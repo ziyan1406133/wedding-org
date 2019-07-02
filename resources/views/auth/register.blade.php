@@ -44,7 +44,7 @@
                                 <label for="username" class="col-md-4 col-form-label text-md-right">{{ __('Username') }}</label>
     
                                 <div class="col-md-6">
-                                    <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
+                                    <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" maxlength="16" required autocomplete="username" autofocus>
     
                                     @error('username')
                                         <span class="invalid-feedback" role="alert">
@@ -72,16 +72,10 @@
                                 <label for="role" class="col-md-4 col-form-label text-md-right">{{ __('Sebagai') }}</label>
     
                                 <div class="col-md-6">
-                                    <select name="role" id="role"class="form-control @error('role') is-invalid @enderror" value="{{ old('role') }}" required autocomplete="role" autofocus>
-                                        <option value="Costumer">Costumer</option>
-                                        <option value="Organizer">Wedding Organizer</option>
+                                    <select name="role" id="role" class="form-control @error('role') is-invalid @enderror" value="{{ old('role') }}" required autocomplete="role" autofocus>
+                                        <option value="Customer">Customer</option>
+                                        <option value="Wedding Organizer">Wedding Organizer</option>
                                     </select>
-    
-                                    @error('role')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
                                 </div>
                             </div>
     

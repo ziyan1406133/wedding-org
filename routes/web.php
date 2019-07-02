@@ -15,3 +15,7 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('landingpage');
 Route::get('/home', 'HomeController@home')->name('homepage');
+
+//dynamic select form
+Route::get('/json-regencies','UserController@regencies');
+Route::get('/json-districts', 'UserController@districts');

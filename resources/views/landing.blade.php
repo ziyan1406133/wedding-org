@@ -18,8 +18,25 @@
         <li class="nav-item">
             <div class="separator"></div>
         </li>
-        <li class="nav-item mt-2"><a href="/login">SIGN IN</a></li>
-        <li class="nav-item"><a href="/register">SIGN UP</a></li>
+        @guest
+            <li class="nav-item mt-2"><a href="/login">SIGN IN</a></li>
+            <li class="nav-item"><a href="/register">SIGN UP</a></li>
+        @else
+            <li class="nav-item mt-2"><a href="/home">DASHBOARD</a></li>
+            <li class="nav-item"><a  href="#">MY PROFILE</a></li>
+            @if(auth()->user()->role == 'Wedding Organizer')
+            <li class="nav-item"><a href="#">MY PACKAGES</a></li>
+            @elseif(auth()->user()->role == 'Customer')
+            <li class="nav-item"> <a href="#">CART</a></li>
+            @endif
+            <li class="nav-item">
+                <a href="{{ route('logout') }}"
+                    onclick="event.preventDefault();
+                    document.getElementById('logout-form').submit();">
+                        SIGN OUT
+                </a>
+            </li>
+        @endguest
         </ul>
     </div>
 
@@ -34,10 +51,37 @@
             <li class="nav-item"><a href="#package" class="scrollTo">PAKET WEDDING</a></li>
             <li class="nav-item"><a href="#reviews" class="scrollTo">REVIEWS</a></li>
             <li class="nav-item"><a href="#contact" class="scrollTo">KONTAK KAMI</a></li>
+            @guest
             <li class="nav-item mr-3"><a href="/login">SIGN IN</a></li>
             <li class="nav-item pl-2">
                 <a class="btn btn-outline-semi-light btn-sm pr-4 pl-4" href="/register">SIGN UP</a>
             </li>
+            @else
+            <li class="nav-item pl-2">
+                <a class="btn btn-outline-semi-light btn-sm pr-4 pl-4" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    <span class="name">{{auth()->user()->username}}</span>
+                </a>
+
+                <div class="dropdown-menu dropdown-menu-right mt-3">
+                    <a class="dropdown-item" href="/home">Dashboard</a>
+                    <a class="dropdown-item" href="/user/{{auth()->user()->id}}">My Profile</a>
+                    @if(auth()->user()->role == 'Wedding Organizer')
+                        <a class="dropdown-item" href="#">My Packages</a> <!-- Khusus Organizer -->
+                    @elseif(auth()->user()->role == 'Customer')
+                        <a class="dropdown-item" href="#">Cart</a> <!-- Khusus Costumer -->
+                    @endif
+                    <a class="dropdown-item" href="{{ route('logout') }}"
+                        onclick="event.preventDefault();
+                        document.getElementById('logout-form').submit();">
+                            Sign Out
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                </div>
+            </li>
+            @endguest
             </ul>
             <a href="#" class="mobile-menu-button">
             <i class="simple-icon-menu"></i>

@@ -20,8 +20,8 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#orders">
-                        <i class="iconsmind-Pantone"></i> Orders
+                    <a href="#transactions">
+                        <i class="iconsmind-Pantone"></i> Transaksi
                     </a> <!-- Khusus Costumer -->
                 </li>
                 <li>
@@ -55,76 +55,76 @@
 
             <ul class="list-unstyled" data-link="cari">
                 <li>
-                    <a href="/home">
+                    <a href="#">
                         <i class="simple-icon-credit-card"></i> Semua WO
                     </a>
                 </li>
                 <li>
-                    <a href="/home">
+                    <a href="#">
                         <i class="simple-icon-list"></i> Di Sekitar Anda
                     </a>
                 </li>
             </ul>
             <ul class="list-unstyled" data-link="myaccount">
                 <li>
-                    <a href="/home">
+                    <a href="#">
                         <i class="simple-icon-check"></i> Lihat Profil
                     </a>
                 </li>
                 <li>
-                    <a href="/home">
+                    <a href="#">
                         <i class="simple-icon-calculator"></i> Ganti Password
                     </a>
                 </li>
                 <li>
-                    <a href="/home">
+                    <a href="#">
                         <i class="simple-icon-bubbles"></i> Logout
                     </a>
                 </li>
             </ul>
-            <ul class="list-unstyled" data-link="orders">
+            <ul class="list-unstyled" data-link="transactions">
                 <li>
-                    <a href="/home">
-                        <i class="simple-icon-bell"></i> Order Selesai
+                    <a href="#">
+                        <i class="simple-icon-bell"></i> Transaksi Selesai
                     </a>
                 </li>
                 <li>
-                    <a href="/home">
-                        <i class="simple-icon-badge"></i> On Going
-                    </a>
-                </li>
-                <li>
-                    <a href="/home">
-                        <i class="simple-icon-control-play"></i> Wishlist
+                    <a href="#">
+                        <i class="simple-icon-badge"></i> Transaksi Berjalan
                     </a>
                 </li>
             </ul>
             <ul class="list-unstyled" data-link="admin">
                 <li>
-                    <a href="/home">
+                    <a href="#">
                         <i class="simple-icon-bell"></i> Organizer
                     </a>
                 </li>
                 <li>
-                    <a href="/home">
+                    <a href="#">
                         <i class="simple-icon-badge"></i> Customer
                     </a>
                 </li>
                 <li>
-                    <a href="/home">
-                        <i class="simple-icon-control-play"></i> Order
+                    <a href="#">
+                        <i class="simple-icon-control-play"></i> Transaksi
                     </a>
                 </li>
             </ul>
 
             <ul class="list-unstyled" data-link="organizer">
                 <li>
-                    <a href="/home">
-                        <i class="simple-icon-control-pause"></i> Order
+                    <a href="#">
+                        <i class="simple-icon-control-pause"></i> Transaksi Selesai
                     </a>
                 </li>
                 <li>
-                    <a href="/home">
+                    <a href="#">
+                        <i class="simple-icon-control-pause"></i> Transaksi Berjalan
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
                         <i class="simple-icon-arrow-left mi-subhidden"></i> Paket Wedding
                     </a>
                 </li>

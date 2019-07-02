@@ -40,17 +40,28 @@
             <div class="user d-inline-block">
                 <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
-                    <span class="name">Sarah Kortney</span>
+                    <span class="name">{{auth()->user()->username}}</span>
                     <span>
-                        <img alt="Profile Picture" src="img/profile-pic-l.jpg" />
+                        <img alt="Profile Picture" src="{{asset('/storage/avatar/'.auth()->user()->avatar)}}" />
                     </span>
                 </button>
 
                 <div class="dropdown-menu dropdown-menu-right mt-3">
-                    <a class="dropdown-item" href="#">Account</a>
-                    <a class="dropdown-item" href="#">My Packages</a> <!-- Khusus Organizer -->
-                    <a class="dropdown-item" href="#">Cart</a> <!-- Khusus Costumer -->
-                    <a class="dropdown-item" href="#">Sign out</a>
+                    <a class="dropdown-item" href="/home">Dashboard</a>
+                    <a class="dropdown-item" href="/user/{{auth()->user()->id}}">My Profile</a>
+                    @if(auth()->user()->role == 'Wedding Organizer')
+                        <a class="dropdown-item" href="#">My Packages</a> <!-- Khusus Organizer -->
+                    @elseif(auth()->user()->role == 'Customer')
+                        <a class="dropdown-item" href="#">Cart</a> <!-- Khusus Costumer -->
+                    @endif
+                    <a class="dropdown-item" href="{{ route('logout') }}"
+                        onclick="event.preventDefault();
+                        document.getElementById('logout-form').submit();">
+                            Sign Out
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
                 </div>
             </div>
         </div>
