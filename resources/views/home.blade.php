@@ -7,7 +7,157 @@
 
 @section('content')
 @include('inc.navbar')
-@include('inc.sidebar')
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="main-menu">
+        <div class="scroll">
+            <ul class="list-unstyled">
+                <li class="active">
+                    <a href="#home">
+                        <i class="iconsmind-Home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#cari">
+                        <i class="iconsmind-WomanMan"></i> Wedding
+                    </a>
+                </li>
+                @auth   
+                    @if(auth()->user()->role == 'Customer')
+                    <li>
+                        <a href="#transactions">
+                            <i class="iconsmind-Money-2"></i> Transaksi
+                        </a>
+                    </li>
+                    @elseif(auth()->user()->role == 'Admin')
+                    <li>
+                        <a href="#admin">
+                            <i class="iconsmind-Administrator"></i> Menu Admin
+                        </a> 
+                    </li>
+                    @elseif(auth()->user()->role == 'Wedding Organizer')
+                    <li>
+                        <a href="#organizer">
+                            <i class="iconsmind-Box-Full"></i> Menu Organizer
+                        </a> 
+                    </li>
+                    @endif
+                    <li>
+                        <a href="#myaccount">
+                            <i class="iconsmind-User"></i> My Account
+                        </a>
+                    </li>
+                @endauth
+            </ul>
+        </div>
+    </div>
+
+    <div class="sub-menu">
+        <div class="scroll">
+            <ul class="list-unstyled" data-link="home">
+                <li>
+                    <a href="/home">
+                        <i class="iconsmind-Line-Chart"></i> Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="/">
+                        <i class="simple-icon-rocket"></i>Landing Page
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="list-unstyled" data-link="cari">
+                <li>
+                    <a href="/organizer">
+                        <i class="iconsmind-Conference"></i> Wedding Organizer
+                    </a>
+                </li>
+                <li>
+                    <a href="/package">
+                        <i class="iconsmind-Box-withFolders"></i> Paket Wedding
+                    </a>
+                </li>
+            </ul>
+            @auth   
+                @if(auth()->user()->role == 'Customer')
+                    <ul class="list-unstyled" data-link="transactions">
+                        <li>
+                            <a href="/finishedt">
+                                <i class="iconsmind-Money-Bag"></i> Transaksi Selesai
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/pendingt">
+                                <i class="iconsmind-Waiter"></i> Transaksi Berjalan
+                            </a>
+                        </li>
+                    </ul>
+
+                @elseif(auth()->user()->role == 'Admin')
+                    <ul class="list-unstyled" data-link="admin">
+                        <li>
+                            <a href="/adminorganizer">
+                                <i class="iconsmind-Conference"></i> Organizer
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/admincustomer">
+                                <i class="iconsmind-Couple-Sign"></i> Customer
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/transaction">
+                                <i class="iconsmind-Money-2"></i> Transaksi
+                            </a>
+                        </li>
+                    </ul>
+
+                @elseif(auth()->user()->role == 'Wedding Organizer')
+                    <ul class="list-unstyled" data-link="organizer">
+                        <li>
+                            <a href="/finishedt">
+                                <i class="iconsmind-Money-Bag"></i> Transaksi Selesai
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/pendingt">
+                                <i class="iconsmind-Waiter"></i> Transaksi Berjalan
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/package/{{auth()->user()->id}}">
+                                <i class="iconsmind-Box-withFolders"></i> My Package
+                            </a>
+                        </li>
+                    </ul>
+                @endif
+
+                <ul class="list-unstyled" data-link="myaccount">
+                    <li>
+                        <a href="/user/{{auth()->user()->id}}">
+                            <i class="simple-icon-user"></i> Lihat Profil
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/editpassword/{{auth()->user()->id}}/user">
+                            <i class="iconsmind-Key"></i> Ganti Password
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('logout') }}"
+                        onclick="event.preventDefault();
+                        document.getElementById('logout-form').submit();">
+                            <i class="simple-icon-logout"></i> Sign Out
+                        </a>
+                    </li>
+                </ul>
+            @endauth
+        </div>
+    </div>
+</div>
+<!-- End of Side Bar -->
 <main> <!-- Isi dashboard beda-beda tergantung role akun -->
     <div class="container-fluid">
         <div class="row">
@@ -26,8 +176,20 @@
                     </ol>
                 </nav>
                 <div class="separator mb-5"></div>
-
-
+                @auth
+                    @if(auth()->user()->status == 'Belum Terverifikasi')
+                        <div class="alert alert-danger alert-dismissible fade show rounded mb-0" role="alert">
+                            Akun anda belum diverifikasi oleh admin, 
+                            pastikan anda telah melengkapi <a href="/user/{{auth()->user()->id}}/edit">profil</a>,
+                            kemudian tunggu selama 24 jam hari kerja.
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <br>
+                    @endif
+                @endauth
+                @include('inc.messages')
             </div>
             <div class="col-lg-12 col-xl-6">
 

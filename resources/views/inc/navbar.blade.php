@@ -36,8 +36,8 @@
                 <i class="simple-icon-size-fullscreen"></i>
                 <i class="simple-icon-size-actual"></i>
             </button>
-
-            <div class="user d-inline-block">
+            @auth
+            <div class="header-icon btn btn-empty d-none d-sm-inline-block user">
                 <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
                     <span class="name">{{auth()->user()->username}}</span>
@@ -64,5 +64,11 @@
                     </form>
                 </div>
             </div>
+            @else
+            <a class="header-icon btn btn-empty d-none d-sm-inline-block" href="/login"> Sign In
+            </a>
+            <a class="header-icon btn btn-empty d-none d-sm-inline-block" href="/register"> Sign Up
+            </a>
+            @endauth
         </div>
     </nav>

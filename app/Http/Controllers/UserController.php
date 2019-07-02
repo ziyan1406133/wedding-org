@@ -93,11 +93,11 @@ class UserController extends Controller
         $provinces_id = Input::get('province_id');
         $regencies = Regency::where('province_id', '=', $provinces_id)->get();
         return response()->json($regencies);
-      }
+    }
   
     public function districts(){
-    $regencies_id = Input::get('regencies_id');
-    $districts = District::where('regency_id', '=', $regencies_id)->get();
-    return response()->json($districts);
+        $regencies_id = Input::get('regencies_id');
+        $districts = District::where('regency_id', '=', $regencies_id)->get();
+        return response()->json($districts);
     }
 }
