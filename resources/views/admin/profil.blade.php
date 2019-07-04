@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-
 @section('style')
 <link href="{{ asset('css/dore.light.blue.min.css') }}" rel="stylesheet">
 @endsection
@@ -12,7 +11,7 @@
     <div class="main-menu">
         <div class="scroll">
             <ul class="list-unstyled">
-                <li class="active">
+                <li>
                     <a href="#home">
                         <i class="iconsmind-Home"></i>
                         <span>Home</span>
@@ -44,7 +43,7 @@
                     </li>
                     @endif
                 @endauth
-                <li>
+                <li class="active">
                     <a href="#myaccount">
                         <i class="iconsmind-User"></i> My Account
                     </a>
@@ -56,7 +55,7 @@
     <div class="sub-menu">
         <div class="scroll">
             <ul class="list-unstyled" data-link="home">
-                <li class="active">
+                <li>
                     <a href="/home">
                         <i class="iconsmind-Line-Chart"></i> Dashboard
                     </a>
@@ -157,7 +156,7 @@
 
                 <ul class="list-unstyled" data-link="myaccount">
                     @auth
-                        <li>
+                        <li class="active">
                             <a href="/user/{{auth()->user()->id}}">
                                 <i class="simple-icon-user"></i> Lihat Profil
                             </a>
@@ -190,49 +189,105 @@
         </div>
     </div>
 </div>
-<!-- End of Side Bar -->
-<main> <!-- Isi dashboard beda-beda tergantung role akun -->
+
+<main>
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
 
-                <h1>Dashboard Ecommerce</h1>
+                <h1>Profil {{$user->username}} </h1>
+                <div class="float-right">
+                    <button type="button" class="btn btn-lg btn-empty dropdown-toggle dropdown-toggle-split top-right-button top-right-button-single" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="iconsmind-Gear"></span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="/user/{{$user->id}}/edit">Edit Profil</a>
+                        <a class="dropdown-item" href="/editpassword/{{$user->id}}/user">Edit Password</a>
+                    </div>
+                </div>
                 <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                     <ol class="breadcrumb pt-0">
                         <li class="breadcrumb-item">
-                            <a href="#">Home</a>
+                            <a href="/home">Home</a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a href="#">Library</a>
+                            <a href="/user">Admin</a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Data</li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            {{$user->username}}
+                        </li>
                     </ol>
                 </nav>
-                <div class="separator mb-5"></div>
-                @auth
-                    @if(auth()->user()->status == 'Belum Terverifikasi')
-                        <div class="alert alert-warning alert-dismissible fade show rounded mb-0" role="alert">
-                            Akun tidak bisa melakukan transaksi apabila belum diverifikasi oleh admin, 
-                            pastikan anda telah <a href="/user/{{auth()->user()->id}}/edit">melengkapi profil</a>,
-                            kemudian tunggu selama 24 jam hari kerja.
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <br>
-                    @elseif(auth()->user()->status == 'Ditolak')
-                        <div class="alert alert-danger alert-dismissible fade show rounded mb-0" role="alert">
-                            Akun anda telah ditolak pada tahap verifikasi oleh admin,
-                            silahkan <a href="/user/{{auth()->user()->id}}/edit">perbaiki profil</a> 
-                            anda sesuai arahan dari admin yang bisa terlihat pada halaman edit profil.
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    @endif
-                @endauth
                 @include('inc.messages')
                 <br>
+
+                <div class="row">
+                    <div class="col-lg-4 col-12 mb-4">
+                        <div class="card mb-4">
+                            <img src="{{ asset('/storage/avatar/'.$user->avatar) }}" alt="Detail Picture" class="card-img-top">
+
+                            <div class="card-body">
+                                <p class="text-muted text-small mb-2">Bio</p>
+                                <p class="mb-3">
+                                    @if($user->bio !== null)
+                                        {{$user->bio}}
+                                    @else
+                                        Belum diisi.
+                                    @endif
+                                <p class="text-muted text-small mb-2">Member Since</p>
+                                <p class="mb-3">{{ date('d-m-y', strtotime($user->created_at)) }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-8">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td>Nama</td>
+                                            <td>: {{$user->name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Username</td>
+                                            <td>: {{$user->username}}</td>
+                                        </tr>
+                                        @if((auth()->user()->role == 'Admin') || (auth()->user()->id == $user->id))
+                                            <tr>
+                                                <td>E-Mail</td>
+                                                <td>: {{$user->email}}</td>
+                                            </tr>
+                                        @endif
+                                        @if(auth()->user()->role == 'Admin')
+                                            <tr>
+                                                <td>Role</td>
+                                                <td>: {{$user->role}}</td>
+                                            </tr>
+                                        @endif
+                                        <tr>
+                                            <td>No HP</td>
+                                            @if($user->mobile_no == NULL)
+                                                <td>: -</td>
+                                            @else
+                                                <td>: {{$user->mobile_no}}</td>
+                                            @endif
+                                        </tr>
+                                        <tr>
+                                            <td>Alamat</td>
+                                            @if($user->address == NULL)
+                                                <td>: -</td>
+                                            @else
+                                                <td>: {{$user->address}}, {{$user->district['name']}}, {{$user->regency['name']}}, {{$user->province['name']}}</td>
+                                            @endif
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

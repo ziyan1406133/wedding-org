@@ -21,7 +21,7 @@ class CreateTransactionsTable extends Migration
             $table->string('rekening')->nullable();
             $table->string('atas_nama')->nullable();
             $table->string('image')->nullable();
-            $table->enum('status', ['Sudah Dibayar', 'Belum Upload Bukti'])->default('Belum Upload Bukti');
+            $table->enum('status', ['Sudah Dibayar', 'Belum Upload Bukti', 'Canceled'])->default('Belum Upload Bukti');
             $table->timestamps();
         });
     }

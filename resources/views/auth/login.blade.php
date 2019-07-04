@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('style')
+<link href="{{ asset('css/dore.light.blue.min.css') }}" rel="stylesheet">
+@endsection
+
 @section('content')
 <div class="fixed-background"></div>
 <main>
@@ -81,4 +85,8 @@
         </div>
     </div>
 </main>
+@endsection
+
+@section('script')
+<script src="{{ asset('js/scripts.single.theme.js') }}"></script>
 @endsection

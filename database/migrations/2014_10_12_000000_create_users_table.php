@@ -31,7 +31,8 @@ class CreateUsersTable extends Migration
             $table->string('rekening')->nullable();
             $table->string('atas_nama')->nullable();
             $table->enum('role', ['Admin', 'Wedding Organizer', 'Customer']);
-            $table->enum('status', ['Terverifikasi', 'Belum Terverifikasi'])->default('Belum Terverifikasi');
+            $table->enum('status', ['Terverifikasi', 'Belum Terverifikasi', 'Ditolak'])->default('Belum Terverifikasi');
+            $table->string('alasan')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

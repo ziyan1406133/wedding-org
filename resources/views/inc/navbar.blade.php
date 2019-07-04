@@ -49,10 +49,10 @@
                 <div class="dropdown-menu dropdown-menu-right mt-3">
                     <a class="dropdown-item" href="/home">Dashboard</a>
                     <a class="dropdown-item" href="/user/{{auth()->user()->id}}">My Profile</a>
-                    @if(auth()->user()->role == 'Wedding Organizer')
-                        <a class="dropdown-item" href="#">My Packages</a> <!-- Khusus Organizer -->
-                    @elseif(auth()->user()->role == 'Customer')
-                        <a class="dropdown-item" href="#">Cart</a> <!-- Khusus Costumer -->
+                    @if((auth()->user()->role == 'Wedding Organizer') && (auth()->user()->status == 'Terverifikasi'))
+                    <a class="dropdown-item" href="/package/{{auth()->user()->id}}">My Packages</a> <!-- Khusus Organizer -->
+                    @elseif((auth()->user()->role == 'Customer') && (auth()->user()->status == 'Terverifikasi'))
+                        <a class="dropdown-item" href="/cart">Cart</a> <!-- Khusus Costumer -->
                     @endif
                     <a class="dropdown-item" href="{{ route('logout') }}"
                         onclick="event.preventDefault();
@@ -63,12 +63,13 @@
                         @csrf
                     </form>
                 </div>
-            </div>
             @else
-            <a class="header-icon btn btn-empty d-none d-sm-inline-block" href="/login"> Sign In
-            </a>
-            <a class="header-icon btn btn-empty d-none d-sm-inline-block" href="/register"> Sign Up
-            </a>
+            <div class="header-icon btn btn-empty d-none d-sm-inline-block user">
+                <a class="btn btn-empty" href="/login"> Sign In
+                </a>
+                <a class="btn btn-outline-primary" href="/register"> Sign Up
+                </a>
+            </div>
             @endauth
         </div>
     </nav>

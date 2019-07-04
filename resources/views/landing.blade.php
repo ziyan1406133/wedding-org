@@ -23,11 +23,11 @@
             <li class="nav-item"><a href="/register">SIGN UP</a></li>
         @else
             <li class="nav-item mt-2"><a href="/home">DASHBOARD</a></li>
-            <li class="nav-item"><a  href="#">MY PROFILE</a></li>
+            <li class="nav-item"><a  href="/user/{{auth()->user()->id}}">MY PROFILE</a></li>
             @if(auth()->user()->role == 'Wedding Organizer')
-            <li class="nav-item"><a href="#">MY PACKAGES</a></li>
+            <li class="nav-item"><a href="/mypackage">MY PACKAGES</a></li>
             @elseif(auth()->user()->role == 'Customer')
-            <li class="nav-item"> <a href="#">CART</a></li>
+            <li class="nav-item"> <a href="/cart">CART</a></li>
             @endif
             <li class="nav-item">
                 <a href="{{ route('logout') }}"
@@ -67,9 +67,9 @@
                     <a class="dropdown-item" href="/home">Dashboard</a>
                     <a class="dropdown-item" href="/user/{{auth()->user()->id}}">My Profile</a>
                     @if(auth()->user()->role == 'Wedding Organizer')
-                        <a class="dropdown-item" href="#">My Packages</a> <!-- Khusus Organizer -->
+                        <a class="dropdown-item" href="/mypackage">My Packages</a> <!-- Khusus Organizer -->
                     @elseif(auth()->user()->role == 'Customer')
-                        <a class="dropdown-item" href="#">Cart</a> <!-- Khusus Costumer -->
+                        <a class="dropdown-item" href="cart">Cart</a> <!-- Khusus Costumer -->
                     @endif
                     <a class="dropdown-item" href="{{ route('logout') }}"
                         onclick="event.preventDefault();
@@ -95,7 +95,7 @@
                     <div class="row home-row">
                         <div class="col-12 d-block d-md-none">
                         <a href="#">
-                            <img alt="mobile hero" class="mobile-hero" src="img/landing-page/home-hero-mobile.png" />
+                            <img alt="mobile hero" class="mobile-hero" src="/img/landing-page/home-hero-mobile.png" />
                         </a>
                         </div>
 
@@ -115,7 +115,7 @@
                         </div>
                         <div class="col-12 col-xl-7 offset-xl-1 col-lg-7 col-md-6  d-none d-md-block">
                         <a href="#">
-                            <img alt="hero" src="img/landing-page/home-hero.png" />
+                            <img alt="hero" src="/img/landing-page/home-hero.png" />
                         </a>
                         </div>
                     </div>
@@ -236,7 +236,7 @@
                             <div class="card flex-row mb-5 listing-card-container">
                                 <div class="w-40 position-relative">
                                 <a href="LandingPage.Blog.Image.html">
-                                    <img class="card-img-left" src="img/landing-page/blog-thumb-1.jpg" alt="Card image cap">
+                                    <img class="card-img-left" src="/img/landing-page/blog-thumb-1.jpg" alt="Card image cap">
                                 </a>
                                 </div>
                                 <div class="w-60 d-flex align-items-center">
@@ -262,7 +262,7 @@
                                 <a href="LandingPage.Blog.Video.html" class="video-play-icon">
                                     <span></span>
                                 </a>
-                                <img class="card-img-left" src="img/landing-page/blog-thumb-2.jpg" alt="Card image cap">
+                                <img class="card-img-left" src="/img/landing-page/blog-thumb-2.jpg" alt="Card image cap">
                                 </div>
                                 <div class="w-60 d-flex align-items-center">
                                 <div class="card-body">
@@ -286,7 +286,7 @@
                             <div class="card flex-row mb-5 listing-card-container">
                                 <div class="w-40 position-relative">
                                 <a href="LandingPage.Blog.Image.html">
-                                    <img class="card-img-left" src="img/landing-page/blog-thumb-3.jpg" alt="Card image cap">
+                                    <img class="card-img-left" src="/img/landing-page/blog-thumb-3.jpg" alt="Card image cap">
                                 </a>
                                 </div>
                                 <div class="w-60 d-flex align-items-center">
@@ -310,7 +310,7 @@
                             <div class="card flex-row mb-5 listing-card-container">
                                 <div class="w-40 position-relative">
                                 <a href="LandingPage.Blog.Image.html">
-                                    <img class="card-img-left" src="img/landing-page/blog-thumb-4.jpg" alt="Card image cap">
+                                    <img class="card-img-left" src="/img/landing-page/blog-thumb-4.jpg" alt="Card image cap">
                                 </a>
                                 </div>
                                 <div class="w-60 d-flex align-items-center">
@@ -353,7 +353,7 @@
                         <div class="card">
                             <div class="card-body text-center pt-5 pb-5">
                             <div>
-                                <img alt="profile" class="img-thumbnail border-0 rounded-circle mb-4 list-thumbnail mx-auto" src="img/profile-pic-l-7.jpg" />
+                                <img alt="profile" class="img-thumbnail border-0 rounded-circle mb-4 list-thumbnail mx-auto" src="/img/profile-pic-l-7.jpg" />
                                 <h5 class="mb-0 font-weight-semibold color-theme-1 mb-3">
                                 codebars
                                 </h5>
@@ -380,7 +380,7 @@
                         <div class="card">
                             <div class="card-body text-center pt-5 pb-5">
                             <div>
-                                <img alt="profile" class="img-thumbnail border-0 rounded-circle mb-4 list-thumbnail mx-auto" src="img/profile-pic-l-11.jpg" />
+                                <img alt="profile" class="img-thumbnail border-0 rounded-circle mb-4 list-thumbnail mx-auto" src="/img/profile-pic-l-11.jpg" />
                                 <h5 class="mb-0 font-weight-semibold color-theme-1 mb-3">
                                 helvetica
                                 </h5>
@@ -407,7 +407,7 @@
                         <div class="card">
                             <div class="card-body text-center pt-5 pb-5">
                             <div>
-                                <img alt="profile" class="img-thumbnail border-0 rounded-circle mb-4 list-thumbnail mx-auto" src="img/profile-pic-l-2.jpg" />
+                                <img alt="profile" class="img-thumbnail border-0 rounded-circle mb-4 list-thumbnail mx-auto" src="/img/profile-pic-l-2.jpg" />
                                 <h5 class="mb-0 font-weight-semibold color-theme-1 mb-3">
                                 logorrhea
                                 </h5>
@@ -434,7 +434,7 @@
                         <div class="card">
                             <div class="card-body text-center pt-5 pb-5">
                             <div>
-                                <img alt="profile" class="img-thumbnail border-0 rounded-circle mb-4 list-thumbnail mx-auto" src="img/profile-pic-l-8.jpg" />
+                                <img alt="profile" class="img-thumbnail border-0 rounded-circle mb-4 list-thumbnail mx-auto" src="/img/profile-pic-l-8.jpg" />
 
                                 <h5 class="mb-0 font-weight-semibold color-theme-1 mb-3">
                                 nanaimo
@@ -461,7 +461,7 @@
                         <div class="card">
                             <div class="card-body text-center pt-5 pb-5">
                             <div>
-                                <img alt="profile" class="img-thumbnail border-0 rounded-circle mb-4 list-thumbnail mx-auto" src="img/profile-pic-l-11.jpg" />
+                                <img alt="profile" class="img-thumbnail border-0 rounded-circle mb-4 list-thumbnail mx-auto" src="/img/profile-pic-l-11.jpg" />
                                 <h5 class="mb-0 font-weight-semibold color-theme-1 mb-3">
                                 helvetica
                                 </h5>
@@ -553,7 +553,7 @@
                         </div>
                         <div class="col-12 text-center footer-content">
                             <a href="#home" class="scrollTo">
-                                <img class="footer-logo" alt="footer logo" src="img/landing-page/logo-footer.svg" />
+                                <img class="footer-logo" alt="footer logo" src="/img/landing-page/logo-footer.svg" />
                             </a>
                         </div>
                     </div>
@@ -587,4 +587,5 @@
 <script src="{{ asset('js/vendor/landing-page/jquery.scrollTo.min.js')}}"></script>
 <script src="{{ asset('js/vendor/landing-page/jquery.autoellipsis.js')}}"></script>
 <script src="{{ asset('js/dore.scripts.landingpage.js')}}"></script>
+<script src="{{ asset('js/scripts.js') }}"></script>  
 @endsection
