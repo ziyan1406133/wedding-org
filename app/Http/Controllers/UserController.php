@@ -11,7 +11,7 @@ use App\Bank;
 use App\Province;
 use App\Regency;
 use App\District;
-
+use App\Package;
 class UserController extends Controller
 {
     /**
@@ -86,7 +86,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return redirect ('/home');
     }
 
     /**
@@ -97,7 +97,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return redirect ('/home');
     }
 
     /**
@@ -215,6 +215,15 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
+        $packages = Package::where('user_id', $id)->get();
+        if(count($packages) > 0) {
+            foreach($packages as $package) {
+                if($package->image !== 'no_image.png') {
+                    Storage::delete('/public/avatar/'.$package->image);
+                }
+                $package->delete();
+            }
+        }
         if($user->avatar !== 'no_avatar.png') {
             Storage::delete('/public/avatar/'.$user->avatar);
         }

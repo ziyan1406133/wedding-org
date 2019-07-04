@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Package;
+use App\User;
+use Illuminate\Support\Facades\Storage;
 
 class PackageController extends Controller
 {
@@ -23,7 +26,21 @@ class PackageController extends Controller
      */
     public function index()
     {
-        //
+        $packages = Package::orderBy('created_at', 'desc')->paginate(10);
+
+        return view('package.index', compact('packages'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function myindex()
+    {
+        $packages = Package::where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(10);
+
+        return view('package.index', compact('packages'));
     }
 
     /**
@@ -43,7 +60,12 @@ class PackageController extends Controller
      */
     public function create()
     {
-        //
+        if(auth()->user()->role == 'Wedding Organizer') {
+            
+            return view('package.create');
+        } else {
+            return redirect('/home')->with('error', 'Anda tidak memiliki hak untuk mengakses halaman tersebut.');
+        }
     }
 
     /**
@@ -54,7 +76,22 @@ class PackageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $package = new Package;
+        $package->user_id = auth()->user()->id;
+        $package->nama = $request->input('nama');
+        $package->price = $request->input('price');
+        $package->description = $request->input('description');
+        if($request->hasFile('image')){
+            $filenameWithExt = $request->file('image')->getClientOriginalName();
+            $filename = pathInfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $FileNameToStore = $filename.'_'.time().'_.'.$extension;
+            $path = $request->file('image')->storeAs('public/package/', $FileNameToStore);
+            $package->image = $FileNameToStore;
+        }
+        $package->save();
+
+        return redirect('/mypackage')->with('success', 'Paket Baru Telah Dibuat');
     }
 
     /**
@@ -65,7 +102,9 @@ class PackageController extends Controller
      */
     public function show($id)
     {
-        //
+        $package = Package::findOrFail($id);
+        $user = User::where('id', $package->user_id)->first();
+        return view('package.show', compact('package', 'user'));
     }
 
     /**
@@ -76,7 +115,13 @@ class PackageController extends Controller
      */
     public function edit($id)
     {
-        //
+        $package = Package::findOrFail($id);
+        if(auth()->user()->id == $package->user_id) {
+            
+            return view('package.edit', compact('package'));
+        } else {
+            return redirect('/home')->with('error', 'Anda tidak memiliki hak untuk mengakses halaman tersebut.');
+        }
     }
 
     /**
@@ -88,7 +133,25 @@ class PackageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $package = Package::findOrFail($id);
+        $package->user_id = auth()->user()->id;
+        $package->nama = $request->input('nama');
+        $package->price = $request->input('price');
+        $package->description = $request->input('description');
+        if($request->hasFile('image')){
+            $filenameWithExt = $request->file('image')->getClientOriginalName();
+            $filename = pathInfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $FileNameToStore = $filename.'_'.time().'_.'.$extension;
+            $path = $request->file('image')->storeAs('public/package/', $FileNameToStore);
+            if ($package->image !== 'no_image.png') {
+                Storage::delete('public/package/'.$package->image);
+            }
+            $package->image = $FileNameToStore;
+        }
+        $package->save();
+
+        return redirect('/package/'.$id)->with('success', 'Paket Telah Berhasil Diperbaharui');
     }
 
     /**
@@ -99,6 +162,11 @@ class PackageController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $package = Package::findOrFail($id);
+        if($package->image !== 'no_image.png') {
+            Storage::delete('/public/avatar/'.$package->image);
+        }
+        $package->delete();
+        return redirect('/mypackage')->with('success', 'Paket Berhasil Dihapus');
     }
 }

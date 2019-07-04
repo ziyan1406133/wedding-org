@@ -147,7 +147,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="/package/{{auth()->user()->id}}">
+                            <a href="/mypackage">
                                 <i class="iconsmind-Box-withFolders"></i> My Package
                             </a>
                         </li>

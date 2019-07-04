@@ -13,7 +13,6 @@
         </a>
         <ul class="navbar-nav">
         <li class="nav-item"><a href="#package" class="scrollTo">PAKET WEDDING</a></li>
-        <li class="nav-item"><a href="#reviews" class="scrollTo">REVIEWS</a></li>
         <li class="nav-item"><a href="#contact" class="scrollTo">KONTAK KAMI</a></li>
         <li class="nav-item">
             <div class="separator"></div>
@@ -49,7 +48,6 @@
             </a>
             <ul class="navbar-nav d-none d-lg-flex flex-row">
             <li class="nav-item"><a href="#package" class="scrollTo">PAKET WEDDING</a></li>
-            <li class="nav-item"><a href="#reviews" class="scrollTo">REVIEWS</a></li>
             <li class="nav-item"><a href="#contact" class="scrollTo">KONTAK KAMI</a></li>
             @guest
             <li class="nav-item mr-3"><a href="/login">SIGN IN</a></li>
@@ -135,7 +133,11 @@
                                 <div>
                                     <p class="detail-text">
                                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                        Curabitur at porttitor nunc, finibus dictum massa. 
+                                        Curabitur at porttitor nunc, finibus dictum massa.                                        
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                        Curabitur at porttitor nunc, finibus dictum massa.                                       
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                        Curabitur at porttitor nunc, finibus dictum massa.  
                                     </p>
                                 </div>
                                 </div>
@@ -245,8 +247,12 @@
                                     <h3 class="mb-4 listing-heading ellipsis">Nama Paket 1, [Nama WO]</h3>
                                     </a>
                                     <p class="listing-desc ellipsis">
-                                        (Deskripsi) Lorem ipsum dolor sit amet, 
-                                        consectetur adipiscing elit.
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                        Curabitur at porttitor nunc, finibus dictum massa.                                        
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                        Curabitur at porttitor nunc, finibus dictum massa.                                       
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                        Curabitur at porttitor nunc, finibus dictum massa.  
                                     </p>
                                     <footer>
                                     <p class="text-small mb-0">Rp. 123.456,00</p>
@@ -335,172 +341,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="section background background-no-bottom mb-0">
-                <div class="container" id="reviews">
-                <div class="row">
-                    <div class="col-12 offset-0 col-lg-8 offset-lg-2 text-center">
-                    <h1>Review Pengguna</h1>
-                    <p>
-                        Ini adalah testimoni dari beberapa pelanggan kami
-                        baik sebagai Wedding Organizer maupun sebagai
-                        Costumer.
-                    </p>
-                    </div>
-                    <div class="col-12 p-0">
-                    <div class="owl-container">
-                        <div class="owl-carousel review-carousel">
-                        <div class="card">
-                            <div class="card-body text-center pt-5 pb-5">
-                            <div>
-                                <img alt="profile" class="img-thumbnail border-0 rounded-circle mb-4 list-thumbnail mx-auto" src="/img/profile-pic-l-7.jpg" />
-                                <h5 class="mb-0 font-weight-semibold color-theme-1 mb-3">
-                                codebars
-                                </h5>
-                                <select class="rating" data-current-rating="5" data-readonly="true">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                </select>
-                                <p class="text-muted text-small">Code Quality</p>
-                            </div>
-                            <div class="pl-3 pr-3 pt-3 pb-0 flex-grow-1 d-flex align-items-center">
-                                <p class="mb-0 ">
-                                Many that live deserve death. And some that die
-                                deserve life. Can you give it to them? Then do not
-                                be eager to deal out death in judgement. For even
-                                the very wise cannot see all ends.
-                                </p>
-                            </div>
-                            </div>
-                        </div>
-
-                        <div class="card">
-                            <div class="card-body text-center pt-5 pb-5">
-                            <div>
-                                <img alt="profile" class="img-thumbnail border-0 rounded-circle mb-4 list-thumbnail mx-auto" src="/img/profile-pic-l-11.jpg" />
-                                <h5 class="mb-0 font-weight-semibold color-theme-1 mb-3">
-                                helvetica
-                                </h5>
-                                <select class="rating" data-current-rating="5" data-readonly="true">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                </select>
-                                <p class="text-muted text-small">Code Quality</p>
-                            </div>
-                            <div class="pl-3 pr-3 pt-3 pb-0 flex-grow-1 d-flex align-items-center">
-                                <p class="mb-0 ">
-                                That's the only place in all the lands we've ever
-                                heard of that we don't want to see any closer; and
-                                that's the one place we're trying to get to! And
-                                that's just where we can't get, nohow.
-                                </p>
-                            </div>
-                            </div>
-                        </div>
-
-                        <div class="card">
-                            <div class="card-body text-center pt-5 pb-5">
-                            <div>
-                                <img alt="profile" class="img-thumbnail border-0 rounded-circle mb-4 list-thumbnail mx-auto" src="/img/profile-pic-l-2.jpg" />
-                                <h5 class="mb-0 font-weight-semibold color-theme-1 mb-3">
-                                logorrhea
-                                </h5>
-                                <select class="rating" data-current-rating="5" data-readonly="true">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                </select>
-                                <p class="text-muted text-small">Code Quality</p>
-                            </div>
-                            <div class="pl-3 pr-3 pt-3 pb-0 flex-grow-1 d-flex align-items-center">
-                                <p class="mb-0 ">
-                                Yet such is oft the course of deeds that move the
-                                wheels of the world: small hands do them because
-                                they must, while the eyes of the great are
-                                elsewhere.
-                                </p>
-                            </div>
-                            </div>
-                        </div>
-
-                        <div class="card">
-                            <div class="card-body text-center pt-5 pb-5">
-                            <div>
-                                <img alt="profile" class="img-thumbnail border-0 rounded-circle mb-4 list-thumbnail mx-auto" src="/img/profile-pic-l-8.jpg" />
-
-                                <h5 class="mb-0 font-weight-semibold color-theme-1 mb-3">
-                                nanaimo
-                                </h5>
-                                <select class="rating" data-current-rating="5" data-readonly="true">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                </select>
-                                <p class="text-muted text-small">Code Quality</p>
-                            </div>
-                            <div class="pl-3 pr-3 pt-3 pb-0 flex-grow-1 d-flex align-items-center">
-                                <p class="mb-0 ">
-                                I have passed through fire and deep water, since
-                                we parted. I have forgotten much that I thought I
-                                knew, and learned again much that I had forgotten
-                                </p>
-                            </div>
-                            </div>
-                        </div>
-
-                        <div class="card">
-                            <div class="card-body text-center pt-5 pb-5">
-                            <div>
-                                <img alt="profile" class="img-thumbnail border-0 rounded-circle mb-4 list-thumbnail mx-auto" src="/img/profile-pic-l-11.jpg" />
-                                <h5 class="mb-0 font-weight-semibold color-theme-1 mb-3">
-                                helvetica
-                                </h5>
-                                <select class="rating" data-current-rating="5" data-readonly="true">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                </select>
-                                <p class="text-muted text-small">Code Quality</p>
-                            </div>
-                            <div class="pl-3 pr-3 pt-3 pb-0 flex-grow-1 d-flex align-items-center">
-                                <p class="mb-0 ">
-                                That's the only place in all the lands we've ever
-                                heard of that we don't want to see any closer; and
-                                that's the one place we're trying to get to! And
-                                that's just where we can't get, nohow.
-                                </p>
-                            </div>
-                            </div>
-                        </div>
-                        </div>
-
-                        <div class="slider-nav text-center">
-                        <a href="#" class="left-arrow owl-prev">
-                            <i class="simple-icon-arrow-left"></i>
-                        </a>
-                        <div class="slider-dot-container"></div>
-                        <a href="#" class="right-arrow owl-next">
-                            <i class="simple-icon-arrow-right"></i>
-                        </a>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-
 
             <div class="section background background-no-bottom mb-0">
                 <div class="container" id="contact">

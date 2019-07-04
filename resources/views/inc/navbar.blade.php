@@ -50,7 +50,7 @@
                     <a class="dropdown-item" href="/home">Dashboard</a>
                     <a class="dropdown-item" href="/user/{{auth()->user()->id}}">My Profile</a>
                     @if((auth()->user()->role == 'Wedding Organizer') && (auth()->user()->status == 'Terverifikasi'))
-                    <a class="dropdown-item" href="/package/{{auth()->user()->id}}">My Packages</a> <!-- Khusus Organizer -->
+                    <a class="dropdown-item" href="/package">My Packages</a> <!-- Khusus Organizer -->
                     @elseif((auth()->user()->role == 'Customer') && (auth()->user()->status == 'Terverifikasi'))
                         <a class="dropdown-item" href="/cart">Cart</a> <!-- Khusus Costumer -->
                     @endif

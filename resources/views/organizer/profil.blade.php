@@ -146,7 +146,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="/package/{{auth()->user()->id}}">
+                            <a href="/mypackage">
                                 <i class="iconsmind-Box-withFolders"></i> My Package
                             </a>
                         </li>
@@ -255,14 +255,10 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="/user/{{$user->id}}/edit">Edit Profil</a>
-                        <a class="dropdown-item" href="/editpassword/{{$user->id}}/user">Edit Password</a>
-                        @if(auth()->user()->role == 'Admin')
-                        <div class="separator"></div>   
-                        
-                            @if($user->role != 'Admin')
+                        @if(auth()->user()->id == $user->id)
+                            <a class="dropdown-item" href="/editpassword/{{$user->id}}/user">Edit Password</a>
+                        @elseif((auth()->user()->role == 'Admin') && ($user->role != 'Admin'))
                             <a class="dropdown-item" data-toggle="modal" data-target="#confirmdelete" href="#">Hapus Akun</a>
-                            
-                            @endif
                         @endif
                     </div>
                 </div>
@@ -274,7 +270,7 @@
                                 <h4 class="modal-title">Konfirmasi</h4>
                             </div>
                             <div class="modal-body">
-                                <p align="left">Apakah anda yakin untuk menghapus akun ini?</p>
+                                <p align="left">Apakah anda yakin untuk menghapus akun ini Semua paket WO ini akan terhapus semua.</p>
                             </div>
                             <div class="modal-footer">
                                 {!!Form::open(['action' => ['UserController@destroy', $user->id], 'method' => 'POST'])!!}
@@ -444,18 +440,20 @@
                     </div>
 
                     <div class="tab-pane show active" id="second" role="tabpanel" aria-labelledby="second-tab">
-                        <div class="col">
-                            <div class="card">
-                                <div class="position-relative">
-                                    <a href="Pages.Details.html"><img class="card-img-top" src="/img/card-thumb-1.jpg" alt="Card image cap"></a>
-                                </div>
-                                <div class="card-body">
-                                    <a href="Pages.Details.html">
-                                        <p class="list-item-heading mb-4">Cheesecake</p>
-                                    </a>
-                                    <footer>
-                                        <p class="text-muted text-small mb-0 font-weight-light">18.08.2018</p>
-                                    </footer>
+                        <div class="row">
+                            <div class="col">
+                                <div class="card">
+                                    <div class="position-relative">
+                                        <a href="Pages.Details.html"><img class="card-img-top" src="/img/card-thumb-1.jpg" alt="Card image cap"></a>
+                                    </div>
+                                    <div class="card-body">
+                                        <a href="Pages.Details.html">
+                                            <p class="list-item-heading mb-4">Cheesecake</p>
+                                        </a>
+                                        <footer>
+                                            <p class="text-muted text-small mb-0 font-weight-light">18.08.2018</p>
+                                        </footer>
+                                    </div>
                                 </div>
                             </div>
                         </div>

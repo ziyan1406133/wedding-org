@@ -26,6 +26,7 @@ Route::get('organizer', 'UserController@organizer')->name('organizerlist');
 Route::get('verifieduser', 'UserController@verifieduser')->name('verifieduser');
 Route::get('unverifieduser', 'UserController@unverifieduser')->name('unverifieduser');
 Route::get('rejecteduser', 'UserController@rejecteduser')->name('rejecteduser');
+Route::get('mypackage', 'PackageController@myindex')->name('myindex');
 Route::get('adminpackage', 'PackageController@adminindex')->name('adminpackage');
 Route::get('finishedt', 'TransactionController@finishedt')->name('finishedt');
 Route::get('pendingt', 'TransactionController@pendingt')->name('pendingt');
