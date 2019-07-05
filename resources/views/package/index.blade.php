@@ -17,7 +17,7 @@
                         <span>Home</span>
                     </a>
                 </li>
-                <li>
+                <li class="active">
                     <a href="#cari">
                         <i class="iconsmind-WomanMan"></i> Wedding
                     </a>
@@ -43,7 +43,7 @@
                     </li>
                     @endif
                 @endauth
-                <li class="active">
+                <li>
                     <a href="#myaccount">
                         <i class="iconsmind-User"></i> My Account
                     </a>
@@ -69,29 +69,38 @@
 
             <ul class="list-unstyled" data-link="cari">
                 <li>
-                    <a href="/organizer">
-                        <i class="iconsmind-Conference"></i> Wedding Organizer
-                    </a>
-                </li>
-                <li>
                     <a href="/package">
                         <i class="iconsmind-Box-withFolders"></i> Paket Wedding
                     </a>
                 </li>
+                @auth
+                    @if(auth()->user()->role != 'Admin')
+                    <li>
+                        <a href="/finishedevent">
+                            <i class="iconsmind-Balloon"></i> Event Selesai
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/upcoming">
+                            <i class="simple-icon-calendar"></i> Upcoming Event
+                        </a>
+                    </li>
+                    @endif
+                @endauth
             </ul>
             @auth   
                 @if(auth()->user()->role == 'Customer')
                     <ul class="list-unstyled" data-link="transactions">
                         <li>
-                            <a href="/finishedt">
-                                <i class="iconsmind-Money-Bag"></i> Transaksi Selesai
+                            <a href="/transaction">
+                                <i class="iconsmind-Money-Bag"></i> Invoice
                             </a>
                         </li>
                         <li>
                             <a href="/pendingt">
                                 <i class="iconsmind-Waiter"></i> Transaksi Berjalan
                             </a>
-                        </li>
+                        </li> 
                         <li>
                             <a href="/cart">
                                 <i class="iconsmind-Full-Cart"></i> Cart
@@ -103,7 +112,7 @@
                     <ul class="list-unstyled" data-link="admin">
                         <li>
                             <a href="/user">
-                                <i class="simple-icon-people"></i> All Users
+                                <i class="simple-icon-people"></i> Semua User
                             </a>
                         </li>
                         <li>
@@ -128,7 +137,7 @@
                         </li>
                         <li>
                             <a href="/transaction">
-                                <i class="iconsmind-Money-2"></i> Transactions
+                                <i class="iconsmind-Money-Bag"></i> Invoice
                             </a>
                         </li>
                     </ul>
@@ -136,15 +145,15 @@
                 @elseif(auth()->user()->role == 'Wedding Organizer')
                     <ul class="list-unstyled" data-link="organizer">
                         <li>
-                            <a href="/finishedt">
-                                <i class="iconsmind-Money-Bag"></i> Transaksi Selesai
+                            <a href="/packagedone">
+                                <i class="iconsmind-Money-Bag"></i> Pesanan Selesai
                             </a>
                         </li>
                         <li>
-                            <a href="/pendingt">
-                                <i class="iconsmind-Waiter"></i> Transaksi Berjalan
+                            <a href="/packagepending">
+                                <i class="iconsmind-Waiter"></i> Pesanan Pending
                             </a>
-                        </li>
+                        </li> 
                         <li>
                             <a href="/mypackage">
                                 <i class="iconsmind-Box-withFolders"></i> My Package
@@ -156,7 +165,7 @@
 
                 <ul class="list-unstyled" data-link="myaccount">
                     @auth
-                        <li class="active">
+                        <li>
                             <a href="/user/{{auth()->user()->id}}">
                                 <i class="simple-icon-user"></i> Lihat Profil
                             </a>
@@ -196,11 +205,6 @@
             <div class="col-12">
 
                 <h1>Paket Wedding</h1>
-                @if(auth()->user()->role == 'Wedding Organizer')
-                    <div class="float-right">
-                        <a class="btn btn-outline-primary btn-lg" href="/package/create">Tambah</a>
-                    </div>
-                @endif
                 <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                     <ol class="breadcrumb pt-0">
                         <li class="breadcrumb-item">
@@ -220,7 +224,7 @@
                         <div class="row">
                             @foreach($packages as $package)
                                 <div class="col">
-                                    <div class="card text-center">
+                                    <div class="card mb-3 shadow text-center">
                                         <div class="position-relative">
                                             <a href="/package/{{$package->id}}"><img class="card-img-top" src="{{asset('/storage/package/'.$package->image)}}" alt="Card image cap"></a>
                                         </div>

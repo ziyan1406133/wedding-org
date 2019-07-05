@@ -2,6 +2,9 @@
 
 @section('style')
 <link href="{{ asset('css/dore.light.blue.min.css') }}" rel="stylesheet">
+<link href="{{ asset('css/vendor/bootstrap-float-label.min.css') }}" rel="stylesheet">
+<link href="{{ asset('css/vendor/select2.min.css') }}" rel="stylesheet">
+<link href="{{ asset('css/vendor/select2-bootstrap.min.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -17,7 +20,7 @@
                         <span>Home</span>
                     </a>
                 </li>
-                <li>
+                <li class="active">
                     <a href="#cari">
                         <i class="iconsmind-WomanMan"></i> Wedding
                     </a>
@@ -43,7 +46,7 @@
                     </li>
                     @endif
                 @endauth
-                <li class="active">
+                <li>
                     <a href="#myaccount">
                         <i class="iconsmind-User"></i> My Account
                     </a>
@@ -68,28 +71,32 @@
             </ul>
 
             <ul class="list-unstyled" data-link="cari">
-                <li>
-                    <a href="/organizer">
-                        <i class="iconsmind-Conference"></i> Wedding Organizer
-                    </a>
-                </li>
-                <li>
+                <li class="active">
                     <a href="/package">
                         <i class="iconsmind-Box-withFolders"></i> Paket Wedding
                     </a>
                 </li>
+                @auth
+                    @if(auth()->user()->role != 'Admin')
+                    <li>
+                        <a href="/finishedevent">
+                            <i class="iconsmind-Balloon"></i> Event Selesai
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/upcoming">
+                            <i class="simple-icon-calendar"></i> Upcoming Event
+                        </a>
+                    </li>
+                    @endif
+                @endauth
             </ul>
             @auth   
                 @if(auth()->user()->role == 'Customer')
                     <ul class="list-unstyled" data-link="transactions">
                         <li>
-                            <a href="/finishedt">
-                                <i class="iconsmind-Money-Bag"></i> Transaksi Selesai
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/pendingt">
-                                <i class="iconsmind-Waiter"></i> Transaksi Berjalan
+                            <a href="/transaction">
+                                <i class="iconsmind-Money-Bag"></i> Invoice
                             </a>
                         </li>
                         <li>
@@ -103,7 +110,7 @@
                     <ul class="list-unstyled" data-link="admin">
                         <li>
                             <a href="/user">
-                                <i class="simple-icon-people"></i> All Users
+                                <i class="simple-icon-people"></i> Semua User
                             </a>
                         </li>
                         <li>
@@ -123,12 +130,12 @@
                         </li>
                         <li>
                             <a href="/adminpackage">
-                                <i class="iconsmind-Box-withFolders"></i> Packages
+                                <i class="iconsmind-Box-withFolders"></i> Paket Wedding
                             </a>
                         </li>
                         <li>
                             <a href="/transaction">
-                                <i class="iconsmind-Money-2"></i> Transactions
+                                <i class="iconsmind-Money-Bag"></i> Invoice
                             </a>
                         </li>
                     </ul>
@@ -136,15 +143,15 @@
                 @elseif(auth()->user()->role == 'Wedding Organizer')
                     <ul class="list-unstyled" data-link="organizer">
                         <li>
-                            <a href="/finishedt">
-                                <i class="iconsmind-Money-Bag"></i> Transaksi Selesai
+                            <a href="/packagedone">
+                                <i class="iconsmind-Money-Bag"></i> Pesanan Selesai
                             </a>
                         </li>
                         <li>
-                            <a href="/pendingt">
-                                <i class="iconsmind-Waiter"></i> Transaksi Berjalan
+                            <a href="/packagepending">
+                                <i class="iconsmind-Waiter"></i> Pesanan Pending
                             </a>
-                        </li>
+                        </li> 
                         <li>
                             <a href="/mypackage">
                                 <i class="iconsmind-Box-withFolders"></i> My Package
@@ -156,7 +163,7 @@
 
                 <ul class="list-unstyled" data-link="myaccount">
                     @auth
-                        <li class="active">
+                        <li>
                             <a href="/user/{{auth()->user()->id}}">
                                 <i class="simple-icon-user"></i> Lihat Profil
                             </a>
@@ -196,37 +203,7 @@
             <div class="col-12">
 
                 <h1>Paket Wedding </h1>
-                @if(auth()->user()->id == $package->user_id)
-                    <div class="float-right">
-                        <button type="button" class="btn btn-lg btn-empty dropdown-toggle dropdown-toggle-split top-right-button top-right-button-single" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="iconsmind-Gear"></span>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="/package/{{$package->id}}/edit">Edit Paket</a>
-                            <a class="dropdown-item" data-toggle="modal" data-target="#confirmdelete" href="#">Hapus Paket</a>
-                        </div>
-                    </div>
-                    <div class="modal fade" id="confirmdelete" role="dialog">
-                        <div class="modal-dialog">
-                            <!-- Modal content-->
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Konfirmasi</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <p align="left">Apakah anda yakin untuk menghapus paket ini?</p>
-                                </div>
-                                <div class="modal-footer">
-                                    {!!Form::open(['action' => ['PackageController@destroy', $package->id], 'method' => 'POST'])!!}
-                                        {{Form::hidden('_method', 'DELETE')}}
-                                            <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
-                                            {{Form::submit('Ya', ['class' => 'btn btn-danger btn-md'])}}
-                                    {!! Form::close() !!}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endif
+                
                 <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                     <ol class="breadcrumb pt-0">
                         <li class="breadcrumb-item">
@@ -287,7 +264,101 @@
                                     {!!$package->description!!}
                                 </p>
                                 <p class="text-muted text-small mb-2">Price</p>
-                                <p class="mb-3">{{ number_format($package->price,0,",",".") }}</p>
+                                <p class="mb-3">Rp. {{ number_format($package->price,0,",",".") }}</p>
+                                @auth
+                                    @if(auth()->user()->role == 'Customer')
+                                        <a class="btn default btn-primary card-img-bottom"  data-toggle="modal" data-target="#bookevent" href="#"><i class="simple-icon-book-open"></i> Book Event</a>
+                                        <div class="modal fade" id="bookevent" role="dialog">
+                                            <div class="modal-dialog">
+                                                <!-- Modal content-->
+                                                <div class="modal-content">
+                                                    {!! Form::open(['action' => 'CartController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+                                                    <div class="modal-body">
+                                                        <div class="form-group mb-1">
+                                                            <label>Tanggal Event</label>
+                                                            <div class="input-group date">
+                                                                <input type="date" name="date" id="date" class="form-control" required>
+                                                                <span class="input-group-text input-group-append input-group-addon">
+                                                                    <i class="simple-icon-calendar"></i>
+                                                                </span>
+                                                            </div>
+                                                            <label class="mt-5">Alamat Event</label>
+                                                            <label class="form-group has-float-label">
+                                                                <select class="form-control select2-single" name="provinces" id="provinces" required>
+                                                                    <option value="0" disable="true"></option>
+                                                                    @foreach ($provinces as $key => $value)
+                                                                        <option value="{{$value->id}}">{{ $value->name }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                                <span>Provinsi*</span>
+                                                            </label>
+                                                            <br>
+                                                            <label class="form-group has-float-label">
+                                                                <select class="form-control select2-single" name="regencies" id="regencies" required>
+                                                                    <option value="0" disable="true"></option>
+                                                                </select>
+                                                                <span>Kabupaten*</span>
+                                                            </label>
+                                                            <br>
+                                                            <label class="form-group has-float-label">
+                                                                <select class="form-control select2-single" name="districts" id="districts" required>
+                                                                    <option value="0" disable="true"></option>
+                                                                </select>
+                                                                <span>Kecamatan*</span>
+                                                            </label>
+                                                            <br>
+                                                            <label class="form-group has-float-label">
+                                                                <textarea class="form-control select2-single" name="address" rows="3" required maxlength="190"></textarea>
+                                                                <span>Alamat Lengkap*</span>
+                                                        </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <input type="text" name="organizer_id" id="organizer_id" value="{{$package->user->id}}" hidden>
+                                                        <input type="text" name="package_id" id="package_id" value="{{$package->id}}" hidden>
+                                                        <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
+                                                        <button type="submit" class="btn btn-primary btn-md"><i class="simple-icon-book-open"></i></button>
+                                                    </div>
+                                                    {!! Form::close() !!}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @elseif(auth()->user()->id == $user->id)
+                                    <div class="row">
+                                        <div class="col">
+                                            <a class="btn default btn-secondary card-img-bottom" href="/package/{{$package->id}}/edit"><i class="simple-icon-pencil"></i></a>
+                                        </div>
+                                        <div class="col">
+                                            <a class="btn default btn-danger card-img-bottom" data-toggle="modal" data-target="#deletpackage{{$package->id}}" href="#"><i class="simple-icon-trash"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="deletpackage{{$package->id}}" role="dialog">
+                                        <div class="modal-dialog">
+                                            <!-- Modal content-->
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Konfirmasi</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Apakah anda yakin untuk menghapus paket ini?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    {!!Form::open(['action' => ['PackageController@destroy', $package->id], 'method' => 'POST'])!!}
+                                                        {{Form::hidden('_method', 'DELETE')}}
+                                                            <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
+                                                            {{Form::submit('Ya', ['class' => 'btn btn-danger btn-md'])}}
+                                                    {!! Form::close() !!}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
+                                @else
+                                <p class="text-muted text-small mb-2">
+                                    Silahkan <a href="/login">login</a> untuk memesan paket,
+                                    atau <a href="/register">buat akun baru</a>.
+                                </p>
+                                @endauth
                             </div>
                         </div>
                     </div>
@@ -301,4 +372,38 @@
 
 @section('script')
 <script src="{{ asset('js/scripts.single.theme.js') }}"></script>
+<script src="{{ asset('js/vendor/select2.full.js') }}"></script>
+<script type="text/javascript">
+
+    $('#provinces').on('change', function(e){
+        console.log(e);
+        var province_id = e.target.value;
+        $.get('/json-regencies?province_id=' + province_id,function(data) {
+            console.log(data);
+            $('#regencies').empty();
+            $('#regencies').append('<option value="0" disable="true" selected="true"></option>');
+
+            $('#districts').empty();
+            $('#districts').append('<option value="0" disable="true" selected="true"></option>');
+
+            $.each(data, function(index, regenciesObj){
+                $('#regencies').append('<option value="'+ regenciesObj.id +'">'+ regenciesObj.name +'</option>');
+            })
+        });
+    });
+
+    $('#regencies').on('change', function(e){
+        console.log(e);
+        var regencies_id = e.target.value;
+        $.get('/json-districts?regencies_id=' + regencies_id,function(data) {
+            console.log(data);
+            $('#districts').empty();
+            $('#districts').append('<option value="0" disable="true" selected="true"></option>');
+
+            $.each(data, function(index, districtsObj){
+            $('#districts').append('<option value="'+ districtsObj.id +'">'+ districtsObj.name +'</option>');
+            })
+        });
+    });
+</script>
 @endsection

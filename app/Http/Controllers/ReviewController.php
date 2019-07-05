@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Transaction;
-use App\Cart;
 
-class TransactionController extends Controller
+class ReviewController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -17,7 +15,7 @@ class TransactionController extends Controller
     {
         $this->middleware('auth');
     }
-
+    
     /**
      * Display a listing of the resource.
      *
@@ -26,20 +24,6 @@ class TransactionController extends Controller
     public function index()
     {
         //
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function pendingt()
-    {
-        if(auth()->user()->role == 'Admin') {
-            return view('admin.pending');
-        } else {
-            return redirect('/dashboard')->with('danger', 'Anda tidak memiliki hak untuk mengakses halaman tersebut.');
-        }
     }
 
     /**
@@ -59,27 +43,8 @@ class TransactionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   
-        
-        $invoice1 = date('dmy', strtotime(now()));
-        $invoice2 = mt_rand(100, 999);
-
-        $transaction = new Transaction;
-        $transaction->user_id = auth()->user()->id;
-        $transaction->invoice = 'INV/'.$invoice1.'/'.$invoice2;
-
-        $transaction->save();
-
-        $transaction1 = Transaction::where('user_id', auth()->user()->id)->first();
-
-        $carts = Cart::where('status', 'cart')->where('user_id', auth()->user()->id)->get();
-        foreach($carts as $cart) {
-            $cart->transaction_id = $transaction1->id;
-            $cart->status = 'Pending';
-            $cart->save();
-        }
-
-        return redirect('/home')->with('success', 'Paket wedding berhasil dipesan, silahkan tunggu kesepakatan dari Wedding Organizer');
+    {
+        //
     }
 
     /**

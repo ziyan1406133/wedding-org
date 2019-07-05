@@ -70,11 +70,6 @@
 
             <ul class="list-unstyled" data-link="cari">
                 <li>
-                    <a href="/organizer">
-                        <i class="iconsmind-Conference"></i> Wedding Organizer
-                    </a>
-                </li>
-                <li>
                     <a href="/package">
                         <i class="iconsmind-Box-withFolders"></i> Paket Wedding
                     </a>
@@ -83,8 +78,8 @@
             @if(auth()->user()->role == 'Customer')
                 <ul class="list-unstyled" data-link="transactions">
                     <li>
-                        <a href="/finishedt">
-                            <i class="iconsmind-Money-Bag"></i> Transaksi Selesai
+                        <a href="/transaction">
+                            <i class="iconsmind-Money-Bag"></i> Invoice
                         </a>
                     </li>
                     <li>
@@ -103,7 +98,7 @@
                 <ul class="list-unstyled" data-link="admin">
                     <li>
                         <a href="/user">
-                            <i class="simple-icon-people"></i> All Users
+                            <i class="simple-icon-people"></i> Semua User
                         </a>
                     </li>
                     <li>
@@ -136,15 +131,15 @@
             @elseif(auth()->user()->role == 'Wedding Organizer')
                 <ul class="list-unstyled" data-link="organizer">
                     <li>
-                        <a href="/finishedt">
-                            <i class="iconsmind-Money-Bag"></i> Transaksi Selesai
+                        <a href="/packagedone">
+                            <i class="iconsmind-Money-Bag"></i> Pesanan Selesai
                         </a>
                     </li>
                     <li>
-                        <a href="/pendingt">
-                            <i class="iconsmind-Waiter"></i> Transaksi Berjalan
+                        <a href="/packagepending">
+                            <i class="iconsmind-Waiter"></i> Pesanan Pending
                         </a>
-                    </li>
+                    </li> 
                     <li>
                         <a href="/mypackage">
                             <i class="iconsmind-Box-withFolders"></i> My Package

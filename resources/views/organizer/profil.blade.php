@@ -69,29 +69,38 @@
 
             <ul class="list-unstyled" data-link="cari">
                 <li>
-                    <a href="/organizer">
-                        <i class="iconsmind-Conference"></i> Wedding Organizer
-                    </a>
-                </li>
-                <li>
                     <a href="/package">
                         <i class="iconsmind-Box-withFolders"></i> Paket Wedding
                     </a>
                 </li>
+                @auth
+                    @if(auth()->user()->role != 'Admin')
+                    <li>
+                        <a href="/finishedevent">
+                            <i class="iconsmind-Balloon"></i> Event Selesai
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/upcoming">
+                            <i class="simple-icon-calendar"></i> Upcoming Event
+                        </a>
+                    </li>
+                    @endif
+                @endauth
             </ul>
             @auth   
                 @if(auth()->user()->role == 'Customer')
                     <ul class="list-unstyled" data-link="transactions">
                         <li>
-                            <a href="/finishedt">
-                                <i class="iconsmind-Money-Bag"></i> Transaksi Selesai
+                            <a href="/transaction">
+                                <i class="iconsmind-Money-Bag"></i> Invoice
                             </a>
                         </li>
                         <li>
                             <a href="/pendingt">
                                 <i class="iconsmind-Waiter"></i> Transaksi Berjalan
                             </a>
-                        </li>
+                        </li> 
                         <li>
                             <a href="/cart">
                                 <i class="iconsmind-Full-Cart"></i> Cart
@@ -103,7 +112,7 @@
                     <ul class="list-unstyled" data-link="admin">
                         <li>
                             <a href="/user">
-                                <i class="simple-icon-people"></i> All Users
+                                <i class="simple-icon-people"></i> Semua User
                             </a>
                         </li>
                         <li>
@@ -128,7 +137,7 @@
                         </li>
                         <li>
                             <a href="/transaction">
-                                <i class="iconsmind-Money-2"></i> Transactions
+                                <i class="iconsmind-Money-Bag"></i> Invoice
                             </a>
                         </li>
                     </ul>
@@ -136,15 +145,15 @@
                 @elseif(auth()->user()->role == 'Wedding Organizer')
                     <ul class="list-unstyled" data-link="organizer">
                         <li>
-                            <a href="/finishedt">
-                                <i class="iconsmind-Money-Bag"></i> Transaksi Selesai
+                            <a href="/packagedone">
+                                <i class="iconsmind-Money-Bag"></i> Pesanan Selesai
                             </a>
                         </li>
                         <li>
-                            <a href="/pendingt">
-                                <i class="iconsmind-Waiter"></i> Transaksi Berjalan
+                            <a href="/packagepending">
+                                <i class="iconsmind-Waiter"></i> Pesanan Pending
                             </a>
-                        </li>
+                        </li> 
                         <li>
                             <a href="/mypackage">
                                 <i class="iconsmind-Box-withFolders"></i> My Package
@@ -250,17 +259,19 @@
                             </div>
                         </div>
                     @endif
-                    <button type="button" class="btn btn-lg btn-empty dropdown-toggle dropdown-toggle-split top-right-button top-right-button-single" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="iconsmind-Gear"></span>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="/user/{{$user->id}}/edit">Edit Profil</a>
-                        @if(auth()->user()->id == $user->id)
-                            <a class="dropdown-item" href="/editpassword/{{$user->id}}/user">Edit Password</a>
-                        @elseif((auth()->user()->role == 'Admin') && ($user->role != 'Admin'))
-                            <a class="dropdown-item" data-toggle="modal" data-target="#confirmdelete" href="#">Hapus Akun</a>
-                        @endif
-                    </div>
+                    @if((auth()->user()->role == 'Admin') || (auth()->user()->id == $user->id))
+                        <button type="button" class="btn btn-lg btn-empty dropdown-toggle dropdown-toggle-split top-right-button top-right-button-single" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="iconsmind-Gear"></span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="/user/{{$user->id}}/edit">Edit Profil</a>
+                            @if(auth()->user()->id == $user->id)
+                                <a class="dropdown-item" href="/editpassword/{{$user->id}}/user">Edit Password</a>
+                            @elseif((auth()->user()->role == 'Admin') && ($user->role != 'Admin'))
+                                <a class="dropdown-item" data-toggle="modal" data-target="#confirmdelete" href="#">Hapus Akun</a>
+                            @endif
+                        </div>
+                    @endif
                 </div>
                 <div class="modal fade" id="confirmdelete" role="dialog">
                     <div class="modal-dialog">
@@ -270,7 +281,7 @@
                                 <h4 class="modal-title">Konfirmasi</h4>
                             </div>
                             <div class="modal-body">
-                                <p align="left">Apakah anda yakin untuk menghapus akun ini Semua paket WO ini akan terhapus semua.</p>
+                                <p>Apakah anda yakin untuk menghapus akun ini? Semua paket WO ini juga akan terhapus semua.</p>
                             </div>
                             <div class="modal-footer">
                                 {!!Form::open(['action' => ['UserController@destroy', $user->id], 'method' => 'POST'])!!}
@@ -337,6 +348,14 @@
                                     <img src="{{ asset('/storage/avatar/'.$user->avatar) }}" alt="Detail Picture" class="card-img-top">
 
                                     <div class="card-body">
+                                        <p class="text-muted text-small mb-2">Alamat</p>
+                                        <p class="mb-3">
+                                            @if($user->address == NULL)
+                                                <td>Belum diisi.</td>
+                                            @else
+                                                <td>{{$user->address}}, {{$user->district['name']}}, {{$user->regency['name']}}, {{$user->province['name']}}</td>
+                                            @endif
+                                        </p>
                                         <p class="text-muted text-small mb-2">Bio</p>
                                         <p class="mb-3">
                                             @if($user->bio !== null)
@@ -344,6 +363,7 @@
                                             @else
                                                 Belum diisi.
                                             @endif
+                                        </p>
                                         <p class="text-muted text-small mb-2">Member Since</p>
                                         <p class="mb-3">{{ date('d-m-y', strtotime($user->created_at)) }}</p>
                                     </div>
@@ -391,6 +411,7 @@
                                                         <td>: {{$user->address}}, {{$user->district['name']}}, {{$user->regency['name']}}, {{$user->province['name']}}</td>
                                                     @endif
                                                 </tr>
+                                                @if((auth()->user()->role == 'Admin') || (auth()->user()->id == $user->id))
                                                 <tr>
                                                     <td>No Rekening</td>
                                                     @if($user->rekening == NULL)
@@ -407,7 +428,6 @@
                                                         <td>: {{$user->atas_nama}}</td>
                                                     @endif
                                                 </tr>
-                                                @if((auth()->user()->role == 'Admin') || (auth()->user()->id == $user->id))
                                                     <tr>
                                                         <td>CV / SIUP / NPWP</td>
                                                         @if($user->legal_doc == 'no_image.png')
@@ -440,23 +460,71 @@
                     </div>
 
                     <div class="tab-pane show active" id="second" role="tabpanel" aria-labelledby="second-tab">
-                        <div class="row">
-                            <div class="col">
-                                <div class="card">
-                                    <div class="position-relative">
-                                        <a href="Pages.Details.html"><img class="card-img-top" src="/img/card-thumb-1.jpg" alt="Card image cap"></a>
+                        @if((auth()->user()->role == 'Wedding Organizer') && (auth()->user()->status == 'Terverifikasi'))
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="float-right">
+                                        <a class="btn btn-outline-primary btn-lg" href="/package/create">Tambah</a>
                                     </div>
-                                    <div class="card-body">
-                                        <a href="Pages.Details.html">
-                                            <p class="list-item-heading mb-4">Cheesecake</p>
-                                        </a>
-                                        <footer>
-                                            <p class="text-muted text-small mb-0 font-weight-light">18.08.2018</p>
-                                        </footer>
-                                    </div>
+                                </div>
+                            </div>  
+                        @endif
+                        @if(count($user->packages) > 0)
+                        <div class="card>
+                            <div class="card-body">
+                                <div class="row">
+                                    @foreach($user->packages as $package)
+                                        <div class="col">
+                                            <div class="card mb-3 shadow text-center">
+                                                <div class="position-relative">
+                                                    <a href="/package/{{$package->id}}"><img class="card-img-top" src="{{asset('/storage/package/'.$package->image)}}" alt="Card image cap"></a>
+                                                </div>
+                                                <div class="card-body">
+                                                    <a href="/package/{{$package->id}}">
+                                                        <p class="list-item-heading">{{$package->nama}}</p>
+                                                        <p class="mb-4">Rp. {{ number_format($package->price,0,",",".") }}</p>
+                                                    </a>
+                                                    @if(auth()->user()->id == $user->id)
+                                                        <a class="btn default btn-secondary" href="/package/{{$package->id}}/edit"><i class="simple-icon-pencil"></i></a>
+                                                        <a class="btn default btn-danger" data-toggle="modal" data-target="#deletpackage{{$package->id}}" href="#"><i class="simple-icon-trash"></i></a>
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                            <div class="modal fade" id="deletpackage{{$package->id}}" role="dialog">
+                                                <div class="modal-dialog">
+                                                    <!-- Modal content-->
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Konfirmasi</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Apakah anda yakin untuk menghapus paket ini?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            {!!Form::open(['action' => ['PackageController@destroy', $package->id], 'method' => 'POST'])!!}
+                                                                {{Form::hidden('_method', 'DELETE')}}
+                                                                    <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
+                                                                    {{Form::submit('Ya', ['class' => 'btn btn-danger btn-md'])}}
+                                                            {!! Form::close() !!}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
+                        
+
+                        @else
+                            <div class="card">
+                                <div class="card-body">
+                                    Tidak ada data yang tersedia.
+                                </div>
+                            </div>
+                        @endif
                     </div>
 
                 </div>

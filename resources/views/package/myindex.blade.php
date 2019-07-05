@@ -1,10 +1,7 @@
 @extends('layouts.app')
 
 @section('style')
-<link href="{{ asset('css/vendor/bootstrap-float-label.min.css') }}" rel="stylesheet">
 <link href="{{ asset('css/dore.light.blue.min.css') }}" rel="stylesheet">
-<link href="{{ asset('css/vendor/select2.min.css') }}" rel="stylesheet">
-<link href="{{ asset('css/vendor/select2-bootstrap.min.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -30,7 +27,6 @@
                         <i class="iconsmind-Box-Full"></i> Menu WO
                     </a> 
                 </li>
-
                 <li>
                     <a href="#myaccount">
                         <i class="iconsmind-User"></i> My Account
@@ -76,7 +72,6 @@
                     @endif
                 @endauth
             </ul>
-
             <ul class="list-unstyled" data-link="organizer">
                 <li>
                     <a href="/transaction">
@@ -118,56 +113,64 @@
         <div class="row">
             <div class="col-12">
 
-                <h1>Edit Paket </h1>
+                <h1>Paket Wedding</h1>
+                @if((auth()->user()->role == 'Wedding Organizer') && (auth()->user()->status == 'Terverifikasi'))
+                    <div class="float-right">
+                        <a class="btn btn-outline-primary btn-lg" href="/package/create">Tambah</a>
+                    </div>
+                @endif
                 <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                     <ol class="breadcrumb pt-0">
                         <li class="breadcrumb-item">
                             <a href="/home">Home</a>
                         </li>
-                        <li class="breadcrumb-item">
-                            <a href="/mypackage">Package</a>
-                        </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Create
+                            Packages
                         </li>
                     </ol>
                 </nav>
                 @include('inc.messages')
-
-                <div class="card mt-5">
+                <br>
+                
+                @if(count($packages) > 0)
+                <div class="card">
                     <div class="card-body">
-                            {!! Form::model($package, array('route' => array('package.update', $package->id), 'method' => 'PUT', ' enctype' => 'multipart/form-data')) !!}
-                            <label class="form-group has-float-label">
-                                <input type="text" class="form-control" 
-                                name="nama" value="{{$package->nama}}" required>
-                                <span>Nama Paket</span>
-                            </label>
-
-                            <label class="form-group has-float-label">
-                                <input type="text" class="form-control" 
-                                    name="price"value="{{$package->price}}"  maxlength="16" required>
-                                <span>Harga Paket</span>
-                                <small id="price" class="form-text text-muted">Tulis tanpa tanda baca. Contoh: 5000000</small>
-                            </label>
-                            
-                            <label class="form-group has-float-label">
-                                <input type="file" class="form-control" id="image" name="image">
-                                <span>Cover Image</span>
-                            </label>
-                            <img src="{{asset('/storage/package/'.$package->image)}}" width="50%">
-
-                            <h5 class="mt-4">Deskripsi</h5>
-                            <textarea name="description" id="article-ckeditor" rows="10" c;ass="form-control mb-4" required>
-                                {{$package->description}}
-                            </textarea>
-
-                            
-                            <small class="mt-5" id="price" class="form-text text-muted">Semua kolom harus diisi <small>
-                            {{Form::submit('Submit', ['class' => 'btn btn-primary btn-md float-right'])}}
-                        {!! Form::close() !!}           
+                        <div class="row">
+                            @foreach($packages as $package)
+                                <div class="col">
+                                    <div class="card mb-3 shadow text-center">
+                                        <div class="position-relative">
+                                            <a href="/package/{{$package->id}}"><img class="card-img-top" src="{{asset('/storage/package/'.$package->image)}}" alt="Card image cap"></a>
+                                        </div>
+                                        <div class="card-body">
+                                            <a href="/package/{{$package->id}}">
+                                                <p class="list-item-heading">{{$package->nama}}</p>
+                                                <p class="mb-4">Rp. {{ number_format($package->price,0,",",".") }}</p>
+                                            </a>
+                                            <footer>
+                                                <a href="/user/{{$package->user['id']}}" class="text-muted text-small mb-0 font-weight-light">{{$package->user['name']}}</a>
+                                            </footer>
+                                            @if(auth()->user()->id == $package->user_id)
+                                                <a class="btn default btn-secondary" href="/package/{{$package->id}}/edit"><i class="simple-icon-pencil"></i></a>
+                                                <a class="btn default btn-danger" data-toggle="modal" data-target="#deletpackage{{$package->id}}" href="#"><i class="simple-icon-trash"></i></a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        {{$packages->links()}}
                     </div>
                 </div>
+                
 
+                @else
+                    <div class="card">
+                        <div class="card-body">
+                            Tidak ada data yang tersedia.
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -176,8 +179,4 @@
 
 @section('script')
 <script src="{{ asset('js/scripts.single.theme.js') }}"></script>
-<script src="{{ asset('/vendor/unisharp/laravel-ckeditor/ckeditor.js') }}"></script>
-<script>
-    CKEDITOR.replace( 'article-ckeditor' );
-</script>
 @endsection

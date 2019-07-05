@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Package;
 use App\User;
+use App\Province;
+use App\Regency;
+use App\District;
 use Illuminate\Support\Facades\Storage;
 
 class PackageController extends Controller
@@ -38,9 +41,14 @@ class PackageController extends Controller
      */
     public function myindex()
     {
-        $packages = Package::where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(10);
+        if(auth()->user()->role == 'Wedding Organizer') {
+            $packages = Package::where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(10);
+    
+            return view('package.myindex', compact('packages'));
+        } else {
+            return redirect('/home')->with('error', 'Anda tidak memiliki hak untuk mengakses halaman tersebut.');
+        }
 
-        return view('package.index', compact('packages'));
     }
 
     /**
@@ -104,7 +112,8 @@ class PackageController extends Controller
     {
         $package = Package::findOrFail($id);
         $user = User::where('id', $package->user_id)->first();
-        return view('package.show', compact('package', 'user'));
+        $provinces = Province::all();
+        return view('package.show', compact('package', 'user', 'provinces'));
     }
 
     /**
@@ -169,4 +178,18 @@ class PackageController extends Controller
         $package->delete();
         return redirect('/mypackage')->with('success', 'Paket Berhasil Dihapus');
     }
+    
+    //dynamic select form
+    public function regencies(){
+        $provinces_id = Input::get('province_id');
+        $regencies = Regency::where('province_id', '=', $provinces_id)->get();
+        return response()->json($regencies);
+    }
+  
+    public function districts(){
+        $regencies_id = Input::get('regencies_id');
+        $districts = District::where('regency_id', '=', $regencies_id)->get();
+        return response()->json($districts);
+    }
+
 }

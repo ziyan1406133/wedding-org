@@ -57,26 +57,30 @@
 
             <ul class="list-unstyled" data-link="cari">
                 <li>
-                    <a href="/organizer">
-                        <i class="iconsmind-Conference"></i> Wedding Organizer
-                    </a>
-                </li>
-                <li>
                     <a href="/package">
                         <i class="iconsmind-Box-withFolders"></i> Paket Wedding
                     </a>
                 </li>
+                @auth
+                    @if(auth()->user()->role != 'Admin')
+                    <li>
+                        <a href="/finishedevent">
+                            <i class="iconsmind-Balloon"></i> Event Selesai
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/upcoming">
+                            <i class="simple-icon-calendar"></i> Upcoming Event
+                        </a>
+                    </li>
+                    @endif
+                @endauth
             </ul>
 
             <ul class="list-unstyled" data-link="organizer">
                 <li>
-                    <a href="/finishedt">
-                        <i class="iconsmind-Money-Bag"></i> Transaksi Selesai
-                    </a>
-                </li>
-                <li>
-                    <a href="/pendingt">
-                        <i class="iconsmind-Waiter"></i> Transaksi Berjalan
+                    <a href="/transaction">
+                        <i class="iconsmind-Money-Bag"></i> Invoice
                     </a>
                 </li>
                 <li class="active">

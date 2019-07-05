@@ -56,4 +56,12 @@ class User extends Authenticatable
     public function bank() {
         return $this->belongsTo('App\Bank');
     }
+
+    public function packages() {
+        return $this->hasMany('App\Package')->orderBy('created_at', 'desc');
+    }
+
+    public function transactions() {
+        return $this->hasMany('App\Transaction')->orderBy('created_at', 'desc');
+    }
 }
