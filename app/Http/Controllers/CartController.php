@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Cart;
 use App\User;
 use App\Transaction;
+use App\Package;
 
 class CartController extends Controller
 {
@@ -30,6 +31,40 @@ class CartController extends Controller
 
         return view('transaction.cart', compact('carts'));
     
+    }
+
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function pending()
+    {
+        $carts = Cart::where('status', 'pending')->paginate(10);
+        return view('transaction.pending', compact('carts'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function done()
+    {
+        $carts = Cart::where('status', '!=', 'pending')->paginate(10);
+        return view('transaction.pending', compact('carts'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function upcoming()
+    {
+        $carts = Cart::where('status', '!=', 'pending')->paginate(10);
+        return view('transaction.pending', compact('carts'));
     }
 
     /**
@@ -78,7 +113,9 @@ class CartController extends Controller
      */
     public function show($id)
     {
-        //
+        $cart = Cart::findOrFail($id);
+
+        return view('transaction.showcart', compact('cart'));
     }
 
     /**
@@ -101,7 +138,30 @@ class CartController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $status = $request->input('status');
+
+        $cart = Cart::findOrFail($id);
+        $cart->status = $status;
+        if($status == 'Dibatalkan') {
+            $cart->cancel_id = auth()->user()->id;
+        }
+        $cart->save();
+
+        $cartpendings = Cart::where('status', 'Pending')
+                        ->where('user_id', $cart->user_id)->get();
+
+
+        if(count($cartpendings) == '0') {
+            $cartdone = Cart::findOrFail($id);
+            
+            $transaction = Transaction::findOrFail($cartdone->transaction_id);
+            $transaction->status = 'Menunggu Pembayaran';
+            $transaction->save();
+        }
+
+        return redirect('/cart/'.$id)->with('success', 'Status pesanan diperbaharui.');
+
+
     }
 
     /**

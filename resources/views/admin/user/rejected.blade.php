@@ -62,11 +62,6 @@
                 @auth
                     @if(auth()->user()->role != 'Admin')
                     <li>
-                        <a href="/finishedevent">
-                            <i class="iconsmind-Balloon"></i> Event Selesai
-                        </a>
-                    </li>
-                    <li>
                         <a href="/upcoming">
                             <i class="simple-icon-calendar"></i> Upcoming Event
                         </a>
@@ -96,13 +91,8 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/adminpackage">
-                        <i class="iconsmind-Box-withFolders"></i> Packages
-                    </a>
-                </li>
-                <li>
-                    <a href="/transaction">
-                        <i class="iconsmind-Money-Bag"></i> Invoice
+                    <a href="/confirmindex">
+                        <i class="iconsmind-Money-2"></i> Confirm Pembayaran
                     </a>
                 </li>
             </ul>
@@ -188,7 +178,7 @@
                                         <tr>
                                             <th>Username</th>
                                             <th>Role</th>
-                                            <th>Join At</th>
+                                            <th>Tgl Ditolak</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -196,14 +186,18 @@
                                         <tr>
                                             <td><a class="btn btn-empty" href="/user/{{$user->id}}">{{$user->username}}</a></td>
                                             <td>{{$user->role}}</td>
-                                            <td>{{ date('d-m-y', strtotime($user->created_at)) }}</td>
+                                            <td>{{ date('d-m-y', strtotime($user->updated_at)) }}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>
                                 </table>
                             </div>
                         @else
-                            Tidak ada user yang ditolak verifikasi.
+                        <div class="card">
+                            <div class="card-body">
+                                Tidak ada user yang ditolak verifikasi.
+                            </div>
+                        </div>
                         @endif
                     </div>
                 </div>
@@ -220,7 +214,8 @@
     $(document).ready(function() {
     $('#example').DataTable({        
             "scrollY": 300,
-            "scrollX": true
+            "scrollX": true,
+            "order": [[ 2, "desc" ]]
         });
 } );
 </script>

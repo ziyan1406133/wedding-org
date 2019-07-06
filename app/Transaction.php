@@ -10,7 +10,12 @@ class Transaction extends Model
         return $this->belongsTo('App\User');
     }
 
-    public function cancel() {
-        return $this->belongsTo('App\User', 'cancel_id');
+    public function carts() {
+        return $this->hasMany('App\Cart');
     }
+
+    public function bank() {
+        return $this->belongsTo('App\Bank');
+    }
+    
 }

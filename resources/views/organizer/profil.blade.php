@@ -76,11 +76,6 @@
                 @auth
                     @if(auth()->user()->role != 'Admin')
                     <li>
-                        <a href="/finishedevent">
-                            <i class="iconsmind-Balloon"></i> Event Selesai
-                        </a>
-                    </li>
-                    <li>
                         <a href="/upcoming">
                             <i class="simple-icon-calendar"></i> Upcoming Event
                         </a>
@@ -96,11 +91,6 @@
                                 <i class="iconsmind-Money-Bag"></i> Invoice
                             </a>
                         </li>
-                        <li>
-                            <a href="/pendingt">
-                                <i class="iconsmind-Waiter"></i> Transaksi Berjalan
-                            </a>
-                        </li> 
                         <li>
                             <a href="/cart">
                                 <i class="iconsmind-Full-Cart"></i> Cart
@@ -131,13 +121,8 @@
                             </a>
                         </li>
                         <li>
-                            <a href="/adminpackage">
-                                <i class="iconsmind-Box-withFolders"></i> Packages
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/transaction">
-                                <i class="iconsmind-Money-Bag"></i> Invoice
+                            <a href="/confirmindex">
+                                <i class="iconsmind-Money-2"></i> Confirm Pembayaran
                             </a>
                         </li>
                     </ul>
@@ -145,12 +130,12 @@
                 @elseif(auth()->user()->role == 'Wedding Organizer')
                     <ul class="list-unstyled" data-link="organizer">
                         <li>
-                            <a href="/packagedone">
+                            <a href="/pesanandone">
                                 <i class="iconsmind-Money-Bag"></i> Pesanan Selesai
                             </a>
                         </li>
                         <li>
-                            <a href="/packagepending">
+                            <a href="/pesananpending">
                                 <i class="iconsmind-Waiter"></i> Pesanan Pending
                             </a>
                         </li> 
@@ -163,38 +148,38 @@
                 @endif
             @endauth
 
-                <ul class="list-unstyled" data-link="myaccount">
-                    @auth
-                        <li class="active">
-                            <a href="/user/{{auth()->user()->id}}">
-                                <i class="simple-icon-user"></i> Lihat Profil
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/editpassword/{{auth()->user()->id}}/user">
-                                <i class="iconsmind-Key"></i> Ganti Password
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('logout') }}"
-                            onclick="event.preventDefault();
-                            document.getElementById('logout-form').submit();">
-                                <i class="simple-icon-logout"></i> Sign Out
-                            </a>
-                        </li>
-                    @else
-                        <li>
-                            <a href="/login">
-                                <i class="simple-icon-login"></i> Sign in
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/register">
-                                <i class="simple-icon-arrow-up-circle"></i> Sign Up
-                            </a>
-                        </li>
-                    @endauth
-                </ul>
+            <ul class="list-unstyled" data-link="myaccount">
+                @auth
+                    <li class="active">
+                        <a href="/user/{{auth()->user()->id}}">
+                            <i class="simple-icon-user"></i> Lihat Profil
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/editpassword/{{auth()->user()->id}}/user">
+                            <i class="iconsmind-Key"></i> Ganti Password
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('logout') }}"
+                        onclick="event.preventDefault();
+                        document.getElementById('logout-form').submit();">
+                            <i class="simple-icon-logout"></i> Sign Out
+                        </a>
+                    </li>
+                @else
+                    <li>
+                        <a href="/login">
+                            <i class="simple-icon-login"></i> Sign in
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/register">
+                            <i class="simple-icon-arrow-up-circle"></i> Sign Up
+                        </a>
+                    </li>
+                @endauth
+            </ul>
         </div>
     </div>
 </div>
@@ -205,6 +190,7 @@
             <div class="col-12">
 
                 <h1>Profil {{$user->username}} </h1>
+                @auth
                 <div class="float-right">
                     @if((auth()->user()->role == 'Admin') && ($user->status != 'Terverifikasi'))
                         <a href="#" class="btn btn-outline-success" data-toggle="modal" data-target="#confirmverify" ><i class="simple-icon-check"></i>
@@ -260,9 +246,9 @@
                         </div>
                     @endif
                     @if((auth()->user()->role == 'Admin') || (auth()->user()->id == $user->id))
-                        <button type="button" class="btn btn-lg btn-empty dropdown-toggle dropdown-toggle-split top-right-button top-right-button-single" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a href="#" class="btn btn-empty dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="iconsmind-Gear"></span>
-                        </button>
+                        </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <a class="dropdown-item" href="/user/{{$user->id}}/edit">Edit Profil</a>
                             @if(auth()->user()->id == $user->id)
@@ -293,6 +279,8 @@
                         </div>
                     </div>
                 </div>
+                @endauth
+
                 <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                     <ol class="breadcrumb pt-0">
                         <li class="breadcrumb-item">
@@ -383,6 +371,7 @@
                                                     <td>Username</td>
                                                     <td>: {{$user->username}}</td>
                                                 </tr>
+                                                @auth
                                                 @if((auth()->user()->role == 'Admin') || (auth()->user()->id == $user->id))
                                                     <tr>
                                                         <td>E-Mail</td>
@@ -395,6 +384,7 @@
                                                         <td>: {{$user->role}}</td>
                                                     </tr>
                                                 @endif
+                                                @endauth
                                                 <tr>
                                                     <td>No HP</td>
                                                     @if($user->mobile_no == NULL)
@@ -411,6 +401,7 @@
                                                         <td>: {{$user->address}}, {{$user->district['name']}}, {{$user->regency['name']}}, {{$user->province['name']}}</td>
                                                     @endif
                                                 </tr>
+                                                @auth
                                                 @if((auth()->user()->role == 'Admin') || (auth()->user()->id == $user->id))
                                                 <tr>
                                                     <td>No Rekening</td>
@@ -450,7 +441,7 @@
                                                     </tr>
                                                     @endif
                                                 @endif
-        
+                                                @endauth
                                             </table>
                                         </div>
                                     </div>
@@ -460,6 +451,7 @@
                     </div>
 
                     <div class="tab-pane show active" id="second" role="tabpanel" aria-labelledby="second-tab">
+                        @auth
                         @if((auth()->user()->role == 'Wedding Organizer') && (auth()->user()->status == 'Terverifikasi'))
                             <div class="row mb-2">
                                 <div class="col">
@@ -469,6 +461,7 @@
                                 </div>
                             </div>  
                         @endif
+                        @endauth
                         @if(count($user->packages) > 0)
                         <div class="card>
                             <div class="card-body">
@@ -484,10 +477,12 @@
                                                         <p class="list-item-heading">{{$package->nama}}</p>
                                                         <p class="mb-4">Rp. {{ number_format($package->price,0,",",".") }}</p>
                                                     </a>
+                                                    @auth
                                                     @if(auth()->user()->id == $user->id)
                                                         <a class="btn default btn-secondary" href="/package/{{$package->id}}/edit"><i class="simple-icon-pencil"></i></a>
                                                         <a class="btn default btn-danger" data-toggle="modal" data-target="#deletpackage{{$package->id}}" href="#"><i class="simple-icon-trash"></i></a>
                                                     @endif
+                                                    @endauth
                                                 </div>
                                             </div>
 

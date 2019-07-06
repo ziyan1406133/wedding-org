@@ -10,7 +10,8 @@ class Package extends Model
         return $this->belongsTo('App\User');
     }
     
-    public function cart(){
+
+    public function carts(){
         return $this->hasMany('App\Cart');
     }
 }

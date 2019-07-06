@@ -59,20 +59,6 @@
                         <i class="iconsmind-Box-withFolders"></i> Paket Wedding
                     </a>
                 </li>
-                @auth
-                    @if(auth()->user()->role != 'Admin')
-                    <li>
-                        <a href="/finishedevent">
-                            <i class="iconsmind-Balloon"></i> Event Selesai
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/upcoming">
-                            <i class="simple-icon-calendar"></i> Upcoming Event
-                        </a>
-                    </li>
-                    @endif
-                @endauth
             </ul>
             <ul class="list-unstyled" data-link="admin">
                 <li>
@@ -96,13 +82,8 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/adminpackage">
-                        <i class="iconsmind-Box-withFolders"></i> Packages
-                    </a>
-                </li>
-                <li>
-                    <a href="/transaction">
-                        <i class="iconsmind-Money-Bag"></i> Invoice
+                    <a href="/confirmindex">
+                        <i class="iconsmind-Money-2"></i> Confirm Pembayaran
                     </a>
                 </li>
             </ul>
@@ -176,39 +157,34 @@
                 <br>
             </div>
         </div>
-
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        @if(count($users)>0)
-                            <div class="table-responsive">
-                                <table id="example" class="table table-bordered" style="width:100%">
-                                    <thead  class="text-center">
-                                        <tr>
-                                            <th>Username</th>
-                                            <th>Role</th>
-                                            <th>Join At</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($users as $user)
-                                        <tr>
-                                            <td><a class="btn btn-empty" href="/user/{{$user->id}}">{{$user->username}}</a></td>
-                                            <td>{{$user->role}}</td>
-                                            <td>{{ date('d-m-y', strtotime($user->created_at)) }}</td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        @else
-                            Belum ada data user yang tersedia.
-                        @endif
-                    </div>
-                </div>
+        @if(count($users)>0)
+            <div class="table-responsive">
+                <table id="example" class="table table-bordered" style="width:100%">
+                    <thead  class="text-center">
+                        <tr>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Join At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($users as $user)
+                        <tr>
+                            <td><a class="btn btn-empty" href="/user/{{$user->id}}">{{$user->username}}</a></td>
+                            <td>{{$user->role}}</td>
+                            <td>{{ date('d-m-y', strtotime($user->created_at)) }}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
+        <div class="card">
+            <div class="card-body">
+                Belum ada data user yang tersedia.
             </div>
         </div>
+        @endif
     </div>
 </main>
 @endsection
@@ -220,7 +196,8 @@
     $(document).ready(function() {
     $('#example').DataTable({        
             "scrollY": 300,
-            "scrollX": true
+            "scrollX": true,
+            "order": [[ 2, "desc" ]]
         });
 } );
 </script>

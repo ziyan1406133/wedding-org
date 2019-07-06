@@ -23,9 +23,9 @@
                     </a>
                 </li>
                 <li class="active">
-                    <a href="#transactions">
-                        <i class="iconsmind-Money-2"></i> Transaksi
-                    </a>
+                    <a href="#organizer">
+                        <i class="iconsmind-Box-Full"></i> Menu WO
+                    </a> 
                 </li>
                 <li>
                     <a href="#myaccount">
@@ -58,25 +58,25 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/finishedevent">
-                        <i class="iconsmind-Balloon"></i> Event Selesai
-                    </a>
-                </li>
-                <li>
                     <a href="/upcoming">
                         <i class="simple-icon-calendar"></i> Upcoming Event
                     </a>
                 </li>
             </ul>
-            <ul class="list-unstyled" data-link="transactions">
+            <ul class="list-unstyled" data-link="organizer">
                 <li>
-                    <a href="/transaction">
-                        <i class="iconsmind-Money-Bag"></i> Invoice
+                    <a href="/pesanandone">
+                        <i class="iconsmind-Money-Bag"></i> Pesanan Selesai
                     </a>
                 </li>
                 <li class="active">
-                    <a href="/cart">
-                        <i class="iconsmind-Full-Cart"></i> Cart
+                    <a href="/pesananpending">
+                        <i class="iconsmind-Waiter"></i> Pesanan Pending
+                    </a>
+                </li> 
+                <li>
+                    <a href="/mypackage">
+                        <i class="iconsmind-Box-withFolders"></i> My Package
                     </a>
                 </li>
             </ul>
@@ -109,14 +109,14 @@
         <div class="row">
             <div class="col">
 
-                <h1>Cart</h1>
+                <h1>Pesanan Pending</h1>
                 <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                     <ol class="breadcrumb pt-0">
                         <li class="breadcrumb-item">
                             <a href="/home">Home</a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a href="/transaction">Transactions</a>
+                            <a href="/transaction">Transaction</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
                             Pending
@@ -127,48 +127,29 @@
                 <br>
             </div>
         </div>
-        <div class="row">
-            <div class="col list">
-                <div class="card">
-                    <div class="card-body">
-                        @if(count(auth()->user()->transactions) > 0)
-                            @foreach(auth()->user()->transactions as $transaction)
-                                <div class="card d-flex flex-row mb-3">
-                                    <div class="card d-flex flex-row mb-3">
-                                        <div class="d-flex flex-grow-1 min-width-zero">
-                                            <div class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
-                                                <a class="list-item-heading mb-1 truncate w-40 w-xs-100" href="/transaction/{{$transaction->id}}">
-                                                   {{$transaction->invoice}}
-                                                </a>
-                                                <p class="mb-1 text-muted text-small w-15 w-xs-100">created at {{date('d/m/y', strtotime($transaction->created_at))}}</p>
-                                                <div class="w-15 w-xs-100">
-                                                    @if($transaction->status == 'Pending')
-                                                        <span class="badge badge-pill badge-warning">PENDING</span>
-                                                    @elseif($transaction->status == 'Menunggu Pembayaran')
-                                                        <span class="badge badge-pill badge-secondary">MENUNGGU PEMBAYARAN</span>
-                                                    @elseif($transaction->status == 'Canceled')
-                                                        <span class="badge badge-pill badge-danger">CANCELED</span>
-                                                    @else
-                                                        <span class="badge badge-pill badge-success">SUDAH DIBAYAR</span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                            <div class="float-right">
-                                {!! Form::open(['action' => 'TransactionController@store', 'method' => 'POST']) !!}
-                                        <button type="submit" class="btn btn-primary btn-md"><i class="simple-icon-book-open"></i></button>
-                                {!! Form::close() !!}
+        @if(count($carts) > 0)
+            @foreach($carts as $cart)
+                @if($cart->package->user_id == auth()->user()->id)
+                    <div class="card d-flex flex-row mb-3">
+                        <a class="d-flex" href="/cart/{{$cart->id}}">
+                            <img src="{{ asset('/storage/package/'.$cart->package->image)}}" alt="Fat Rascal" class="list-thumbnail responsive border-0" />
+                        </a>
+                        <div class="pl-2 d-flex flex-grow-1 min-width-zero">
+                            <div class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
+                                <a href="/cart/{{$cart->id}}" class="w-40 w-sm-100">
+                                    <p class="list-item-heading mb-1 truncate">{{$cart->package->nama}}</p>
+                                </a>
+                                <p class="mb-1 text-muted text-small w-15 w-sm-100">Rp. {{ number_format($cart->package->price,0,",",".") }}</p>
+                                <p class="mb-1 text-muted text-small w-15 w-sm-100">{{ date('d-m-y', strtotime($cart->event_date)) }}</p>
                             </div>
-                        @else
-                            <p>Belum ada item apapun di keranjang belanja, silahkan pesan paket di halaman <a href="/package">paket wedding</a>.</p>
-                        @endif
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
+                @endif
+            @endforeach
+            {{$carts->links()}}
+        @else
+            <p>Tidak ada pesanan yang menunggu respon dari anda.</p>
+        @endif
     </div>
 </main>
 @endsection

@@ -76,11 +76,6 @@
                 @auth
                     @if(auth()->user()->role != 'Admin')
                     <li>
-                        <a href="/finishedevent">
-                            <i class="iconsmind-Balloon"></i> Event Selesai
-                        </a>
-                    </li>
-                    <li>
                         <a href="/upcoming">
                             <i class="simple-icon-calendar"></i> Upcoming Event
                         </a>
@@ -96,11 +91,6 @@
                                 <i class="iconsmind-Money-Bag"></i> Invoice
                             </a>
                         </li>
-                        <li>
-                            <a href="/pendingt">
-                                <i class="iconsmind-Waiter"></i> Transaksi Berjalan
-                            </a>
-                        </li> 
                         <li>
                             <a href="/cart">
                                 <i class="iconsmind-Full-Cart"></i> Cart
@@ -131,13 +121,8 @@
                             </a>
                         </li>
                         <li>
-                            <a href="/adminpackage">
-                                <i class="iconsmind-Box-withFolders"></i> Packages
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/transaction">
-                                <i class="iconsmind-Money-Bag"></i> Invoice
+                            <a href="/confirmindex">
+                                <i class="iconsmind-Money-2"></i> Confirm Pembayaran
                             </a>
                         </li>
                     </ul>
@@ -145,12 +130,12 @@
                 @elseif(auth()->user()->role == 'Wedding Organizer')
                     <ul class="list-unstyled" data-link="organizer">
                         <li>
-                            <a href="/packagedone">
+                            <a href="/pesanandone">
                                 <i class="iconsmind-Money-Bag"></i> Pesanan Selesai
                             </a>
                         </li>
                         <li>
-                            <a href="/packagepending">
+                            <a href="/pesananpending">
                                 <i class="iconsmind-Waiter"></i> Pesanan Pending
                             </a>
                         </li> 
@@ -205,7 +190,8 @@
             <div class="col-12">
 
                 <h1>Profil {{$user->username}} </h1>
-                <div class="float-right">
+                @auth
+                <div class="row float-right">
                     @if((auth()->user()->role == 'Admin') && ($user->status != 'Terverifikasi'))
                         <a href="#" class="btn btn-outline-success" data-toggle="modal" data-target="#confirmverify" ><i class="simple-icon-check"></i>
                         </a>
@@ -260,9 +246,9 @@
                         </div>
                     @endif
                     @if((auth()->user()->role == 'Admin') || (auth()->user()->id == $user->id))
-                        <button type="button" class="btn btn-lg btn-empty dropdown-toggle dropdown-toggle-split top-right-button top-right-button-single" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a href="#" class="btn btn-empty dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="iconsmind-Gear"></span>
-                        </button>
+                        </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <a class="dropdown-item" href="/user/{{$user->id}}/edit">Edit Profil</a>
                             @if(auth()->user()->id == $user->id)
@@ -281,7 +267,7 @@
                                 <h4 class="modal-title">Konfirmasi</h4>
                             </div>
                             <div class="modal-body">
-                                <p>Apakah anda yakin untuk menghapus akun ini?</p>
+                                <p>Apakah anda yakin untuk menghapus akun ini? Semua paket WO ini juga akan terhapus semua.</p>
                             </div>
                             <div class="modal-footer">
                                 {!!Form::open(['action' => ['UserController@destroy', $user->id], 'method' => 'POST'])!!}
@@ -293,6 +279,7 @@
                         </div>
                     </div>
                 </div>
+                @endauth
                 <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                     <ol class="breadcrumb pt-0">
                         <li class="breadcrumb-item">
@@ -363,6 +350,7 @@
                                             <td>Username</td>
                                             <td>: {{$user->username}}</td>
                                         </tr>
+                                        @auth
                                         @if((auth()->user()->role == 'Admin') || (auth()->user()->id == $user->id))
                                             <tr>
                                                 <td>E-Mail</td>
@@ -374,6 +362,7 @@
                                                 <td>Role</td>
                                                 <td>: {{$user->role}}</td>
                                             </tr>
+                                        @endif
                                         @endif
                                         <tr>
                                             <td>No HP</td>
@@ -391,29 +380,31 @@
                                                 <td>: {{$user->address}}, {{$user->district['name']}}, {{$user->regency['name']}}, {{$user->province['name']}}</td>
                                             @endif
                                         </tr>
-                                        @if((auth()->user()->role == 'Admin') || (auth()->user()->id == $user->id))
-                                            <tr>
-                                                <td>KTP</td>
-                                                @if($user->legal_doc == 'no_image.png')
-                                                    <td>: -</td>
-                                                @else
-                                                <td>: <a class="btn btn-outline-primary btn-sm" 
-                                                    href="{{ asset('/storage/legaldoc/'.$user->legal_doc) }}" >
-                                                    Lihat</a>
-                                                </td>
+                                        @auth
+                                            @if((auth()->user()->role == 'Admin') || (auth()->user()->id == $user->id))
+                                                <tr>
+                                                    <td>KTP</td>
+                                                    @if($user->legal_doc == 'no_image.png')
+                                                        <td>: -</td>
+                                                    @else
+                                                    <td>: <a class="btn btn-outline-primary btn-sm" 
+                                                        href="{{ asset('/storage/legaldoc/'.$user->legal_doc) }}" >
+                                                        Lihat</a>
+                                                    </td>
+                                                    @endif
+                                                </tr>
+                                                <tr>
+                                                    <td>Status</td>
+                                                    <td>: {{$user->status}}</td>
+                                                </tr>
+                                                @if($user->status == 'Ditolak')
+                                                <tr>
+                                                    <td>Alasan Ditolak</td>
+                                                    <td>: {{$user->alasan}}</td>
+                                                </tr>
                                                 @endif
-                                            </tr>
-                                            <tr>
-                                                <td>Status</td>
-                                                <td>: {{$user->status}}</td>
-                                            </tr>
-                                            @if($user->status == 'Ditolak')
-                                            <tr>
-                                                <td>Alasan Ditolak</td>
-                                                <td>: {{$user->alasan}}</td>
-                                            </tr>
                                             @endif
-                                        @endif
+                                        @endauth
 
                                     </table>
                                 </div>

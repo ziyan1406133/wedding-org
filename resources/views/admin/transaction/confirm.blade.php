@@ -1,10 +1,7 @@
 @extends('layouts.app')
 
 @section('style')
-<link href="{{ asset('css/vendor/bootstrap-float-label.min.css') }}" rel="stylesheet">
 <link href="{{ asset('css/dore.light.blue.min.css') }}" rel="stylesheet">
-<link href="{{ asset('css/vendor/select2.min.css') }}" rel="stylesheet">
-<link href="{{ asset('css/vendor/select2-bootstrap.min.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -30,7 +27,6 @@
                         <i class="iconsmind-Box-Full"></i> Menu WO
                     </a> 
                 </li>
-
                 <li>
                     <a href="#myaccount">
                         <i class="iconsmind-User"></i> My Account
@@ -61,15 +57,19 @@
                         <i class="iconsmind-Box-withFolders"></i> Paket Wedding
                     </a>
                 </li>
+                <li>
+                    <a href="/upcoming">
+                        <i class="simple-icon-calendar"></i> Upcoming Event
+                    </a>
+                </li>
             </ul>
-
             <ul class="list-unstyled" data-link="organizer">
                 <li>
                     <a href="/pesanandone">
                         <i class="iconsmind-Money-Bag"></i> Pesanan Selesai
                     </a>
                 </li>
-                <li>
+                <li class="active">
                     <a href="/pesananpending">
                         <i class="iconsmind-Waiter"></i> Pesanan Pending
                     </a>
@@ -107,68 +107,55 @@
 <main>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-12">
+            <div class="col">
 
-                <h1>Edit Paket </h1>
+                <h1>Pesanan Pending</h1>
                 <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                     <ol class="breadcrumb pt-0">
                         <li class="breadcrumb-item">
                             <a href="/home">Home</a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a href="/mypackage">Package</a>
+                            <a href="/transaction">Transaction</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Create
+                            Pending
                         </li>
                     </ol>
                 </nav>
                 @include('inc.messages')
-
-                <div class="card mt-5">
-                    <div class="card-body">
-                            {!! Form::model($package, array('route' => array('package.update', $package->id), 'method' => 'PUT', ' enctype' => 'multipart/form-data')) !!}
-                            <label class="form-group has-float-label">
-                                <input type="text" class="form-control" 
-                                name="nama" value="{{$package->nama}}" required>
-                                <span>Nama Paket</span>
-                            </label>
-
-                            <label class="form-group has-float-label">
-                                <input type="text" class="form-control" 
-                                    name="price"value="{{$package->price}}"  maxlength="16" required>
-                                <span>Harga Paket</span>
-                                <small id="price" class="form-text text-muted">Tulis tanpa tanda baca. Contoh: 5000000</small>
-                            </label>
-                            
-                            <label class="form-group has-float-label">
-                                <input type="file" class="form-control" id="image" name="image">
-                                <span>Cover Image</span>
-                            </label>
-                            <img src="{{asset('/storage/package/'.$package->image)}}" width="50%">
-
-                            <h5 class="mt-4">Deskripsi</h5>
-                            <textarea name="description" id="article-ckeditor" rows="10" c;ass="form-control mb-4" required>
-                                {{$package->description}}
-                            </textarea>
-
-                            
-                            <small class="mt-5" id="price" class="form-text text-muted">Semua kolom harus diisi <small>
-                            {{Form::submit('Submit', ['class' => 'btn btn-primary btn-md float-right'])}}
-                        {!! Form::close() !!}           
-                    </div>
-                </div>
-
+                <br>
             </div>
         </div>
+        @if(count($transactions) > 0)
+            @foreach($transactions as $transaction)
+                <div class="card d-flex flex-row mb-3">
+                    <div class="card d-flex flex-row mb-3">
+                        <div class="d-flex flex-grow-1 min-width-zero">
+                            <div class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
+                                <a class="list-item-heading mb-1 truncate w-40 w-xs-100" href="/transaction/{{$transaction->id}}">
+                                    {{$transaction->invoice}}
+                                </a>
+                                <p class="mb-1 text-muted text-small w-15 w-xs-100">created at {{date('d/m/y', strtotime($transaction->created_at))}}</p>
+                                <div class="w-15 w-xs-100">
+                                    <span class="badge badge-pill badge-secondary">MENUNGGU PEMBAYARAN</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        @else
+        <div class="card">
+            <div class="card-body">
+                <p>Tidak ada transaksi yang menunggu konfirmasi pembayaran.</p>
+            </div>
+        </div>
+        @endif
     </div>
 </main>
 @endsection
 
 @section('script')
 <script src="{{ asset('js/scripts.single.theme.js') }}"></script>
-<script src="{{ asset('/vendor/unisharp/laravel-ckeditor/ckeditor.js') }}"></script>
-<script>
-    CKEDITOR.replace( 'article-ckeditor' );
-</script>
 @endsection

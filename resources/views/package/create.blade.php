@@ -64,11 +64,6 @@
                 @auth
                     @if(auth()->user()->role != 'Admin')
                     <li>
-                        <a href="/finishedevent">
-                            <i class="iconsmind-Balloon"></i> Event Selesai
-                        </a>
-                    </li>
-                    <li>
                         <a href="/upcoming">
                             <i class="simple-icon-calendar"></i> Upcoming Event
                         </a>

@@ -21,15 +21,16 @@ Route::resource('package', 'PackageController');
 Route::resource('cart', 'CartController');
 Route::resource('transaction', 'TransactionController');
 
-Route::get('organizer', 'UserController@organizer')->name('organizerlist');
-
 Route::get('/verifieduser', 'UserController@verifieduser')->name('verifieduser');
 Route::get('/unverifieduser', 'UserController@unverifieduser')->name('unverifieduser');
 Route::get('/rejecteduser', 'UserController@rejecteduser')->name('rejecteduser');
+
 Route::get('/mypackage', 'PackageController@myindex')->name('myindex');
-Route::get('/adminpackage', 'PackageController@adminindex')->name('adminpackage');
-Route::get('/pendingt', 'TransactionController@pendingt')->name('pendingt');
-Route::get('/finishedevent', 'CartController@finishedevent')->name('finishedevent');
+
+Route::get('/confirmindex', 'TransactionController@confirm')->name('confirm');
+
+Route::get('/pesananpending', 'CartController@pending')->name('pesananpending');
+Route::get('/pesanandone', 'CartController@done')->name('pesanandone');
 Route::get('/upcoming', 'CartController@upcoming')->name('upcoming');
 
 //Proses Verifikasi User

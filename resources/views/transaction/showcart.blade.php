@@ -94,7 +94,7 @@
                                 <i class="iconsmind-Money-Bag"></i> Invoice
                             </a>
                         </li>
-                        <li>
+                        <li class="active">
                             <a href="/cart">
                                 <i class="iconsmind-Full-Cart"></i> Cart
                             </a>
@@ -192,7 +192,7 @@
         <div class="row">
             <div class="col-12">
 
-                <h1>{{$package->nama}} </h1>
+                <h1>Pesanan Paket</h1>
                 
                 <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                     <ol class="breadcrumb pt-0">
@@ -200,155 +200,114 @@
                             <a href="/home">Home</a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a href="/package">Package</a>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <a href="/user/{{$package->user['id']}}">{{$package->user['username']}}</a>
+                            <a href="/transaction">Transaction</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            {{$package->nama}}
+                            Cart
                         </li>
                     </ol>
                 </nav>
-                @auth
-                    @if(auth()->user()->status == 'Belum Terverifikasi')
-                        <div class="alert alert-warning alert-dismissible fade show rounded mb-0" role="alert">
-                            Akun tidak bisa melakukan transaksi apabila belum diverifikasi oleh admin, 
-                            pastikan anda telah <a href="/user/{{auth()->user()->id}}/edit">melengkapi profil</a>,
-                            kemudian tunggu selama 24 jam hari kerja.
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <br>
-                    @elseif(auth()->user()->status == 'Ditolak')
-                        <div class="alert alert-danger alert-dismissible fade show rounded mb-0" role="alert">
-                            Akun anda telah ditolak pada tahap verifikasi oleh admin,
-                            silahkan <a href="/user/{{auth()->user()->id}}/edit">perbaiki profil</a> 
-                            anda sesuai arahan dari admin yang bisa terlihat pada halaman edit profil.
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    @endif
-                @endauth
                 @include('inc.messages')
                 <br>
 
                 <div class="row">
                     <div class="col">
                         <div class="card mb-4">
-                            <img src="{{ asset('/storage/package/'.$package->image) }}" alt="Detail Picture" class="card-img-top">
+                            <img src="{{ asset('/storage/package/'.$cart->package->image) }}" alt="Detail Picture" class="card-img-top">
 
                             <div class="card-body">
+                                <p class="text-muted text-small mb-2">Nama Paket</p>
+                                <p class="mb-3">
+                                    <a href="/package/{{$cart->package->id}}">{{$cart->package->nama}}</a>
+                                </p>
                                 <p class="text-muted text-small mb-2">Wedding Organizer</p>
                                 <p class="mb-3">
-                                   <a href="/user/{{$package->user->id}}">{{$package->user->name}}</a>
+                                    <a href="/user/{{$cart->package->user->id}}">{{$cart->package->user->name}}</a>
                                 </p>
-                                <p class="text-muted text-small mb-2">Alamat WO</p>
+                                <p class="text-muted text-small mb-2">Alamat Wedding Organizer</p>
                                 <p class="mb-3">
-                                    {{$package->user->address}}, {{$user->district['name']}}, {{$user->regency['name']}}, {{$user->province['name']}};
+                                    {{$cart->package->user->address}}, {{$cart->package->user->district['name']}}, {{$cart->package->user->regency['name']}}, {{$cart->package->user->province['name']}};
                                 </p>
-                                <p class="text-muted text-small mb-2">Deskripsi</p>
+                                <p class="text-muted text-small mb-2">Customer</p>
                                 <p class="mb-3">
-                                    {!!$package->description!!}
+                                    <a href="/user/{{$cart->user->id}}">{{$cart->user->name}}</a>
+                                </p>
+                                <p class="text-muted text-small mb-2">Alamat Event</p>
+                                <p class="mb-3">
+                                    {{$cart->address}}, {{$cart->district['name']}}, {{$cart->regency['name']}}, {{$cart->province['name']}};
+                                </p>
+                                <p class="text-muted text-small mb-2">Tanggal Event</p>
+                                <p class="mb-3">
+                                    {{ date('d-m-y', strtotime($cart->event_date)) }}
                                 </p>
                                 <p class="text-muted text-small mb-2">Price</p>
-                                <p class="mb-3">Rp. {{ number_format($package->price,0,",",".") }}</p>
-                                @auth
-                                    @if(auth()->user()->role == 'Customer')
-                                        <a class="btn default btn-primary card-img-bottom"  data-toggle="modal" data-target="#bookevent" href="#"><i class="simple-icon-book-open"></i> Book Event</a>
-                                        <div class="modal fade" id="bookevent" role="dialog">
+                                <p class="mb-3">Rp. {{ number_format($cart->package->price,0,",",".") }}</p>
+                                @if($cart->status == 'Pending')
+                                    @if(auth()->user()->id == $cart->user->id)
+                                        <a class="btn default btn-danger card-img-bottom" data-toggle="modal" data-target="#cancel{{$cart->id}}" href="#">Batal</a>
+                                    @elseif(auth()->user()->id == $cart->package->user_id)
+                                        <div class="row">
+                                            <div class="col">
+                                                <a class="btn default btn-secondary card-img-bottom" data-toggle="modal" data-target="#deal{{$cart->id}}" href="#"><i class="iconsmind-Handshake"></i> Deal</a>
+                                            </div>
+                                            <div class="col">
+                                                <a class="btn default btn-danger card-img-bottom" data-toggle="modal" data-target="#cancel{{$cart->id}}" href="#"><i class="simple-icon-close"></i> No Deal</a>
+                                            </div>
+                                        </div>
+                                        <div class="modal fade" id="deal{{$cart->id}}" role="dialog">
                                             <div class="modal-dialog">
                                                 <!-- Modal content-->
+                                                {!! Form::model($cart, array('route' => array('cart.update', $cart->id), 'method' => 'PUT', ' enctype' => 'multipart/form-data')) !!}
                                                 <div class="modal-content">
-                                                    {!! Form::open(['action' => 'CartController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+                                                    <div class="modal-header">
+                                                        <h3>Konfirmasi</h3>
+                                                    </div>
                                                     <div class="modal-body">
-                                                        <div class="form-group mb-1">
-                                                            <label>Tanggal Event</label>
-                                                            <div class="input-group date">
-                                                                <input type="date" name="date" id="date" class="form-control" required>
-                                                                <span class="input-group-text input-group-append input-group-addon">
-                                                                    <i class="simple-icon-calendar"></i>
-                                                                </span>
-                                                            </div>
-                                                            <label class="mt-5">Alamat Event</label>
-                                                            <label class="form-group has-float-label">
-                                                                <select class="form-control select2-single" name="provinces" id="provinces" required>
-                                                                    <option value="0" disable="true"></option>
-                                                                    @foreach ($provinces as $key => $value)
-                                                                        <option value="{{$value->id}}">{{ $value->name }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                                <span>Provinsi*</span>
-                                                            </label>
-                                                            <br>
-                                                            <label class="form-group has-float-label">
-                                                                <select class="form-control select2-single" name="regencies" id="regencies" required>
-                                                                    <option value="0" disable="true"></option>
-                                                                </select>
-                                                                <span>Kabupaten*</span>
-                                                            </label>
-                                                            <br>
-                                                            <label class="form-group has-float-label">
-                                                                <select class="form-control select2-single" name="districts" id="districts" required>
-                                                                    <option value="0" disable="true"></option>
-                                                                </select>
-                                                                <span>Kecamatan*</span>
-                                                            </label>
-                                                            <br>
-                                                            <label class="form-group has-float-label">
-                                                                <textarea class="form-control select2-single" name="address" rows="3" required maxlength="190"></textarea>
-                                                                <span>Alamat Lengkap*</span>
-                                                        </label>
-                                                        </div>
+                                                        <input type="text" value="Deal" name="status" id="status" hidden>
+                                                        <p>Apakah anda yakin untuk menerima pesanan ini?</p>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <input type="text" name="organizer_id" id="organizer_id" value="{{$package->user->id}}" hidden>
-                                                        <input type="text" name="package_id" id="package_id" value="{{$package->id}}" hidden>
                                                         <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
-                                                        <button type="submit" class="btn btn-primary btn-md"><i class="simple-icon-book-open"></i></button>
+                                                        <button type="submit" class="btn btn-primary btn-md">Ya</button>
                                                     </div>
-                                                    {!! Form::close() !!}
                                                 </div>
+                                                {!! Form::close() !!}
                                             </div>
                                         </div>
-                                    @elseif(auth()->user()->id == $user->id)
-                                    <div class="row">
-                                        <div class="col">
-                                            <a class="btn default btn-secondary card-img-bottom" href="/package/{{$package->id}}/edit"><i class="simple-icon-pencil"></i></a>
-                                        </div>
-                                        <div class="col">
-                                            <a class="btn default btn-danger card-img-bottom" data-toggle="modal" data-target="#deletpackage{{$package->id}}" href="#"><i class="simple-icon-trash"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="modal fade" id="deletpackage{{$package->id}}" role="dialog">
+                                    @endif
+                                    <div class="modal fade" id="cancel{{$cart->id}}" role="dialog">
                                         <div class="modal-dialog">
                                             <!-- Modal content-->
+                                            {!! Form::model($cart, array('route' => array('cart.update', $cart->id), 'method' => 'PUT', ' enctype' => 'multipart/form-data')) !!}
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h4 class="modal-title">Konfirmasi</h4>
+                                                    <h3>Konfirmasi</h3>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <p>Apakah anda yakin untuk menghapus paket ini?</p>
+                                                    <input type="text" value="Dibatalkan" name="status" id="status" hidden>
+                                                    <p>Apakah anda yakin untuk membatalkan pesanan?</p>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    {!!Form::open(['action' => ['PackageController@destroy', $package->id], 'method' => 'POST'])!!}
-                                                        {{Form::hidden('_method', 'DELETE')}}
-                                                            <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
-                                                            {{Form::submit('Ya', ['class' => 'btn btn-danger btn-md'])}}
-                                                    {!! Form::close() !!}
+                                                    <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
+                                                    <button type="submit" class="btn btn-danger btn-md">Ya</button>
                                                 </div>
                                             </div>
+                                            {!! Form::close() !!}
                                         </div>
                                     </div>
+                                @elseif($cart->status == 'Dibatalkan')
+                                    <p>Pesanan paket ini telah dibatalkan oleh {{$cart->cancel->role}}</p>
+                                @elseif($cart->status == 'Event Selesai')
+                                    <p>Event telah selesai dilaksanakan.</p>
+                                @elseif($cart->status == 'Deal')
+                                    @if(auth()->user()->role == 'Customer')
+                                        <p>Pesanan paket ini telah disetujui, silahkan upload bukti pembayaran apabila semua paket di <a href="/transaction/{{$cart->transaction_id}}">transaksi ini</a> telah disetujui.</p>
+                                    @elseif(auth()->user()->role == 'Wedding Organizer')
+                                        <p>Pesanan berhasil diterima, admin akan memberi tahu lewat email atau SMS apabila pembayaran telah dikonfirmasi. Pastikan rekening dan kontak di profil anda bisa digunakan.</p>
+                                    @else
+                                        <p>Paket ini telah disetujui oleh Wedding Organizer. <a href="/transaction/{{$cart->package_id}}">Lihat transaksi</a>.</p>
                                     @endif
-                                @else
-                                <p class="text-muted text-small mb-2">
-                                    Silahkan <a href="/login">login</a> untuk memesan paket,
-                                    atau <a href="/register">buat akun baru</a>.
-                                </p>
-                                @endauth
+                                @endif
                             </div>
                         </div>
                     </div>

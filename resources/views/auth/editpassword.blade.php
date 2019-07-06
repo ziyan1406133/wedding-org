@@ -83,11 +83,6 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/pendingt">
-                            <i class="iconsmind-Waiter"></i> Transaksi Berjalan
-                        </a>
-                    </li>
-                    <li>
                         <a href="/cart">
                             <i class="iconsmind-Full-Cart"></i> Cart
                         </a>
@@ -117,13 +112,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/adminpackage">
-                            <i class="iconsmind-Box-withFolders"></i> Packages
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/transaction">
-                            <i class="iconsmind-Money-2"></i> Transactions
+                        <a href="/confirmindex">
+                            <i class="iconsmind-Money-2"></i> Confirm Pembayaran
                         </a>
                     </li>
                 </ul>
@@ -131,12 +121,12 @@
             @elseif(auth()->user()->role == 'Wedding Organizer')
                 <ul class="list-unstyled" data-link="organizer">
                     <li>
-                        <a href="/packagedone">
+                        <a href="/pesanandone">
                             <i class="iconsmind-Money-Bag"></i> Pesanan Selesai
                         </a>
                     </li>
                     <li>
-                        <a href="/packagepending">
+                        <a href="/pesananpending">
                             <i class="iconsmind-Waiter"></i> Pesanan Pending
                         </a>
                     </li> 
