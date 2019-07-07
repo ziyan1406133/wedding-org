@@ -128,13 +128,23 @@
                                 <i class="iconsmind-Money-2"></i> Confirm Pembayaran
                             </a>
                         </li>
+                        <li>
+                            <a href="/setting">
+                                <i class="iconsmind-Gears"></i> Info Aplikasi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/message">
+                                <i class="iconsmind-Mail-2"></i> Messages
+                            </a>
+                        </li>
                     </ul>
 
                 @elseif(auth()->user()->role == 'Wedding Organizer')
                     <ul class="list-unstyled" data-link="organizer">
                         <li>
                             <a href="/pesanandone">
-                                <i class="iconsmind-Money-Bag"></i> Pesanan Selesai
+                                <i class="iconsmind-Money-Bag"></i> Pesanan
                             </a>
                         </li>
                         <li>
@@ -193,7 +203,6 @@
             <div class="col-12">
 
                 <h1>{{$package->nama}} </h1>
-                
                 <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                     <ol class="breadcrumb pt-0">
                         <li class="breadcrumb-item">
@@ -247,7 +256,7 @@
                                 </p>
                                 <p class="text-muted text-small mb-2">Alamat WO</p>
                                 <p class="mb-3">
-                                    {{$package->user->address}}, {{$user->district['name']}}, {{$user->regency['name']}}, {{$user->province['name']}};
+                                    {{$package->user->address}}, {{ucwords(strtolower($user->district['name']))}}, {{ucwords(strtolower($user->regency['name']))}}, {{ucwords(strtolower($user->province['name']))}};
                                 </p>
                                 <p class="text-muted text-small mb-2">Deskripsi</p>
                                 <p class="mb-3">
@@ -256,92 +265,96 @@
                                 <p class="text-muted text-small mb-2">Price</p>
                                 <p class="mb-3">Rp. {{ number_format($package->price,0,",",".") }}</p>
                                 @auth
-                                    @if(auth()->user()->role == 'Customer')
-                                        <a class="btn default btn-primary card-img-bottom"  data-toggle="modal" data-target="#bookevent" href="#"><i class="simple-icon-book-open"></i> Book Event</a>
-                                        <div class="modal fade" id="bookevent" role="dialog">
+                                    @if($package->hidden == FALSE)
+                                        @if(auth()->user()->role == 'Customer')
+                                            <a class="btn default btn-primary card-img-bottom"  data-toggle="modal" data-target="#bookevent" href="#"><i class="simple-icon-book-open"></i> Book Event</a>
+                                            <div class="modal fade" id="bookevent" role="dialog">
+                                                <div class="modal-dialog">
+                                                    <!-- Modal content-->
+                                                    <div class="modal-content">
+                                                        {!! Form::open(['action' => 'CartController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+                                                        <div class="modal-body">
+                                                            <div class="form-group mb-1">
+                                                                <label>Tanggal Event</label>
+                                                                <div class="input-group date">
+                                                                    <input type="date" name="date" id="date" class="form-control" required>
+                                                                    <span class="input-group-text input-group-append input-group-addon">
+                                                                        <i class="simple-icon-calendar"></i>
+                                                                    </span>
+                                                                </div>
+                                                                <label class="mt-5">Alamat Event</label>
+                                                                <label class="form-group has-float-label">
+                                                                    <select class="form-control select2-single" name="provinces" id="provinces" required>
+                                                                        <option value="0" disable="true"></option>
+                                                                        @foreach ($provinces as $key => $value)
+                                                                            <option value="{{$value->id}}">{{ $value->name }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                    <span>Provinsi*</span>
+                                                                </label>
+                                                                <br>
+                                                                <label class="form-group has-float-label">
+                                                                    <select class="form-control select2-single" name="regencies" id="regencies" required>
+                                                                        <option value="0" disable="true"></option>
+                                                                    </select>
+                                                                    <span>Kabupaten*</span>
+                                                                </label>
+                                                                <br>
+                                                                <label class="form-group has-float-label">
+                                                                    <select class="form-control select2-single" name="districts" id="districts" required>
+                                                                        <option value="0" disable="true"></option>
+                                                                    </select>
+                                                                    <span>Kecamatan*</span>
+                                                                </label>
+                                                                <br>
+                                                                <label class="form-group has-float-label">
+                                                                    <textarea class="form-control select2-single" name="address" rows="3" required maxlength="190"></textarea>
+                                                                    <span>Alamat Lengkap*</span>
+                                                            </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <input type="text" name="organizer_id" id="organizer_id" value="{{$package->user->id}}" hidden>
+                                                            <input type="text" name="package_id" id="package_id" value="{{$package->id}}" hidden>
+                                                            <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
+                                                            <button type="submit" class="btn btn-primary btn-md"><i class="simple-icon-book-open"></i></button>
+                                                        </div>
+                                                        {!! Form::close() !!}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @elseif(auth()->user()->id == $user->id)
+                                        <div class="row">
+                                            <div class="col">
+                                                <a class="btn default btn-secondary card-img-bottom" href="/package/{{$package->id}}/edit"><i class="simple-icon-pencil"></i></a>
+                                            </div>
+                                            <div class="col">
+                                                <a class="btn default btn-danger card-img-bottom" data-toggle="modal" data-target="#deletpackage{{$package->id}}" href="#"><i class="simple-icon-trash"></i></a>
+                                            </div>
+                                        </div>
+                                        <div class="modal fade" id="deletpackage{{$package->id}}" role="dialog">
                                             <div class="modal-dialog">
                                                 <!-- Modal content-->
                                                 <div class="modal-content">
-                                                    {!! Form::open(['action' => 'CartController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Konfirmasi</h4>
+                                                    </div>
                                                     <div class="modal-body">
-                                                        <div class="form-group mb-1">
-                                                            <label>Tanggal Event</label>
-                                                            <div class="input-group date">
-                                                                <input type="date" name="date" id="date" class="form-control" required>
-                                                                <span class="input-group-text input-group-append input-group-addon">
-                                                                    <i class="simple-icon-calendar"></i>
-                                                                </span>
-                                                            </div>
-                                                            <label class="mt-5">Alamat Event</label>
-                                                            <label class="form-group has-float-label">
-                                                                <select class="form-control select2-single" name="provinces" id="provinces" required>
-                                                                    <option value="0" disable="true"></option>
-                                                                    @foreach ($provinces as $key => $value)
-                                                                        <option value="{{$value->id}}">{{ $value->name }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                                <span>Provinsi*</span>
-                                                            </label>
-                                                            <br>
-                                                            <label class="form-group has-float-label">
-                                                                <select class="form-control select2-single" name="regencies" id="regencies" required>
-                                                                    <option value="0" disable="true"></option>
-                                                                </select>
-                                                                <span>Kabupaten*</span>
-                                                            </label>
-                                                            <br>
-                                                            <label class="form-group has-float-label">
-                                                                <select class="form-control select2-single" name="districts" id="districts" required>
-                                                                    <option value="0" disable="true"></option>
-                                                                </select>
-                                                                <span>Kecamatan*</span>
-                                                            </label>
-                                                            <br>
-                                                            <label class="form-group has-float-label">
-                                                                <textarea class="form-control select2-single" name="address" rows="3" required maxlength="190"></textarea>
-                                                                <span>Alamat Lengkap*</span>
-                                                        </label>
-                                                        </div>
+                                                        <p>Apakah anda yakin untuk menghapus paket ini?</p>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <input type="text" name="organizer_id" id="organizer_id" value="{{$package->user->id}}" hidden>
-                                                        <input type="text" name="package_id" id="package_id" value="{{$package->id}}" hidden>
-                                                        <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
-                                                        <button type="submit" class="btn btn-primary btn-md"><i class="simple-icon-book-open"></i></button>
+                                                        {!!Form::open(['action' => ['PackageController@destroy', $package->id], 'method' => 'POST'])!!}
+                                                            {{Form::hidden('_method', 'DELETE')}}
+                                                                <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
+                                                                {{Form::submit('Ya', ['class' => 'btn btn-danger btn-md'])}}
+                                                        {!! Form::close() !!}
                                                     </div>
-                                                    {!! Form::close() !!}
                                                 </div>
                                             </div>
                                         </div>
-                                    @elseif(auth()->user()->id == $user->id)
-                                    <div class="row">
-                                        <div class="col">
-                                            <a class="btn default btn-secondary card-img-bottom" href="/package/{{$package->id}}/edit"><i class="simple-icon-pencil"></i></a>
-                                        </div>
-                                        <div class="col">
-                                            <a class="btn default btn-danger card-img-bottom" data-toggle="modal" data-target="#deletpackage{{$package->id}}" href="#"><i class="simple-icon-trash"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="modal fade" id="deletpackage{{$package->id}}" role="dialog">
-                                        <div class="modal-dialog">
-                                            <!-- Modal content-->
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Konfirmasi</h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p>Apakah anda yakin untuk menghapus paket ini?</p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    {!!Form::open(['action' => ['PackageController@destroy', $package->id], 'method' => 'POST'])!!}
-                                                        {{Form::hidden('_method', 'DELETE')}}
-                                                            <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
-                                                            {{Form::submit('Ya', ['class' => 'btn btn-danger btn-md'])}}
-                                                    {!! Form::close() !!}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        @endif
+                                    @else
+                                        <p>Paket ini telah dihapus.</p>
                                     @endif
                                 @else
                                 <p class="text-muted text-small mb-2">

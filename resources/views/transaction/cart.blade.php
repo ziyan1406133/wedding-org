@@ -134,7 +134,7 @@
                                 <p class="list-item-heading mb-1 truncate">{{$cart->package->nama}}</p>
                             </a>
                             <p class="mb-1 text-muted text-small w-15 w-sm-100">Rp. {{ number_format($cart->package->price,0,",",".") }}</p>
-                            <p class="mb-1 text-muted text-small w-15 w-sm-100">{{ date('d-m-y', strtotime($cart->event_date)) }}</p>
+                            <p class="mb-1 text-muted text-small w-15 w-sm-100">{{ date('d-m-20y', strtotime($cart->event_date)) }}</p>
                         </div>
 
                         <div class="float-right align-self-center">

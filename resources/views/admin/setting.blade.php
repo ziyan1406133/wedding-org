@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('style')
+<link href="{{ asset('css/vendor/bootstrap-float-label.min.css') }}" rel="stylesheet">
 <link href="{{ asset('css/dore.light.blue.min.css') }}" rel="stylesheet">
 @endsection
 
@@ -57,14 +58,10 @@
                         <i class="iconsmind-Box-withFolders"></i> Paket Wedding
                     </a>
                 </li>
-                <li>
-                    <a href="/upcoming">
-                        <i class="simple-icon-calendar"></i> Upcoming Event
-                    </a>
-                </li>
             </ul>
+
             <ul class="list-unstyled" data-link="admin">
-                <li class="active">
+                <li>
                     <a href="/user">
                         <i class="simple-icon-people"></i> Semua User
                     </a>
@@ -84,8 +81,8 @@
                         <i class="simple-icon-user-unfollow"></i> User Ditolak
                     </a>
                 </li>
-                <li>
-                    <a href="/confirmindex">
+                <li class="active">
+                    <a href="/konfirmasibayar">
                         <i class="iconsmind-Money-2"></i> Confirm Pembayaran
                     </a>
                 </li>
@@ -127,49 +124,94 @@
 <main>
     <div class="container-fluid">
         <div class="row">
-            <div class="col">
+            <div class="col-12">
 
-                <h1>Pesanan Pending</h1>
+                <h1>Info Aplikasi</h1>
                 <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                     <ol class="breadcrumb pt-0">
                         <li class="breadcrumb-item">
                             <a href="/home">Home</a>
                         </li>
-                        <li class="breadcrumb-item">
-                            <a href="/transaction">Transaction</a>
-                        </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Pending
+                            Setting
                         </li>
                     </ol>
                 </nav>
                 @include('inc.messages')
                 <br>
-            </div>
-        </div>
-        @if(count($transactions) > 0)
-            @foreach($transactions as $transaction)
-                <div class="card d-flex flex-row mb-3">
-                    <div class="d-flex flex-grow-1 min-width-zero">
-                        <div class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
-                            <a class="list-item-heading mb-1 truncate w-40 w-xs-100" href="/transaction/{{$transaction->id}}">
-                                {{$transaction->invoice}}
-                            </a>
-                            <p class="mb-1 text-muted text-small w-15 w-xs-100">created at {{date('d/m/20y', strtotime($transaction->created_at))}}</p>
-                            <div class="w-15 w-xs-100">
-                                <span class="badge badge-pill badge-secondary">MENUNGGU PEMBAYARAN</span>
+
+                <div class="card">
+                    <div class="card-body">
+                        <ul class="nav nav-tabs separator-tabs ml-0 mb-5" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="first-tab" data-toggle="tab" href="#first" role="tab"
+                                    aria-controls="first" aria-selected="true">UMUM</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " id="second-tab" data-toggle="tab" href="#second" role="tab"
+                                    aria-controls="second" aria-selected="false">REKENING</a>
+                            </li>
+                        </ul> 
+                        {!! Form::model($setting, array('route' => array('setting.update', $setting->id), 'method' => 'PUT')) !!}
+                        <div class="tab-content">
+                            <div class="tab-pane show active" id="first" role="tabpanel" aria-labelledby="first-tab">
+
+                                <label class="form-group has-float-label">
+                                    <input type="text" class="form-control select2-single" 
+                                        name="address" value="{{$setting->address}}" required>
+                                    <span>Alamat</span>
+                                </label>
+
+                                <label class="form-group has-float-label">
+                                    <input type="email" class="form-control select2-single" 
+                                        name="email" value="{{$setting->email}}" required>
+                                    <span>E-Mail*</span>
+                                </label>
+                                
+                                <label class="form-group has-float-label" required>
+                                    <input type="text" class="form-control select2-single" 
+                                        name="phone" value="{{$setting->phone}}">
+                                    <span>No Telepon</span>
+                                </label>
+
                             </div>
+                            
+                            <div class="tab-pane fade" id="second" role="tabpanel" aria-labelledby="second-tab">
+                                <label class="form-group has-float-label">
+                                    <select class="form-control select2-single" name="bank" id="bank" required>
+                                        <option value=""></option>
+                                        @foreach ($banks as $bank)
+                                            @if($bank->id == $setting->bank_id)
+                                                <option value="{{$bank->id}}" selected>{{ $bank->nama }}</option>
+                                            @else 
+                                                <option value="{{$bank->id}}">{{ $bank->nama }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                    <span>Bank</span>
+                                </label>
+
+                                <label class="form-group has-float-label">
+                                    <input type="text" class="form-control select2-single" 
+                                        name="rekening" value="{{$setting->rekening}}"  maxlength="16" required>
+                                    <span>Nomor Reknening</span>
+                                </label>
+
+                                <label class="form-group has-float-label">
+                                    <input type="text" class="form-control select2-single" 
+                                        name="atas_nama" value="{{$setting->atas_nama}}" required>
+                                    <span>Atas Nama</span>
+                                </label>
+                            </div>
+                            <small class="mt-5">Semua kolom harus diisi.</small>
                         </div>
+                            {{Form::submit('Submit', ['class' => 'btn btn-primary btn-md float-right'])}}
+                        {!! Form::close() !!}           
                     </div>
                 </div>
-            @endforeach
-        @else
-        <div class="card">
-            <div class="card-body">
-                <p>Tidak ada transaksi yang menunggu konfirmasi pembayaran.</p>
+
             </div>
         </div>
-        @endif
     </div>
 </main>
 @endsection

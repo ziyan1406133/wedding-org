@@ -95,6 +95,16 @@
                         <i class="iconsmind-Money-2"></i> Confirm Pembayaran
                     </a>
                 </li>
+                <li>
+                    <a href="/setting">
+                        <i class="iconsmind-Gears"></i> Info Aplikasi
+                    </a>
+                </li>
+                <li>
+                    <a href="/message">
+                        <i class="iconsmind-Mail-2"></i> Messages
+                    </a>
+                </li>
             </ul>
             
             <ul class="list-unstyled" data-link="myaccount">
@@ -182,7 +192,7 @@
                             <tr>
                                 <td><a class="btn btn-empty" href="/user/{{$user->id}}">{{$user->username}}</a></td>
                                 <td>{{$user->role}}</td>
-                                <td>{{ date('d-m-y', strtotime($user->updated_at)) }}</td>
+                                <td>{{ date('d-m-20y', strtotime($user->updated_at)) }}</td>
                             </tr>
                         @endforeach
                         </tbody>

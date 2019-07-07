@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
+
 @section('style')
+<link href="{{ asset('css/datatables.min.css') }}" rel="stylesheet">
 <link href="{{ asset('css/dore.light.blue.min.css') }}" rel="stylesheet">
 @endsection
 
@@ -57,14 +59,9 @@
                         <i class="iconsmind-Box-withFolders"></i> Paket Wedding
                     </a>
                 </li>
-                <li>
-                    <a href="/upcoming">
-                        <i class="simple-icon-calendar"></i> Upcoming Event
-                    </a>
-                </li>
             </ul>
             <ul class="list-unstyled" data-link="admin">
-                <li class="active">
+                <li>
                     <a href="/user">
                         <i class="simple-icon-people"></i> Semua User
                     </a>
@@ -94,13 +91,13 @@
                         <i class="iconsmind-Gears"></i> Info Aplikasi
                     </a>
                 </li>
-                <li>
+                <li class="active">
                     <a href="/message">
                         <i class="iconsmind-Mail-2"></i> Messages
                     </a>
                 </li>
             </ul>
-
+            
             <ul class="list-unstyled" data-link="myaccount">
                 <li>
                     <a href="/user/{{auth()->user()->id}}">
@@ -123,23 +120,43 @@
         </div>
     </div>
 </div>
-
-<main>
+<!-- End of Side Bar -->
+<main> <!-- Isi dashboard beda-beda tergantung role akun -->
     <div class="container-fluid">
         <div class="row">
-            <div class="col">
+            <div class="col-12">
 
-                <h1>Pesanan Pending</h1>
+                <h1>Daftar Users</h1>
+                <div class="float-right">
+                    <a class="btn btn-danger" data-toggle="modal" data-target="#confirmdelete" href="#"><i class="simple-icon-trash"></i></a>
+                </div>
+                <div class="modal fade" id="confirmdelete" role="dialog">
+                    <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Konfirmasi</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>Apakah anda yakin untuk menghapus pesan ini?</p>
+                            </div>
+                            <div class="modal-footer">
+                                {!!Form::open(['action' => ['MessageController@destroy', $message->id], 'method' => 'POST'])!!}
+                                    {{Form::hidden('_method', 'DELETE')}}
+                                        <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
+                                        {{Form::submit('Ya', ['class' => 'btn btn-danger btn-md'])}}
+                                {!! Form::close() !!}
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                     <ol class="breadcrumb pt-0">
                         <li class="breadcrumb-item">
                             <a href="/home">Home</a>
                         </li>
-                        <li class="breadcrumb-item">
-                            <a href="/transaction">Transaction</a>
-                        </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Pending
+                            Users
                         </li>
                     </ol>
                 </nav>
@@ -147,33 +164,34 @@
                 <br>
             </div>
         </div>
-        @if(count($transactions) > 0)
-            @foreach($transactions as $transaction)
-                <div class="card d-flex flex-row mb-3">
-                    <div class="d-flex flex-grow-1 min-width-zero">
-                        <div class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
-                            <a class="list-item-heading mb-1 truncate w-40 w-xs-100" href="/transaction/{{$transaction->id}}">
-                                {{$transaction->invoice}}
-                            </a>
-                            <p class="mb-1 text-muted text-small w-15 w-xs-100">created at {{date('d/m/20y', strtotime($transaction->created_at))}}</p>
-                            <div class="w-15 w-xs-100">
-                                <span class="badge badge-pill badge-secondary">MENUNGGU PEMBAYARAN</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        @else
         <div class="card">
             <div class="card-body">
-                <p>Tidak ada transaksi yang menunggu konfirmasi pembayaran.</p>
+                <p class="text-muted text-small mb-2">Pengirim</p>
+                <p class="mb-3">
+                    {{$message->name}} ({{$message->email}})
+                </p>
+                <p class="text-muted text-small mb-2">Pesan</p>
+                <p class="mb-3">
+                    {{$message->pesan}}
+                </p>
+                <p class="text-muted text-small mb-2">Tanggal</p>
+                <p class="mb-3">{{ date('d-m-20y', strtotime($message->created_at)) }}</p>
             </div>
         </div>
-        @endif
     </div>
 </main>
 @endsection
 
 @section('script')
+<script src="{{ asset('js/datatables.min.js') }}"></script>
 <script src="{{ asset('js/scripts.single.theme.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable({        
+            "scrollY": 300,
+            "scrollX": true,
+            "order": [[ 2, "desc" ]]
+        });
+    } );
+</script>
 @endsection

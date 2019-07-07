@@ -58,6 +58,10 @@ class User extends Authenticatable
     }
 
     public function packages() {
+        return $this->hasMany('App\Package')->where('hidden', FALSE)->orderBy('created_at', 'desc');
+    }
+
+    public function allpackages() {
         return $this->hasMany('App\Package')->orderBy('created_at', 'desc');
     }
 

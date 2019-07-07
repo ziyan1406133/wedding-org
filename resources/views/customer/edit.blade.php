@@ -125,13 +125,23 @@
                             <i class="iconsmind-Money-2"></i> Confirm Pembayaran
                         </a>
                     </li>
+                    <li>
+                        <a href="/setting">
+                            <i class="iconsmind-Gears"></i> Info Aplikasi
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/message">
+                            <i class="iconsmind-Mail-2"></i> Messages
+                        </a>
+                    </li>
                 </ul>
 
             @elseif(auth()->user()->role == 'Wedding Organizer')
                 <ul class="list-unstyled" data-link="organizer">
                     <li>
                         <a href="/pesanandone">
-                            <i class="iconsmind-Money-Bag"></i> Pesanan Selesai
+                            <i class="iconsmind-Money-Bag"></i> Pesanan
                         </a>
                     </li>
                     <li>
@@ -275,7 +285,7 @@
                                         @endforeach
                                     </select>
                                     <span>Provinsi*</span>
-                                    <small id="Province" class="form-text text-muted">Provinsi sebelumnya: {{$user->province['name']}}</small>
+                                    <small id="Province" class="form-text text-muted">Provinsi sebelumnya: {{ucwords(strtolower($user->province['name']))}}</small>
                                 </label>
                                 
                                 <label class="form-group has-float-label">
@@ -283,7 +293,7 @@
                                         <option value="0" disable="true"></option>
                                     </select>
                                     <span>Kabupaten*</span>
-                                    <small id="Province" class="form-text text-muted">Kabupaten sebelumnya: {{$user->regency['name']}}</small>
+                                    <small id="Province" class="form-text text-muted">Kabupaten sebelumnya: {{ucwords(strtolower($user->regency['name']))}}</small>
                                 </label>
                                 
                                 <label class="form-group has-float-label">
@@ -291,7 +301,7 @@
                                         <option value="0" disable="true"></option>
                                     </select>
                                     <span>Kecamatan*</span>
-                                    <small id="Province" class="form-text text-muted">Kecamatan sebelumnya: {{$user->district['name']}}</small>
+                                    <small id="Province" class="form-text text-muted">Kecamatan sebelumnya: {{ucwords(strtolower($user->district['name']))}}</small>
                                 </label>
                                 
                                 <label class="form-group has-float-label">

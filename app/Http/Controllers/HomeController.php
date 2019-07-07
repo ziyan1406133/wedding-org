@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Setting;
+use App\Package;
 
 class HomeController extends Controller
 {
@@ -13,7 +15,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('landing');
+        $setting = Setting::first();
+        $packages = Package::where('hidden', FALSE)->inRandomOrder()->limit(4)->get();
+        return view('landing', compact('setting', 'packages'));
     }
 
     /**

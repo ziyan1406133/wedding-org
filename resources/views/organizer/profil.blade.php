@@ -125,13 +125,23 @@
                                 <i class="iconsmind-Money-2"></i> Confirm Pembayaran
                             </a>
                         </li>
+                        <li>
+                            <a href="/setting">
+                                <i class="iconsmind-Gears"></i> Info Aplikasi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/message">
+                                <i class="iconsmind-Mail-2"></i> Messages
+                            </a>
+                        </li>
                     </ul>
 
                 @elseif(auth()->user()->role == 'Wedding Organizer')
                     <ul class="list-unstyled" data-link="organizer">
                         <li>
                             <a href="/pesanandone">
-                                <i class="iconsmind-Money-Bag"></i> Pesanan Selesai
+                                <i class="iconsmind-Money-Bag"></i> Pesanan
                             </a>
                         </li>
                         <li>
@@ -341,7 +351,7 @@
                                             @if($user->address == NULL)
                                                 <td>Belum diisi.</td>
                                             @else
-                                                <td>{{$user->address}}, {{$user->district['name']}}, {{$user->regency['name']}}, {{$user->province['name']}}</td>
+                                                <td>{{$user->address}}, {{ucwords(strtolower($user->district['name']))}}, {{ucwords(strtolower($user->regency['name']))}}, {{ucwords(strtolower($user->province['name']))}}</td>
                                             @endif
                                         </p>
                                         <p class="text-muted text-small mb-2">Bio</p>
@@ -353,7 +363,7 @@
                                             @endif
                                         </p>
                                         <p class="text-muted text-small mb-2">Member Since</p>
-                                        <p class="mb-3">{{ date('d-m-y', strtotime($user->created_at)) }}</p>
+                                        <p class="mb-3">{{ date('d-m-20y', strtotime($user->created_at)) }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -398,7 +408,7 @@
                                                     @if($user->address == NULL)
                                                         <td>: -</td>
                                                     @else
-                                                        <td>: {{$user->address}}, {{$user->district['name']}}, {{$user->regency['name']}}, {{$user->province['name']}}</td>
+                                                        <td>: {{$user->address}}, {{ucwords(strtolower($user->district['name']))}}, {{ucwords(strtolower($user->regency['name']))}}, {{ucwords(strtolower($user->province['name']))}}</td>
                                                     @endif
                                                 </tr>
                                                 @auth
@@ -450,7 +460,7 @@
                         </div>
                     </div>
 
-                    <div class="tab-pane show active" id="second" role="tabpanel" aria-labelledby="second-tab">
+                    <div class="tab-pane fade" id="second" role="tabpanel" aria-labelledby="second-tab">
                         @auth
                         @if((auth()->user()->role == 'Wedding Organizer') && (auth()->user()->status == 'Terverifikasi'))
                             <div class="row mb-2">
@@ -463,7 +473,7 @@
                         @endif
                         @endauth
                         @if(count($user->packages) > 0)
-                        <div class="card>
+                        <div class="card">
                             <div class="card-body">
                                 <div class="row">
                                     @foreach($user->packages as $package)
@@ -479,8 +489,10 @@
                                                     </a>
                                                     @auth
                                                     @if(auth()->user()->id == $user->id)
-                                                        <a class="btn default btn-secondary" href="/package/{{$package->id}}/edit"><i class="simple-icon-pencil"></i></a>
-                                                        <a class="btn default btn-danger" data-toggle="modal" data-target="#deletpackage{{$package->id}}" href="#"><i class="simple-icon-trash"></i></a>
+                                                    <div class="text-center">
+                                                        <a class="btn default btn-secondary btn-sm" href="/package/{{$package->id}}/edit"><i class="simple-icon-pencil"></i></a>
+                                                        <a class="btn default btn-danger btn-sm" data-toggle="modal" data-target="#deletpackage{{$package->id}}" href="#"><i class="simple-icon-trash"></i></a>
+                                                    </div>
                                                     @endif
                                                     @endauth
                                                 </div>

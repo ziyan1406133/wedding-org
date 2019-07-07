@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
+
 @section('style')
+<link href="{{ asset('css/datatables.min.css') }}" rel="stylesheet">
 <link href="{{ asset('css/dore.light.blue.min.css') }}" rel="stylesheet">
 @endsection
 
@@ -57,14 +59,9 @@
                         <i class="iconsmind-Box-withFolders"></i> Paket Wedding
                     </a>
                 </li>
-                <li>
-                    <a href="/upcoming">
-                        <i class="simple-icon-calendar"></i> Upcoming Event
-                    </a>
-                </li>
             </ul>
             <ul class="list-unstyled" data-link="admin">
-                <li class="active">
+                <li>
                     <a href="/user">
                         <i class="simple-icon-people"></i> Semua User
                     </a>
@@ -94,13 +91,13 @@
                         <i class="iconsmind-Gears"></i> Info Aplikasi
                     </a>
                 </li>
-                <li>
+                <li class="active">
                     <a href="/message">
                         <i class="iconsmind-Mail-2"></i> Messages
                     </a>
                 </li>
             </ul>
-
+            
             <ul class="list-unstyled" data-link="myaccount">
                 <li>
                     <a href="/user/{{auth()->user()->id}}">
@@ -123,57 +120,72 @@
         </div>
     </div>
 </div>
-
-<main>
+<!-- End of Side Bar -->
+<main> <!-- Isi dashboard beda-beda tergantung role akun -->
     <div class="container-fluid">
         <div class="row">
-            <div class="col">
+            <div class="col-12">
 
-                <h1>Pesanan Pending</h1>
+                <h1>Daftar Users</h1>
                 <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                     <ol class="breadcrumb pt-0">
                         <li class="breadcrumb-item">
                             <a href="/home">Home</a>
                         </li>
-                        <li class="breadcrumb-item">
-                            <a href="/transaction">Transaction</a>
-                        </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Pending
+                            Users
                         </li>
                     </ol>
                 </nav>
+                <div class="separator mb-5"></div>
                 @include('inc.messages')
                 <br>
             </div>
         </div>
-        @if(count($transactions) > 0)
-            @foreach($transactions as $transaction)
-                <div class="card d-flex flex-row mb-3">
-                    <div class="d-flex flex-grow-1 min-width-zero">
-                        <div class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
-                            <a class="list-item-heading mb-1 truncate w-40 w-xs-100" href="/transaction/{{$transaction->id}}">
-                                {{$transaction->invoice}}
-                            </a>
-                            <p class="mb-1 text-muted text-small w-15 w-xs-100">created at {{date('d/m/20y', strtotime($transaction->created_at))}}</p>
-                            <div class="w-15 w-xs-100">
-                                <span class="badge badge-pill badge-secondary">MENUNGGU PEMBAYARAN</span>
-                            </div>
-                        </div>
-                    </div>
+            @if(count($messages)>0)
+                <div class="table-responsive">
+                        <table id="example" class="table table-bordered" style="width:100%">
+                        <thead  class="text-center">
+                            <tr>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>Tanggal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($messages as $message)
+                            <tr>
+                                <td><a class="btn btn-empty" href="/message/{{$message->id}}">{{$message->name}}</a></td>
+                                <td>{{$message->email}}</td>
+                                <td>
+                                    {{ date('d-m-20y', strtotime($message->created_at)) }}
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
                 </div>
-            @endforeach
-        @else
-        <div class="card">
-            <div class="card-body">
-                <p>Tidak ada transaksi yang menunggu konfirmasi pembayaran.</p>
+            @else
+            <div class="card">
+                <div class="card-body">
+                    Belum ada data user yang tersedia.
+                </div>
             </div>
-        </div>
-        @endif
+            @endif
     </div>
 </main>
 @endsection
 
 @section('script')
+<script src="{{ asset('js/datatables.min.js') }}"></script>
 <script src="{{ asset('js/scripts.single.theme.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable({        
+            "scrollY": 300,
+            "scrollX": true,
+            "order": [[ 2, "desc" ]]
+        });
+    } );
+</script>
 @endsection

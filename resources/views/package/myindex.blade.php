@@ -66,7 +66,7 @@
             <ul class="list-unstyled" data-link="organizer">
                 <li>
                     <a href="/pesanandone">
-                        <i class="iconsmind-Money-Bag"></i> Pesanan Selesai
+                        <i class="iconsmind-Money-Bag"></i> Pesanan
                     </a>
                 </li>
                 <li>
@@ -74,7 +74,7 @@
                         <i class="iconsmind-Waiter"></i> Pesanan Pending
                     </a>
                 </li> 
-                <li>
+                <li class="active">
                     <a href="/mypackage">
                         <i class="iconsmind-Box-withFolders"></i> My Package
                     </a>
@@ -143,12 +143,31 @@
                                                 <p class="list-item-heading">{{$package->nama}}</p>
                                                 <p class="mb-4">Rp. {{ number_format($package->price,0,",",".") }}</p>
                                             </a>
-                                            <footer>
-                                                <a href="/user/{{$package->user['id']}}" class="text-muted text-small mb-0 font-weight-light">{{$package->user['name']}}</a>
-                                            </footer>
                                             @if(auth()->user()->id == $package->user_id)
-                                                <a class="btn default btn-secondary" href="/package/{{$package->id}}/edit"><i class="simple-icon-pencil"></i></a>
-                                                <a class="btn default btn-danger" data-toggle="modal" data-target="#deletpackage{{$package->id}}" href="#"><i class="simple-icon-trash"></i></a>
+                                            <div class="text-center">
+                                                <a class="btn default btn-secondary btn-sm" href="/package/{{$package->id}}/edit"><i class="simple-icon-pencil"></i></a>
+                                                <a class="btn default btn-danger btn-sm" data-toggle="modal" data-target="#deletpackage{{$package->id}}" href="#"><i class="simple-icon-trash"></i></a>
+                                            </div>
+                                            <div class="modal fade" id="deletpackage{{$package->id}}" role="dialog">
+                                                <div class="modal-dialog">
+                                                    <!-- Modal content-->
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Konfirmasi</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Apakah anda yakin untuk menghapus paket ini?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            {!!Form::open(['action' => ['PackageController@destroy', $package->id], 'method' => 'POST'])!!}
+                                                                {{Form::hidden('_method', 'DELETE')}}
+                                                                    <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
+                                                                    {{Form::submit('Ya', ['class' => 'btn btn-danger btn-md'])}}
+                                                            {!! Form::close() !!}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             @endif
                                         </div>
                                     </div>

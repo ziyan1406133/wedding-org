@@ -66,7 +66,7 @@
             <ul class="list-unstyled" data-link="organizer">
                 <li>
                     <a href="/pesanandone">
-                        <i class="iconsmind-Money-Bag"></i> Pesanan Selesai
+                        <i class="iconsmind-Money-Bag"></i> Pesanan
                     </a>
                 </li>
                 <li>

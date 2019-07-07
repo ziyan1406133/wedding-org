@@ -23,11 +23,27 @@
                         <i class="iconsmind-WomanMan"></i> Wedding
                     </a>
                 </li>
-                <li class="active">
-                    <a href="#transactions">
-                        <i class="iconsmind-Money-2"></i> Transaksi
-                    </a>
-                </li>
+                @auth   
+                    @if((auth()->user()->role == 'Customer') && (auth()->user()->status == 'Terverifikasi'))
+                    <li>
+                        <a href="#transactions">
+                            <i class="iconsmind-Money-2"></i> Transaksi
+                        </a>
+                    </li>
+                    @elseif(auth()->user()->role == 'Admin')
+                    <li>
+                        <a href="#admin">
+                            <i class="iconsmind-Administrator"></i> Menu Admin
+                        </a> 
+                    </li>
+                    @elseif((auth()->user()->role == 'Wedding Organizer') && (auth()->user()->status == 'Terverifikasi'))
+                    <li>
+                        <a href="#organizer">
+                            <i class="iconsmind-Box-Full"></i> Menu WO
+                        </a> 
+                    </li>
+                    @endif
+                @endauth
                 <li>
                     <a href="#myaccount">
                         <i class="iconsmind-User"></i> My Account
@@ -53,49 +69,128 @@
             </ul>
 
             <ul class="list-unstyled" data-link="cari">
-                <li>
+                <li class="active">
                     <a href="/package">
                         <i class="iconsmind-Box-withFolders"></i> Paket Wedding
                     </a>
                 </li>
-                <li>
-                    <a href="/upcoming">
-                        <i class="simple-icon-calendar"></i> Upcoming Event
-                    </a>
-                </li>
+                @auth
+                    @if(auth()->user()->role != 'Admin')
+                    <li>
+                        <a href="/upcoming">
+                            <i class="simple-icon-calendar"></i> Upcoming Event
+                        </a>
+                    </li>
+                    @endif
+                @endauth
             </ul>
-            <ul class="list-unstyled" data-link="transactions">
-                <li class="active">
-                    <a href="/transaction">
-                        <i class="iconsmind-Money-Bag"></i> Invoice
-                    </a>
-                </li>
-                <li>
-                    <a href="/cart">
-                        <i class="iconsmind-Full-Cart"></i> Cart
-                    </a>
-                </li>
-            </ul>
+            @auth   
+                @if(auth()->user()->role == 'Customer')
+                    <ul class="list-unstyled" data-link="transactions">
+                        <li>
+                            <a href="/transaction">
+                                <i class="iconsmind-Money-Bag"></i> Invoice
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/cart">
+                                <i class="iconsmind-Full-Cart"></i> Cart
+                            </a>
+                        </li>
+                    </ul>
 
-            <ul class="list-unstyled" data-link="myaccount">
-                <li>
-                    <a href="/user/{{auth()->user()->id}}">
-                        <i class="simple-icon-user"></i> Lihat Profil
-                    </a>
-                </li>
-                <li>
-                    <a href="/editpassword/{{auth()->user()->id}}/user">
-                        <i class="iconsmind-Key"></i> Ganti Password
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('logout') }}"
-                    onclick="event.preventDefault();
-                    document.getElementById('logout-form').submit();">
-                        <i class="simple-icon-logout"></i> Sign Out
-                    </a>
-                </li>
-            </ul>
+                @elseif(auth()->user()->role == 'Admin')
+                    <ul class="list-unstyled" data-link="admin">
+                        <li>
+                            <a href="/user">
+                                <i class="simple-icon-people"></i> Semua User
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/verifieduser">
+                                <i class="simple-icon-user-following"></i> User Terverifikasi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/unverifieduser">
+                                <i class="simple-icon-user-follow"></i> User Pending
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/rejecteduser">
+                                <i class="simple-icon-user-unfollow"></i> User Ditolak
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/confirmindex">
+                                <i class="iconsmind-Money-2"></i> Confirm Pembayaran
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/setting">
+                                <i class="iconsmind-Gears"></i> Info Aplikasi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/message">
+                                <i class="iconsmind-Mail-2"></i> Messages
+                            </a>
+                        </li>
+                    </ul>
+
+                @elseif(auth()->user()->role == 'Wedding Organizer')
+                    <ul class="list-unstyled" data-link="organizer">
+                        <li>
+                            <a href="/pesanandone">
+                                <i class="iconsmind-Money-Bag"></i> Pesanan
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/pesananpending">
+                                <i class="iconsmind-Waiter"></i> Pesanan Pending
+                            </a>
+                        </li> 
+                        <li>
+                            <a href="/mypackage">
+                                <i class="iconsmind-Box-withFolders"></i> My Package
+                            </a>
+                        </li>
+                    </ul>
+                @endif
+            @endauth
+
+                <ul class="list-unstyled" data-link="myaccount">
+                    @auth
+                        <li>
+                            <a href="/user/{{auth()->user()->id}}">
+                                <i class="simple-icon-user"></i> Lihat Profil
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/editpassword/{{auth()->user()->id}}/user">
+                                <i class="iconsmind-Key"></i> Ganti Password
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('logout') }}"
+                            onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();">
+                                <i class="simple-icon-logout"></i> Sign Out
+                            </a>
+                        </li>
+                    @else
+                        <li>
+                            <a href="/login">
+                                <i class="simple-icon-login"></i> Sign in
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/register">
+                                <i class="simple-icon-arrow-up-circle"></i> Sign Up
+                            </a>
+                        </li>
+                    @endauth
+                </ul>
         </div>
     </div>
 </div>
@@ -108,7 +203,7 @@
                 <h1>{{$transaction->invoice}}</h1>
                 
                 <div class="float-right">
-
+                    <a class="btn btn-secondary" href="/pdf/{{$transaction->id}}"><i class="simple-icon-printer"></i></a>
                 </div>
                 
                 <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
@@ -129,29 +224,31 @@
             </div>
         </div>
         @foreach($transaction->carts as $cart)
-            <div class="card">
-                <div class="card-body">
-                    <a class="list-item-heading mb-1 truncate w-40 w-xs-100" href="/cart/{{$cart->id}}">
-                        {{$cart->package->nama}}
-                    </a>
+            <div class="card d-flex flex-row mb-3">
+                <div class="d-flex flex-grow-1 min-width-zero">
+                    <div class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
+                        <a class="list-item-heading mb-1 truncate w-40 w-xs-100" href="/cart/{{$cart->id}}">
+                            {{$cart->package->nama}}
+                        </a>
+                        <p class="mb-1 text-muted text-small w-15 w-xs-100">{{date('d/m/20y', strtotime($cart->event_date))}}</p>
+                        <p class="mb-1 text-muted text-small w-15 w-xs-100">Rp. {{ number_format($cart->package->price,0,",",".") }}</p>
+                        <div class="w-15 w-xs-100">
+                        @if($cart->status == 'Event Selesai')
+                            <span class="badge badge-pill badge-success">EVENT SELESAI</span>
+                        @elseif($cart->status == 'Deal')
+                            <span class="badge badge-pill badge-primary">DEAL</span>
+                        @elseif($cart->status == 'Pending')
+                            <span class="badge badge-pill badge-warning">PENDING</span>
+                        @else
+                            <span class="badge badge-pill badge-danger">CANCELED by {{$cart->cancel->role}}</span>
+                        @endif
+                        </div>
+                    </div>
                     @if(($cart->status != 'Dibatalkan') && (($transaction->status == 'Pending') || ($transaction->status == 'Cart')))
-                        <div class="float-right align-self-center">
+                        <div class="align-self-cente align-items-md-centerr">
                             <a class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#cancel{{$cart->id}}" href="#"><i class="simple-icon-action-undo"></i></a>
                         </div>
                     @endif
-                    <p class="mb-1 text-muted text-small w-15 w-xs-100">{{date('d/m/y', strtotime($cart->event_date))}}</p>
-                    <p class="mb-1 text-muted text-small w-15 w-xs-100">Rp. {{ number_format($cart->package->price,0,",",".") }}</p>
-                    <div class="w-15 w-xs-100">
-                    @if($cart->status == 'Event Selesai')
-                        <span class="badge badge-pill badge-success">EVENT SELESAI</span>
-                    @elseif($cart->status == 'Deal')
-                        <span class="badge badge-pill badge-primary">DEAL</span>
-                    @elseif($cart->status == 'Pending')
-                        <span class="badge badge-pill badge-warning">PENDING</span>
-                    @else
-                        <span class="badge badge-pill badge-danger">CANCELED by {{$cart->cancel->role}}</span>
-                    @endif
-                    </div>
                 </div>
             </div>
             @if(($cart->status == 'Dibatalkan') && (($transaction->status == 'Pending') || ($transaction->status == 'Cart')))
@@ -180,10 +277,29 @@
         @if($transaction->status == 'Menunggu Pembayaran')
             <div class="row">
                 <div class="col text-center">
-                    <h2 class="mt-5 mb-5">Total : Rp. {{ number_format($total,0,",",".") }}</h2>
-                    @if(auth()->user()->role == 'Customer')
-                    <a class="btn btn-primary btn-sm mb-5" data-toggle="modal" data-target="#uploadbukti" href="#">Upload Bukti Pembayaran</a>
-                    @endif
+                    <div class="card mt-5 mb-5">
+                        <div class="card-body">
+                            @if(($transaction->alasan != NULL) && (auth()->user()->role == 'Customer'))
+                            <div class="alert alert-danger default alert-dismissible fade show rounded mt-2" role="alert">
+                                Bukti pembayaran ditolak dengan alasan "{{$transaction->alasan}}"
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            @endif
+                            <h2 class="">Total : Rp. {{ number_format($total,0,",",".") }}</h2>
+                            <hr>
+                            @if(auth()->user()->role == 'Customer')
+                            <h5 class="mb-5">Silahkan bayar ke rekening berikut :</h5>
+                            <h5 class="mb-5">{{$setting->rekening}} ({{$setting->bank->nama}})</h5>
+                            <h5 class="mb-2">Atas nama :</h5>
+                            <h5 class="mb-5">{{$setting->atas_nama}}</h5>
+                            <a class="btn btn-primary default card-img-bottom" data-toggle="modal" data-target="#uploadbukti" href="#">Upload Bukti Pembayaran</a>
+                            @else
+                            <h5>Silahkan tunggu sementara customer membayar dan mengupload bukti pembayaran.</h5>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
             @if(auth()->user()->role == 'Customer')
@@ -236,17 +352,10 @@
                 </div>
             </div>
         @elseif($transaction->status == 'Sudah Dibayar')
-            @if($transaction->alasan != NULL)
-            <div class="alert alert-warning default alert-dismissible fade show rounded mb-0" role="alert">
-                Bukti pembayaran ditolak dengan alasan {{$transaction->alasan}},
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            @endif
             <div class="card mt-3 mb-5">
                 <div class="card-body">
                     <h2 class="text-center mt-5 mb-5">Total : Rp. {{ number_format($total,0,",",".") }}</h2>
+                    @if(auth()->user()->role != 'Wedding Organizer')
                     <p class="text-muted text-small mb-2">Rekening Pengirim</p>
                     <p class="mb-3">
                             {{$transaction->rekening}} ({{$transaction->bank->nama}})
@@ -261,6 +370,7 @@
                             href="{{ asset('/storage/legaldoc/'.$transaction->image) }}" >
                             Lihat</a>
                     </p>
+                    @endif
                     @if(auth()->user()->role == 'Admin')
                         <div class="row">
                             <div class="col">
@@ -310,10 +420,12 @@
                         </div>
                     @else
                         <p class="mb-5">Tagihan telah dibayar, silahkan tunggu sementara admin mengkonfirmasi pembayaran.</p>
+                        @if(auth()->user()->role == 'Customer')
                         {!! Form::model($transaction, array('route' => array('transaction.update', $transaction->id), 'method' => 'PUT')) !!}
                             <input type="text" name="status" value="Menunggu Pembayaran" hidden>
                             <button type="submit" class="btn btn-warning default btn-md card-img-bottom">Batalkan Pembayaran</button>
                         {!! Form::close() !!}
+                        @endif
                     @endif
                 </div>
             </div>

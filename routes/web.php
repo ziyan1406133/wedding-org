@@ -20,6 +20,8 @@ Route::resource('user', 'UserController');
 Route::resource('package', 'PackageController');
 Route::resource('cart', 'CartController');
 Route::resource('transaction', 'TransactionController');
+Route::resource('setting', 'SettingController');
+Route::resource('message', 'MessageController');
 
 Route::get('/verifieduser', 'UserController@verifieduser')->name('verifieduser');
 Route::get('/unverifieduser', 'UserController@unverifieduser')->name('unverifieduser');
@@ -28,6 +30,7 @@ Route::get('/rejecteduser', 'UserController@rejecteduser')->name('rejecteduser')
 Route::get('/mypackage', 'PackageController@myindex')->name('myindex');
 
 Route::get('/confirmindex', 'TransactionController@confirm')->name('confirm');
+Route::get('/pdf/{id}', 'TransactionController@pdf');
 
 Route::get('/pesananpending', 'CartController@pending')->name('pesananpending');
 Route::get('/pesanandone', 'CartController@done')->name('pesanandone');

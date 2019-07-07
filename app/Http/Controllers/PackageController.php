@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Package;
+use App\Cart;
 use App\User;
 use App\Province;
 use App\Regency;
@@ -29,7 +30,7 @@ class PackageController extends Controller
      */
     public function index()
     {
-        $packages = Package::orderBy('created_at', 'desc')->paginate(10);
+        $packages = Package::where('hidden', FALSE)->orderBy('created_at', 'desc')->paginate(10);
 
         return view('package.index', compact('packages'));
     }
@@ -42,7 +43,9 @@ class PackageController extends Controller
     public function myindex()
     {
         if(auth()->user()->role == 'Wedding Organizer') {
-            $packages = Package::where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(10);
+            $packages = Package::where('user_id', auth()->user()->id)
+                                ->where('hidden', FALSE)
+                                ->orderBy('created_at', 'desc')->paginate(10);
     
             return view('package.myindex', compact('packages'));
         } else {
@@ -162,10 +165,26 @@ class PackageController extends Controller
     public function destroy($id)
     {
         $package = Package::findOrFail($id);
-        if($package->image !== 'no_image.png') {
-            Storage::delete('/public/avatar/'.$package->image);
+        $carts = Cart::where('package_id', $id)
+                        ->where(function($q) {
+                            $q->where('status', '!=', 'Deal')
+                            ->orWhere('status', '!=', 'Event Selesai');
+                        })->get();
+
+        if(count($carts) > 0) {
+
+            $package->hidden = TRUE;
+            $package->save();
+            return redirect('/mypackage')->with('success', 'Paket Berhasil Dihapus');
+
+        } else {
+            $deleted = 'DELETED';
+            return $deleted;
+            if($package->image !== 'no_image.png') {
+                Storage::delete('/public/avatar/'.$package->image);
+            }
+            $package->delete();
         }
-        $package->delete();
         return redirect('/mypackage')->with('success', 'Paket Berhasil Dihapus');
     }
     

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Transaction;
 use App\Cart;
 use App\Bank;
+use App\Setting;
+use PDF;
 use Illuminate\Support\Facades\Storage;
 
 class TransactionController extends Controller
@@ -62,6 +64,35 @@ class TransactionController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function pdf($id)
+    {
+        $setting = Setting::first();
+        $transaction = Transaction::findOrFail($id);
+        $carts = Cart::where('transaction_id', $id)
+                    ->where(function($q) {
+                        $q->where('status', '=', 'Deal')
+                        ->orWhere('status', '=', 'Event Selesai');
+                    })->get();
+        $harga[] = 0;
+        foreach($carts as $cart) {
+            $harga[] = $cart->package->price;
+        }
+        $total = array_sum($harga);
+
+
+        $pdf = PDF::loadview('transaction.invoice',
+                            compact('setting', 'transaction', 'carts', 'total'))->setPaper('a4', 'potrait');
+
+        return $pdf->stream($transaction->invoice.' - '.time().'.pdf');
+    }
+
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -69,6 +100,7 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {   
+
         
         $invoice1 = date('dmy', strtotime(now()));
         $invoice2 = mt_rand(100, 999);
@@ -101,6 +133,7 @@ class TransactionController extends Controller
     {
         $banks = Bank::all();
         $transaction = Transaction::findOrFail($id);
+        $setting = Setting::first();
         $harga[] = 0;
         foreach($transaction->carts as $cart) {
             if($cart->status == 'Deal') {
@@ -108,7 +141,7 @@ class TransactionController extends Controller
             }
         }
         $total = array_sum($harga);
-        return view('transaction.show', compact('transaction', 'banks', 'total'));
+        return view('transaction.show', compact('transaction', 'banks', 'total', 'setting'));
     }
 
     /**
@@ -131,12 +164,28 @@ class TransactionController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            'image' => 'image|max:1999'
+        ],
+        [
+            'image' => 'Bukti pembayaran harus berupa gambar'
+        ]);
         $transaction = Transaction::findOrFail($id);
 
         $transaction->bank_id = $request->input('bank');
         $transaction->rekening = $request->input('rekening');
         $transaction->atas_nama = $request->input('atas_nama');
         $transaction->status = $request->input('status');
+
+        if($transaction->status = 'Dibatalkan') {
+            $carts = Cart::where('transaction_id', $id)->get();
+            foreach($carts as $cart) {
+                $cart->status = 'Dibatalkan';
+                $cart->cancel_id = auth()->user()->id;
+                $cart->save();
+            }
+        }
+
         $transaction->alasan = $request->input('alasan');
         if($request->hasFile('image')){
             $filenameWithExt = $request->file('image')->getClientOriginalName();
@@ -153,7 +202,7 @@ class TransactionController extends Controller
         }
         $transaction->save();
 
-        return redirect('/transaction/'.$id)->with('success', 'Input berhasil, status transaksi kini telah berubah.');
+        return redirect('/transaction/'.$id)->with('success', 'Transaksi dibatalkan');
     }
 
     /**

@@ -125,13 +125,23 @@
                                 <i class="iconsmind-Money-2"></i> Confirm Pembayaran
                             </a>
                         </li>
+                        <li>
+                            <a href="/setting">
+                                <i class="iconsmind-Gears"></i> Info Aplikasi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/message">
+                                <i class="iconsmind-Mail-2"></i> Messages
+                            </a>
+                        </li>
                     </ul>
 
                 @elseif(auth()->user()->role == 'Wedding Organizer')
                     <ul class="list-unstyled" data-link="organizer">
                         <li>
                             <a href="/pesanandone">
-                                <i class="iconsmind-Money-Bag"></i> Pesanan Selesai
+                                <i class="iconsmind-Money-Bag"></i> Pesanan
                             </a>
                         </li>
                         <li>
@@ -229,7 +239,7 @@
                                         Belum diisi.
                                     @endif
                                 <p class="text-muted text-small mb-2">Member Since</p>
-                                <p class="mb-3">{{ date('d-m-y', strtotime($user->created_at)) }}</p>
+                                <p class="mb-3">{{ date('d-m-20y', strtotime($user->created_at)) }}</p>
                             </div>
                         </div>
                     </div>
@@ -272,7 +282,7 @@
                                             @if($user->address == NULL)
                                                 <td>: -</td>
                                             @else
-                                                <td>: {{$user->address}}, {{$user->district['name']}}, {{$user->regency['name']}}, {{$user->province['name']}}</td>
+                                                <td>: {{$user->address}}, {{ucwords(strtolower($user->district['name']))}}, {{ucwords(strtolower($user->regency['name']))}}, {{ucwords(strtolower($user->province['name']))}}</td>
                                             @endif
                                         </tr>
                                     </table>

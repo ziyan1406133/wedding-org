@@ -125,19 +125,15 @@
                             <div class="card">
                                 <div class="card-body text-center">
                                 <div>
-                                    <i class="iconsmind-Cupcake large-icon"></i>
+                                    <i class="simple-icon-emotsmile large-icon"></i>
                                     <h5 class="mb-0 font-weight-semibold">
-                                    Fitur 1
+                                    WO Terpercaya
                                     </h5>
                                 </div>
                                 <div>
                                     <p class="detail-text">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                        Curabitur at porttitor nunc, finibus dictum massa.                                        
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                        Curabitur at porttitor nunc, finibus dictum massa.                                       
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                        Curabitur at porttitor nunc, finibus dictum massa.  
+                                        Kami hanya bekerja sama dengan Wedding Organizer
+                                        yang terpercaya dan melewati seleksi terlebih dahulu
                                     </p>
                                 </div>
                                 </div>
@@ -146,15 +142,15 @@
                             <div class="card">
                                 <div class="card-body text-center">
                                 <div>
-                                    <i class="iconsmind-Line-Chart2 large-icon"></i>
+                                    <i class="simple-icon-cup large-icon"></i>
                                     <h5 class="mb-0 font-weight-semibold">
-                                    Fitur 2
+                                    Mobile
                                     </h5>
                                 </div>
                                 <div>
                                     <p class="detail-text">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                        Curabitur at porttitor nunc, finibus dictum massa. 
+                                        Aplikasi bisa dibuka kapan dan dimana saja lewat aplikasi
+                                        mobile, memudahkan penggunaan anda.
                                     </p>
                                 </div>
                                 </div>
@@ -163,48 +159,14 @@
                             <div class="card">
                                 <div class="card-body text-center">
                                 <div>
-                                    <i class="iconsmind-Three-ArrowFork large-icon"></i>
+                                    <i class="simple-icon-magic-wand large-icon"></i>
                                     <h5 class="mb-0 font-weight-semibold">
-                                    Fitur 3
+                                    Mudah Digunakan
                                     </h5>
                                 </div>
                                 <div>
                                     <p class="detail-text">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                        Curabitur at porttitor nunc, finibus dictum massa. 
-                                    </p>
-                                </div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-body text-center">
-                                <div>
-                                    <i class="iconsmind-Funny-Bicycle large-icon"></i>
-                                    <h5 class="mb-0 font-weight-semibold">
-                                    Fitur 4
-                                    </h5>
-                                </div>
-                                <div>
-                                    <p class="detail-text">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                        Curabitur at porttitor nunc, finibus dictum massa. 
-                                    </p>
-                                </div>
-                                </div>
-                            </div>
-
-                            <div class="card">
-                                <div class="card-body text-center">
-                                <div>
-                                    <i class="iconsmind-Full-View large-icon"></i>
-                                    <h5 class="mb-0 font-weight-semibold">
-                                    Fitur 5
-                                    </h5>
-                                </div>
-                                <div>
-                                    <p class="detail-text">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                        Curabitur at porttitor nunc, finibus dictum massa. 
+                                        Aplikasi sangat mudah digunakan dengan Interface yang User Friendly
                                     </p>
                                 </div>
                                 </div>
@@ -215,7 +177,7 @@
                     </div>
                 </div>
 
-                <a class="btn btn-circle btn-outline-semi-light hero-circle-button scrollTo" href="#features" id="homeCircleButton"><i
+                <a class="btn btn-circle btn-outline-semi-light hero-circle-button scrollTo" href="#package" id="homeCircleButton"><i
                     class="simple-icon-arrow-down"></i></a>
             </div>
 
@@ -234,107 +196,30 @@
                     </div>
 
                     <div class="row mt-5">
+                        @foreach($packages as $package)
                         <div class="col-12 col-lg-6 mb-4">
                             <div class="card flex-row mb-5 listing-card-container">
                                 <div class="w-40 position-relative">
                                 <a href="LandingPage.Blog.Image.html">
-                                    <img class="card-img-left" src="/img/landing-page/blog-thumb-1.jpg" alt="Card image cap">
+                                    <img class="card-img-left" src="{{asset('/storage/package/'.$package->image)}}" alt="Card image cap">
                                 </a>
                                 </div>
                                 <div class="w-60 d-flex align-items-center">
                                 <div class="card-body">
-                                    <a href="LandingPage.Blog.Image.html">
-                                    <h3 class="mb-4 listing-heading ellipsis">Nama Paket 1, [Nama WO]</h3>
+                                    <a href="/package/{{$package->id}}">
+                                        <h3 class="mb-4 listing-heading ellipsis">{{$package->nama}}</h3>
                                     </a>
                                     <p class="listing-desc ellipsis">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                        Curabitur at porttitor nunc, finibus dictum massa.                                        
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                        Curabitur at porttitor nunc, finibus dictum massa.                                       
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                        Curabitur at porttitor nunc, finibus dictum massa.  
+                                            Rp. {{ number_format($package->price,0,",",".") }}
                                     </p>
                                     <footer>
-                                    <p class="text-small mb-0">Rp. 123.456,00</p>
+                                    <p class="text-small mb-0">by {{$package->user->name}}</p>
                                     </footer>
                                 </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="col-12 col-lg-6 mb-4">
-                            <div class="card flex-row mb-5 listing-card-container">
-                                <div class="w-40 position-relative">
-                                <a href="LandingPage.Blog.Video.html" class="video-play-icon">
-                                    <span></span>
-                                </a>
-                                <img class="card-img-left" src="/img/landing-page/blog-thumb-2.jpg" alt="Card image cap">
-                                </div>
-                                <div class="w-60 d-flex align-items-center">
-                                <div class="card-body">
-                                    <a href="LandingPage.Blog.Video.html">
-                                    <h3 class="mb-4 listing-heading ellipsis">Nama Paket 2, [Nama WO]</h3>
-                                    </a>
-                                    <p class="listing-desc ellipsis">
-                                        (Deskripsi) Lorem ipsum dolor sit amet, 
-                                        consectetur adipiscing elit.
-                                    </p>
-                                    <footer>
-                                    <p class="text-small mb-0">Rp. 123.456,00</p>
-                                    </footer>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="col-12 col-lg-6 mb-4">
-                            <div class="card flex-row mb-5 listing-card-container">
-                                <div class="w-40 position-relative">
-                                <a href="LandingPage.Blog.Image.html">
-                                    <img class="card-img-left" src="/img/landing-page/blog-thumb-3.jpg" alt="Card image cap">
-                                </a>
-                                </div>
-                                <div class="w-60 d-flex align-items-center">
-                                <div class="card-body">
-                                    <a href="LandingPage.Blog.Image.html">
-                                    <h3 class="mb-4 listing-heading ellipsis">Nama Paket 3, [Nama WO]</h3>
-                                    </a>
-                                    <p class="listing-desc ellipsis">
-                                        (Deskripsi) Lorem ipsum dolor sit amet, 
-                                        consectetur adipiscing elit.
-                                    </p>
-                                    <footer>
-                                    <p class="text-small mb-0">Rp. 123.456,00</p>
-                                    </footer>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-lg-6 mb-4">
-                            <div class="card flex-row mb-5 listing-card-container">
-                                <div class="w-40 position-relative">
-                                <a href="LandingPage.Blog.Image.html">
-                                    <img class="card-img-left" src="/img/landing-page/blog-thumb-4.jpg" alt="Card image cap">
-                                </a>
-                                </div>
-                                <div class="w-60 d-flex align-items-center">
-                                <div class="card-body">
-                                    <a href="LandingPage.Blog.Image.html">
-                                    <h3 class="mb-4 listing-heading ellipsis">Nama Paket 4, [Nama WO]</h3>
-                                    </a>
-                                    <p class="listing-desc ellipsis">
-                                        (Deskripsi) Lorem ipsum dolor sit amet, 
-                                        consectetur adipiscing elit.
-                                    </p>
-                                    <footer>
-                                    <p class="text-small mb-0">Rp. 123.456,00</p>
-                                    </footer>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                     <div class="text-center">
                         <a href="/package" class="btn btn-primary btn-lg mb-1">Lihat Lebih Banyak</a>
@@ -347,11 +232,12 @@
                     <div class="row">
                         <div class="col-12 col-lg-7">
                             <h2>Contact Form</h2>
+                            @include('inc.messages')
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="post">
+                                    {!! Form::open(['action' => 'MessageController@store', 'method' => 'POST']) !!}
                                         <div class="form-group">
-                                            <input type="text" placeholder="Nama" name="nama" class="form-control">
+                                            <input type="text" placeholder="Nama" name="name" class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <input type="email" placeholder="E-Mail" name="email" class="form-control">
@@ -362,7 +248,7 @@
                                         <div class="float-right">
                                             <button class="btn btn-primary btn-md" type="submit">Send</button>
                                         </div>
-                                    </form>
+                                    {!! Form::close() !!}           
                                 </div>
                             </div>
                         </div>
@@ -371,13 +257,13 @@
                             <h2>Contact Info</h2>
 
                             <p class="text-primary mb-2">Address</p>
-                            <p class="mb-5"> Jl. Mayor Syamsu No.1, Jayaraga, Kec. Tarogong Kidul,<br /> Kabupaten Garut, Jawa Barat 44151</p>
+                            <p class="mb-5">{{$setting->address}}
 
                             <p class="text-primary mb-2">Phone</p>
-                            <p class="mb-5">14045</p>
+                            <p class="mb-5">{{$setting->phone}}</p>
 
                             <p class="text-primary mb-2">E-mail</p>
-                            <p class="mb-0">admin@wedding-org.test</p>
+                            <p class="mb-0">{{$setting->email}}</p>
 
                         </div>
                     </div>

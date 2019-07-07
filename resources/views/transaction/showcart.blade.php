@@ -128,13 +128,23 @@
                                 <i class="iconsmind-Money-2"></i> Confirm Pembayaran
                             </a>
                         </li>
+                        <li>
+                            <a href="/setting">
+                                <i class="iconsmind-Gears"></i> Info Aplikasi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/message">
+                                <i class="iconsmind-Mail-2"></i> Messages
+                            </a>
+                        </li>
                     </ul>
 
                 @elseif(auth()->user()->role == 'Wedding Organizer')
                     <ul class="list-unstyled" data-link="organizer">
                         <li>
                             <a href="/pesanandone">
-                                <i class="iconsmind-Money-Bag"></i> Pesanan Selesai
+                                <i class="iconsmind-Money-Bag"></i> Pesanan
                             </a>
                         </li>
                         <li>
@@ -226,7 +236,7 @@
                                 </p>
                                 <p class="text-muted text-small mb-2">Alamat Wedding Organizer</p>
                                 <p class="mb-3">
-                                    {{$cart->package->user->address}}, {{$cart->package->user->district['name']}}, {{$cart->package->user->regency['name']}}, {{$cart->package->user->province['name']}};
+                                    {{$cart->package->user->address}}, {{ucwords(strtolower($cart->package->user->district['name']))}}, {{ucwords(strtolower($cart->package->user->regency['name']))}}, {{ucwords(strtolower($cart->package->user->province['name']))}};
                                 </p>
                                 <p class="text-muted text-small mb-2">Customer</p>
                                 <p class="mb-3">
@@ -234,11 +244,11 @@
                                 </p>
                                 <p class="text-muted text-small mb-2">Alamat Event</p>
                                 <p class="mb-3">
-                                    {{$cart->address}}, {{$cart->district['name']}}, {{$cart->regency['name']}}, {{$cart->province['name']}};
+                                    {{$cart->address}}, {{ucwords(strtolower($cart->district['name']))}}, {{$cart->regency['name']}}, {{$cart->province['name']}};
                                 </p>
                                 <p class="text-muted text-small mb-2">Tanggal Event</p>
                                 <p class="mb-3">
-                                    {{ date('d-m-y', strtotime($cart->event_date)) }}
+                                    {{ date('d-m-20y', strtotime($cart->event_date)) }}
                                 </p>
                                 <p class="text-muted text-small mb-2">Price</p>
                                 <p class="mb-3">Rp. {{ number_format($cart->package->price,0,",",".") }}</p>
@@ -302,10 +312,33 @@
                                 @elseif($cart->status == 'Deal')
                                     @if(auth()->user()->role == 'Customer')
                                         <p>Pesanan paket ini telah disetujui, silahkan upload bukti pembayaran apabila semua paket di <a href="/transaction/{{$cart->transaction_id}}">transaksi ini</a> telah disetujui.</p>
+                                        @if($cart->package->status == 'Payment Confirmed')
+                                        <a class="btn default btn-success card-img-bottom" data-toggle="modal" data-target="#selesai{{$cart->id}}" href="#"> Event Selesai</a>
+                                        <div class="modal fade" id="selesai{{$cart->id}}" role="dialog">
+                                            <div class="modal-dialog">
+                                                <!-- Modal content-->
+                                                {!! Form::model($cart, array('route' => array('cart.update', $cart->id), 'method' => 'PUT', ' enctype' => 'multipart/form-data')) !!}
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h3>Konfirmasi</h3>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <input type="text" value="Event Selesai" name="status" id="status" hidden>
+                                                        <p>Klik "Selesaikan" apabila event ini telah selesai dilaksanakan.</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
+                                                        <button type="submit" class="btn btn-success btn-md">Selesaikan</button>
+                                                    </div>
+                                                </div>
+                                                {!! Form::close() !!}
+                                            </div>
+                                        </div>
+                                        @endif
                                     @elseif(auth()->user()->role == 'Wedding Organizer')
                                         <p>Pesanan berhasil diterima, admin akan memberi tahu lewat email atau SMS apabila pembayaran telah dikonfirmasi. Pastikan rekening dan kontak di profil anda bisa digunakan.</p>
                                     @else
-                                        <p>Paket ini telah disetujui oleh Wedding Organizer. <a href="/transaction/{{$cart->package_id}}">Lihat transaksi</a>.</p>
+                                        <p>Paket ini telah disetujui oleh Wedding Organizer. <a href="/transaction/{{$cart->transaction_id}}">Lihat transaksi</a>.</p>
                                     @endif
                                 @endif
                             </div>

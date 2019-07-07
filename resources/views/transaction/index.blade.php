@@ -125,28 +125,51 @@
         @if(count(auth()->user()->transactions) > 0)
             @foreach(auth()->user()->transactions as $transaction)
                 <div class="card d-flex flex-row mb-3">
-                    <div class="card d-flex flex-row mb-3">
-                        <div class="d-flex flex-grow-1 min-width-zero">
-                            <div class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
-                                <a class="list-item-heading mb-1 truncate w-40 w-xs-100" href="/transaction/{{$transaction->id}}">
-                                    {{$transaction->invoice}}
-                                </a>
-                                <p class="mb-1 text-muted text-small w-15 w-xs-100">created at {{date('d/m/y', strtotime($transaction->created_at))}}</p>
-                                <div class="w-15 w-xs-100">
-                                    @if($transaction->status == 'Pending')
-                                        <span class="badge badge-pill badge-warning">PENDING</span>
-                                    @elseif($transaction->status == 'Menunggu Pembayaran')
-                                        <span class="badge badge-pill badge-secondary">MENUNGGU PEMBAYARAN</span>
-                                    @elseif($transaction->status == 'Canceled')
-                                        <span class="badge badge-pill badge-danger">CANCELED</span>
-                                        @elseif($transaction->status == 'Payment Confirmed')
-                                            <span class="badge badge-pill badge-danger">PAYMENT CONFIRMED</span>
-                                    @else
-                                        <span class="badge badge-pill badge-success">SUDAH DIBAYAR</span>
-                                    @endif
-                                </div>
+                    <div class="d-flex flex-grow-1 min-width-zero">
+                        <div class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
+                            <a class="list-item-heading mb-1 truncate w-40 w-xs-100" href="/transaction/{{$transaction->id}}">
+                                {{$transaction->invoice}}
+                            </a> 
+                            <p class="mb-1 text-muted text-small w-15 w-xs-100">created at {{date('d/m/20y', strtotime($transaction->created_at))}}</p>
+                            <div class="w-15 w-xs-100">
+                                @if($transaction->status == 'Pending')
+                                    <span class="badge badge-pill badge-warning">PENDING</span>
+                                @elseif($transaction->status == 'Menunggu Pembayaran')
+                                    <span class="badge badge-pill badge-secondary">MENUNGGU PEMBAYARAN</span>
+                                @elseif($transaction->status == 'Dibatalkan')
+                                    <span class="badge badge-pill badge-danger">CANCELED</span>
+                                    @elseif($transaction->status == 'Payment Confirmed')
+                                        <span class="badge badge-pill badge-success">PAYMENT CONFIRMED</span>
+                                @elseif($transaction->status == 'Sudah Dibayar')
+                                    <span class="badge badge-pill badge-success">SUDAH DIBAYAR</span>
+                                @endif
                             </div>
                         </div>
+                        @if(($transaction->status == 'Pending') || ($transaction->status == 'Menunggu Pembayaran'))
+                            <div class="float-right align-self-center">
+                                <a class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#cancel{{$transaction->id}}" href="#"><i class="simple-icon-action-undo"></i></a>
+                                <div class="modal fade" id="cancel{{$transaction->id}}" role="dialog">
+                                    <div class="modal-dialog">
+                                        <!-- Modal content-->
+                                        {!! Form::model($transaction, array('route' => array('transaction.update', $transaction->id), 'method' => 'PUT')) !!}
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h3>Konfirmasi</h3>
+                                            </div>
+                                            <div class="modal-body">
+                                                <input type="text" value="Dibatalkan" name="status" id="status" hidden>
+                                                <p>Apakah anda yakin untuk membatalkan pesanan?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
+                                                <button type="submit" class="btn btn-danger btn-md">Ya</button>
+                                            </div>
+                                        </div>
+                                        {!! Form::close() !!}
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             @endforeach
