@@ -1,4 +1,6 @@
 <?php
+use Illuminate\View\View;
+use App\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +30,7 @@ Route::get('/unverifieduser', 'UserController@unverifieduser')->name('unverified
 Route::get('/rejecteduser', 'UserController@rejecteduser')->name('rejecteduser');
 
 Route::get('/mypackage', 'PackageController@myindex')->name('myindex');
+Route::post('/search', 'PackageController@search')->name('search');
 
 Route::get('/confirmindex', 'TransactionController@confirm')->name('confirm');
 Route::get('/pdf/{id}', 'TransactionController@pdf');
@@ -42,6 +45,7 @@ Route::post('/verifikasi', 'UserController@verifikasi')->name('verifikasi.user')
 //dynamic select form
 Route::get('/json-regencies','UserController@regencies');
 Route::get('/json-districts', 'UserController@districts');
+
 
 //edit password
 Route::get('/editpassword/{id}/user', 'UserController@editpassword')->name('edit');

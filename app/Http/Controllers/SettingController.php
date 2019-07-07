@@ -28,7 +28,7 @@ class SettingController extends Controller
      */
     public function create()
     {
-        //
+        return redirect('/');
     }
 
     /**
@@ -39,7 +39,7 @@ class SettingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return redirect('/');
     }
 
     /**
@@ -50,7 +50,7 @@ class SettingController extends Controller
      */
     public function show($id)
     {
-        //
+        return redirect('/');
     }
 
     /**
@@ -61,6 +61,7 @@ class SettingController extends Controller
      */
     public function edit($id)
     {
+        return redirect('/');
     }
 
     /**
@@ -92,6 +93,6 @@ class SettingController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return redirect('/');
     }
 }

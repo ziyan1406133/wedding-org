@@ -285,6 +285,11 @@ class UserController extends Controller
     public function verifikasi(Request $request)
     {
         $user = User::findOrFail($request->input('id'));
+
+        if($user->address == NULL) {
+            return redirect('/user/'.$request->input('id'))->with('error', 'Tidak bisa memverifikasi akun user yang belum lengkap.');
+        }
+
         $user->status = $request->input('status');
         $user->alasan = $request->input('alasan');
         $user->save();

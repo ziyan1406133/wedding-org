@@ -193,6 +193,7 @@
                         </li>
                     </ol>
                 </nav>
+                <div class="separator mb-5"></div>
                 @if(auth()->user()->status == 'Belum Terverifikasi')
                     <div class="alert alert-warning alert-dismissible fade show rounded mb-0" role="alert">
                         Akun tidak bisa melakukan transaksi apabila belum diverifikasi oleh admin, 
@@ -214,31 +215,31 @@
                     </div>
                 @endif
                 @include('inc.messages')
-                <br>
                 <div class="col-lg-12 col-xl-6">
 
                     <div class="icon-cards-row">
                         <div class="owl-container">
                             <div class="owl-carousel dashboard-numbers">
-                                <a href="/transaction" class="card">
+                                <a href="/pesananpending" class="card">
                                     <div class="card-body text-center">
-                                        <i class="iconsmind-Mail-Money"></i>
-                                        <p class="card-text mb-0">Menunggu Pembayaran</p>
-                                        <p class="lead text-center">{{count(auth()->user()->paytransactions)}}</p>
-                                    </div>
-                                </a>
-                                <a href="/transaction" class="card">
-                                    <div class="card-body text-center">
-                                        <i class="iconsmind-Clock"></i>
+                                        <i class="iconsmind-Waiter"></i>
                                         <p class="card-text mb-0">Pesanan Pending</p>
-                                        <p class="lead text-center">{{count(auth()->user()->pendcarts)}}</p>
+                                        <p class="lead text-center">{{count(auth()->user()->orgpendcarts)}}</p>
                                     </div>
                                 </a>
                                 <a href="/upcoming" class="card">
                                     <div class="card-body text-center">
                                         <i class="simple-icon-calendar"></i>
                                         <p class="card-text mb-0">Upcoming Event</p>
-                                        <p class="lead text-center">{{count(auth()->user()->upcarts)}}</p>
+                                        <p class="lead text-center">{{count(auth()->user()->orgupcarts)}}</p>
+                                    </div>
+                                </a>
+
+                                <a href="/pesanandone" class="card">
+                                    <div class="iconsmind-Air-Balloon">
+                                        <i class="iconsmind-Mail-Read"></i>
+                                        <p class="card-text mb-0">Pesanan Sukses</p>
+                                        <p class="lead text-center">{{count(auth()->user()->orgdonecarts)}}</p>
                                     </div>
                                 </a>
                             </div>
@@ -248,26 +249,35 @@
                 <div class="col-xl-6 col-lg-12 mb-4">
                     <div class="card">
                         <div class="position-absolute card-top-buttons">
-                            <a class="btn btn-outline-primary btn-sm" href="/transaction">See All</a>
+                            <a class="btn btn-outline-primary btn-sm" href="/pesananpending">See All</a>
                         </div>
 
                         <div class="card-body">
-                            <h5 class="card-title">Menunggu Pembayaran</h5>
-                            @if(count(auth()->user()->paytransactions_lim) > 0)
-                                @foreach(auth()->user()->pendcarts_lim as $transaction)
-                                <div class="card d-flex flex-row mb-3">
-                                        <div class="d-flex flex-grow-1 min-width-zero">
-                                            <div class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
-                                                <a class="list-item-heading mb-1 truncate w-40 w-xs-100" href="/transaction/{{$transaction->id}}">
-                                                    {{$transaction->invoice}}
-                                                </a> 
-                                                <p class="mb-1 text-muted text-small w-15 w-xs-100">created at {{date('d/m/20y', strtotime($transaction->created_at))}}</p>
-                                            </div>
+                            <h5 class="card-title">Pesanan Pending</h5>
+                            @if(count(auth()->user()->orgpendcarts_lim) > 0)
+                                @foreach(auth()->user()->orgpendcarts_lim as $cart)
+                                    <div class="d-flex flex-row mb-3">
+                                        <a class="d-block position-relative" href="/cart/{{$cart->id}}">
+                                            <img src="{{ asset('/storage/package/'.$cart->package->image)}}" alt="Marble Cake" class="list-thumbnail border-0" />
+                                        </a>
+                                        <div class="pl-3 pt-2 pr-2 pb-2">
+                                            <a href="/cart/{{$cart->id}}">
+                                                <p class="list-item-heading">{{$cart->package->nama}}</p>
+                                                <div class="pr-4 d-none d-sm-block">
+                                                    <p class="text-muted mb-1 text-small">
+                                                        {{$cart->address}}, 
+                                                        {{ucwords(strtolower($cart->district['name']))}}, 
+                                                        {{ucwords(strtolower($cart->regency['name']))}}, 
+                                                        {{ucwords(strtolower($cart->province['name']))}}
+                                                    </p>
+                                                </div>
+                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block">{{date('d/m/20y', strtotime($cart->event_date))}}</div>
+                                            </a>
                                         </div>
                                     </div>
                                 @endforeach
                             @else
-                                <p>Tidak ada transaksi yang menunggu pembayaran.</p>
+                                <p>Tidak ada pesanan pending.</p>
                             @endif
                         </div>
                     </div>
@@ -282,4 +292,5 @@
 
 @section('script')
 <script src="{{ asset('js/scripts.single.theme.js') }}"></script>
+<script src="{{ asset('js/vendor/select2.full.js') }}"></script>
 @endsection

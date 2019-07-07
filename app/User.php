@@ -61,11 +61,63 @@ class User extends Authenticatable
         return $this->hasMany('App\Package')->where('hidden', FALSE)->orderBy('created_at', 'desc');
     }
 
+    public function orgpendcarts() {
+        return $this->hasManyThrough('App\Cart', 'App\Package', 'user_id', 'package_id')
+                    ->where('status', 'Pending')
+                    ->where('hidden', FALSE)
+                    ->orderBy('updated_at', 'desc');
+    }
+
+    public function orgdonecarts() {
+        return $this->hasManyThrough('App\Cart', 'App\Package', 'user_id', 'package_id')
+                    ->where('status', 'Event Selesai')
+                    ->orderBy('updated_at', 'desc');
+    }
+
+    public function orgupcarts() {
+        return $this->hasManyThrough('App\Cart', 'App\Package', 'user_id', 'package_id')
+                    ->where('status', 'Deal')
+                    ->orderBy('updated_at', 'desc');
+    }
+
+    public function orgpendcarts_lim() {
+        return $this->hasManyThrough('App\Cart', 'App\Package', 'user_id', 'package_id')
+                    ->where('status', 'Pending')
+                    ->orderBy('updated_at', 'desc')
+                    ->limit(4);
+    }
+
+    public function upcarts() {
+        return $this->hasMany('App\Cart')
+                    ->where('status', 'Deal')
+                    ->orderBy('updated_at', 'desc');
+    }
+
+    public function pendcarts() {
+        return $this->hasMany('App\Cart')
+                    ->where('status', 'Pending')
+                    ->orderBy('updated_at', 'desc');
+    }
+
+
+    public function paytransactions_lim() {
+        return $this->hasMany('App\Transaction')
+                    ->where('status', 'Menunggu Pembayaran')
+                    ->orderBy('created_at', 'desc')
+                    ->limit(4);
+    }
+
     public function allpackages() {
         return $this->hasMany('App\Package')->orderBy('created_at', 'desc');
     }
 
     public function transactions() {
         return $this->hasMany('App\Transaction')->orderBy('created_at', 'desc');
+    }
+
+    public function paytransactions() {
+        return $this->hasMany('App\Transaction')
+                    ->where('status', 'Menunggu Pembayaran')
+                    ->orderBy('created_at', 'desc');
     }
 }

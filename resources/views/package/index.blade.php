@@ -2,6 +2,9 @@
 
 @section('style')
 <link href="{{ asset('css/dore.light.blue.min.css') }}" rel="stylesheet">
+<link href="{{ asset('css/vendor/bootstrap-float-label.min.css') }}" rel="stylesheet">
+<link href="{{ asset('css/vendor/select2.min.css') }}" rel="stylesheet">
+<link href="{{ asset('css/vendor/select2-bootstrap.min.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -200,6 +203,41 @@
             <div class="col-12">
 
                 <h1>Paket Wedding</h1>
+                <div class="float-right">
+                    <a class="btn btn-outline-primary" data-toggle="modal" data-target="#search"  href="#"><i class="simple-icon-magnifier"></i></a>
+                </div>
+                <div class="modal fade" id="search" role="dialog">
+                    <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            {!!Form::open(['action' => 'PackageController@search', 'method' => 'POST'])!!}
+                            <div class="modal-body">
+                                <h5 class="mb-5">Cari Berdasarkan Lokasi</h5>
+                                <label class="form-group has-float-label">
+                                    <select class="form-control select2-single" name="provinces" id="provinces">
+                                        <option value="0" disable="true"></option>
+                                        @foreach ($provinces as $key => $value)
+                                            <option value="{{$value->id}}">{{ $value->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span>Provinsi*</span>
+                                </label>
+                                
+                                <label class="form-group has-float-label">
+                                    <select class="form-control select2-single" name="regencies" id="regencies">
+                                        <option value="0" disable="true"></option>
+                                    </select>
+                                    <span>Kabupaten*</span>
+                                </label>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
+                                {{Form::submit('Cari', ['class' => 'btn btn-primary btn-md'])}}
+                            </div>
+                            {!! Form::close() !!}
+                        </div>
+                    </div>
+                </div>
                 <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                     <ol class="breadcrumb pt-0">
                         <li class="breadcrumb-item">
@@ -256,4 +294,21 @@
 
 @section('script')
 <script src="{{ asset('js/scripts.single.theme.js') }}"></script>
+<script src="{{ asset('js/vendor/select2.full.js') }}"></script>
+<script type="text/javascript">
+
+    $('#provinces').on('change', function(e){
+        console.log(e);
+        var province_id = e.target.value;
+        $.get('/json-regencies?province_id=' + province_id,function(data) {
+            console.log(data);
+            $('#regencies').empty();
+            $('#regencies').append('<option value="0" disable="true" selected="true"></option>');
+
+            $.each(data, function(index, regenciesObj){
+                $('#regencies').append('<option value="'+ regenciesObj.id +'">'+ regenciesObj.name +'</option>');
+            })
+        });
+    });
+</script>
 @endsection

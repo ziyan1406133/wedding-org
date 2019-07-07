@@ -202,6 +202,7 @@
                         </li>
                     </ol>
                 </nav>
+                <div class="separator mb-5"></div>
                 @auth
                     @if(auth()->user()->status == 'Ditolak')
                         <div class="alert alert-danger alert-dismissible fade show rounded mb-0" role="alert">
@@ -213,7 +214,6 @@
                     @endif
                 @endauth
                 @include('inc.messages')
-                <br>
 
                 <div class="card">
                     <div class="card-body">

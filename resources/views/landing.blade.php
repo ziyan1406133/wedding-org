@@ -196,6 +196,7 @@
                     </div>
 
                     <div class="row mt-5">
+                        @if(count($packages) > 0 )
                         @foreach($packages as $package)
                         <div class="col-12 col-lg-6 mb-4">
                             <div class="card flex-row mb-5 listing-card-container">
@@ -220,6 +221,30 @@
                             </div>
                         </div>
                         @endforeach
+                        @else
+                            <div class="col-12 col-lg-6 mb-4">
+                                <div class="card flex-row mb-5 listing-card-container">
+                                    <div class="w-40 position-relative">
+                                    <a href="LandingPage.Blog.Image.html">
+                                        <img class="card-img-left" src="{{asset('/storage/package/no_image.png')}}" alt="Card image cap">
+                                    </a>
+                                    </div>
+                                    <div class="w-60 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <a href="/">
+                                            <h3 class="mb-4 listing-heading ellipsis">NULL</h3>
+                                        </a>
+                                        <p class="listing-desc ellipsis">
+                                                Belum ada paket yang dibuat.
+                                        </p>
+                                        <footer>
+                                        <p class="text-small mb-0">NULL</p>
+                                        </footer>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                     <div class="text-center">
                         <a href="/package" class="btn btn-primary btn-lg mb-1">Lihat Lebih Banyak</a>

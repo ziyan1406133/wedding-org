@@ -83,7 +83,7 @@ class CartController extends Controller
      */
     public function create()
     {
-        //
+        return redirect('/');
     }
 
     /**
@@ -135,7 +135,7 @@ class CartController extends Controller
      */
     public function edit($id)
     {
-        //
+        return redirect('/');
     }
 
     /**

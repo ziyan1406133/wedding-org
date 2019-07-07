@@ -200,16 +200,10 @@
         <div class="row">
             <div class="col-12">
 
-                <h1>Dashboard Ecommerce</h1>
+                <h1>Dashboard</h1>
                 <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                     <ol class="breadcrumb pt-0">
-                        <li class="breadcrumb-item">
-                            <a href="#">Home</a>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <a href="#">Library</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">Data</li>
+                        <li class="breadcrumb-item active" aria-current="page">Home</li>
                     </ol>
                 </nav>
                 <div class="separator mb-5"></div>
@@ -236,7 +230,72 @@
                     @endif
                 @endauth
                 @include('inc.messages')
-                <br>
+                
+                <div class="col-lg-12 col-xl-6">
+
+                    <div class="icon-cards-row">
+                        <div class="owl-container">
+                            <div class="owl-carousel dashboard-numbers">
+                                <a href="/package" class="card">
+                                    <div class="card-body text-center">
+                                        <i class="iconsmind-Waiter"></i>
+                                        <p class="card-text mb-0">Our Packages</p>
+                                        <p class="lead text-center">{{count($cpackages)}}</p>
+                                    </div>
+                                </a>
+                                <a href="/login" class="card">
+                                    <div class="card-body text-center">
+                                        <i class="simple-icon-calendar"></i>
+                                        <p class="card-text mb-0">Sign In</p>
+                                    </div>
+                                </a>
+
+                                <a href="/register" class="card">
+                                    <div class="card-body text-center">
+                                        <i class="iconsmind-Air-Balloon"></i>
+                                        <p class="card-text mb-0">Sign Up</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-12 mb-4">
+                    <div class="card">
+                        <div class="position-absolute card-top-buttons">
+                            <a class="btn btn-outline-primary btn-sm" href="/package">See All</a>
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title">Paket Terbaru</h5>
+                            @if(count($packages) > 0)
+                                @foreach($packages as $package)
+                                    <div class="d-flex flex-row mb-3">
+                                        <a class="d-block position-relative" href="/package/{{$package->id}}">
+                                            <img src="{{ asset('/storage/package/'.$package->image)}}" alt="Marble Cake" class="list-thumbnail border-0" />
+                                        </a>
+                                        <div class="pl-3 pt-2 pr-2 pb-2">
+                                            <a href="/package/{{$package->id}}">
+                                                <p class="list-item-heading">{{$package->nama}}</p>
+                                                <div class="pr-4 d-none d-sm-block">
+                                                    <p class="text-muted mb-1 text-small">
+                                                        {{$package->user->address}}, 
+                                                        {{ucwords(strtolower($package->user->district['name']))}}, 
+                                                        {{ucwords(strtolower($package->user->regency['name']))}}, 
+                                                        {{ucwords(strtolower($package->user->province['name']))}}
+                                                    </p>
+                                                </div>
+                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block">Rp. {{ number_format($package->price,0,",",".") }}</div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <p>Belum ada paket yang ditambahkan.</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

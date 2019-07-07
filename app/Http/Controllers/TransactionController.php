@@ -60,7 +60,7 @@ class TransactionController extends Controller
      */
     public function create()
     {
-        //
+        return redirect('/');
     }
 
     /**
@@ -152,7 +152,7 @@ class TransactionController extends Controller
      */
     public function edit($id)
     {
-        //
+        return redirect('/');
     }
 
     /**
@@ -177,7 +177,8 @@ class TransactionController extends Controller
         $transaction->atas_nama = $request->input('atas_nama');
         $transaction->status = $request->input('status');
 
-        if($transaction->status = 'Dibatalkan') {
+        if($transaction->status == 'Dibatalkan') {
+            return $transaction->status;
             $carts = Cart::where('transaction_id', $id)->get();
             foreach($carts as $cart) {
                 $cart->status = 'Dibatalkan';
@@ -202,7 +203,7 @@ class TransactionController extends Controller
         }
         $transaction->save();
 
-        return redirect('/transaction/'.$id)->with('success', 'Transaksi dibatalkan');
+        return redirect('/transaction/'.$id)->with('success', 'Input berhasil dilakukan, status telah berubah.');
     }
 
     /**
@@ -213,6 +214,6 @@ class TransactionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return redirect('/');
     }
 }

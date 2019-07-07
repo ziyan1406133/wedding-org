@@ -20,7 +20,7 @@ class PackageController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('auth', ['except' => ['index', 'show', 'search']]);
     }
     
     /**
@@ -31,8 +31,8 @@ class PackageController extends Controller
     public function index()
     {
         $packages = Package::where('hidden', FALSE)->orderBy('created_at', 'desc')->paginate(10);
-
-        return view('package.index', compact('packages'));
+        $provinces = Province::all();
+        return view('package.index', compact('packages', 'provinces'));
     }
 
     /**
@@ -201,4 +201,33 @@ class PackageController extends Controller
         return response()->json($districts);
     }
 
+    public function search(Request $request) {
+
+        if($request->input('provinces') != '0') {
+            $province = Province::find($request->input('provinces'));
+            $userinprovinces = User::where('province_id', $province->id)->get();
+            $user_id[] = 0;
+    
+            foreach($userinprovinces as $user) {
+                $user_id[] = $user->id;
+            }
+    
+            if($request->input('regencies') != '0') {
+                $regency = Regency::find($request->input('regencies'));
+                $userinregencies = User::where('regency_id', $regency->id)->get();
+    
+                foreach($userinregencies as $user) {
+                    $user_id[] = $user->id;
+                }
+            }
+    
+            $packages = Package::whereIn('user_id', $user_id)
+                                ->where('hidden', FALSE)->orderBy('updated_at', 'desc')->paginate(10);
+            $provinces = Province::all();
+    
+            return view('package.index', compact('packages', 'provinces'));
+        } else {
+            return redirect('/package');
+        }
+    }
 }
