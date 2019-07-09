@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 07, 2019 at 06:47 PM
+-- Generation Time: Jul 09, 2019 at 03:12 PM
 -- Server version: 10.1.33-MariaDB
 -- PHP Version: 7.2.6
 
@@ -71,8 +71,6 @@ CREATE TABLE `carts` (
   `province_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` enum('Event Selesai','Deal','Pending','Cart','Dibatalkan') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Cart',
   `cancel_id` int(11) DEFAULT NULL,
-  `rating` int(1) DEFAULT NULL,
-  `ulasan` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -81,13 +79,13 @@ CREATE TABLE `carts` (
 -- Dumping data for table `carts`
 --
 
-INSERT INTO `carts` (`id`, `user_id`, `transaction_id`, `package_id`, `event_date`, `address`, `district_id`, `regency_id`, `province_id`, `status`, `cancel_id`, `rating`, `ulasan`, `created_at`, `updated_at`) VALUES
-(1, 1, 2, 1, '2019-07-17', 'dadadada', '3404120', '3404', '34', 'Deal', NULL, NULL, NULL, '2019-07-05 05:46:22', '2019-07-07 09:14:36'),
-(4, 1, 2, 7, '2019-07-17', 'dadadada', '3404120', '3404', '34', 'Dibatalkan', 9, NULL, NULL, '2019-07-05 05:54:50', '2019-07-07 09:14:36'),
-(6, 1, 2, 8, '2019-07-17', 'dadadada', '3404120', '3404', '34', 'Dibatalkan', 1, NULL, NULL, '2019-07-05 08:00:17', '2019-07-06 05:35:00'),
-(7, 1, NULL, 7, '2019-07-16', 'depok', '3404070', '3404', '34', 'Cart', NULL, NULL, NULL, '2019-07-05 08:16:44', '2019-07-06 05:53:18'),
-(8, 14, 3, 9, '2019-07-19', 'Cangkringan', '3404170', '3404', '34', 'Event Selesai', NULL, NULL, NULL, '2019-07-06 21:07:34', '2019-07-06 23:52:08'),
-(9, 14, NULL, 7, '2019-07-28', 'dadad222', '3404140', '3404', '34', 'Cart', NULL, NULL, NULL, '2019-07-06 23:38:58', '2019-07-06 23:38:58');
+INSERT INTO `carts` (`id`, `user_id`, `transaction_id`, `package_id`, `event_date`, `address`, `district_id`, `regency_id`, `province_id`, `status`, `cancel_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 2, 1, '2019-07-17', 'dadadada', '3404120', '3404', '34', 'Deal', NULL, '2019-07-05 05:46:22', '2019-07-07 09:14:36'),
+(4, 1, 2, 7, '2019-07-17', 'dadadada', '3404120', '3404', '34', 'Dibatalkan', 9, '2019-07-05 05:54:50', '2019-07-07 09:14:36'),
+(6, 1, 2, 8, '2019-07-17', 'dadadada', '3404120', '3404', '34', 'Dibatalkan', 1, '2019-07-05 08:00:17', '2019-07-06 05:35:00'),
+(7, 1, NULL, 7, '2019-07-16', 'depok', '3404070', '3404', '34', 'Cart', NULL, '2019-07-05 08:16:44', '2019-07-06 05:53:18'),
+(8, 14, 3, 9, '2019-07-19', 'Cangkringan', '3404170', '3404', '34', 'Dibatalkan', NULL, '2019-07-06 21:07:34', '2019-07-06 23:52:08'),
+(9, 14, NULL, 7, '2019-07-28', 'dadad222', '3404140', '3404', '34', 'Cart', NULL, '2019-07-06 23:38:58', '2019-07-06 23:38:58');
 
 -- --------------------------------------------------------
 
@@ -8047,7 +8045,7 @@ CREATE TABLE `transactions` (
 --
 
 INSERT INTO `transactions` (`id`, `user_id`, `bank_id`, `invoice`, `rekening`, `atas_nama`, `image`, `status`, `alasan`, `created_at`, `updated_at`) VALUES
-(2, 1, 2, 'INV/050719/266', '456789412', 'Nama Nama', 'ttd3_1562516304_.png', 'Sudah Dibayar', NULL, '2019-07-05 08:13:02', '2019-07-07 09:18:24'),
+(2, 1, NULL, 'INV/050719/266', NULL, NULL, 'no-image-icon-23483_1562676554_.png', 'Payment Confirmed', NULL, '2019-07-05 08:13:02', '2019-07-09 05:53:36'),
 (3, 14, NULL, 'INV/070719/361', NULL, NULL, 'ttd5_1562480856_.png', 'Dibatalkan', NULL, '2019-07-06 21:07:41', '2019-07-06 23:52:08');
 
 -- --------------------------------------------------------
@@ -8076,6 +8074,7 @@ CREATE TABLE `users` (
   `atas_nama` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `role` enum('Admin','Wedding Organizer','Customer') COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` enum('Terverifikasi','Belum Terverifikasi','Ditolak') COLLATE utf8mb4_unicode_ci DEFAULT 'Belum Terverifikasi',
+  `reputasi` int(11) NOT NULL DEFAULT '0',
   `alasan` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -8086,22 +8085,22 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `bank_id`, `name`, `username`, `email`, `email_verified_at`, `password`, `bio`, `mobile_no`, `address`, `district_id`, `regency_id`, `province_id`, `avatar`, `legal_doc`, `rekening`, `atas_nama`, `role`, `status`, `alasan`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, NULL, 'Customer Number One', 'customer#1', 'customer1@gmail.com', NULL, '$2y$10$Ri.O9Kf0ftgrb.zOG5plLuQvKNubYxsoNeFPfKkSV9E2gVKtPvuVG', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed a suscipit mauris, vel euismod nibh. Donec a urna nisl. Sed lorem nibh, maximus vulputate ultricies ac, auctor sit amet diam. Suspendisse vitae egestas nunc, nec rutrum arcu. Nullam sodales justo in blandit euismod. Aliquam eget mattis erat. Etiam quis bibendum dui. Ut a diam purus. Suspendisse vel felis tempus, sollicitudin dui sit amet, mollis arcu. Proin convallis dui non bibendum dignissim. Duis vestibulum, libero id gravida mattis, diam nisl molestie dolor, ut cursus diam mauris sit amet erat. Integer pellentesque augue erat, id cursus tellus bibendum eget. Curabitur eleifend vestibulum nisl. Vivamus rutrum dolor ac tristique efficitur.', NULL, 'Jl. Mayor Syamsu', '3205181', '3205', '32', 'woman-profile-cartoon-graphic-design-vector-illustration-eps-63800342_1562318720_.jpg', 'ktp-wna_1562235194_.jpg', NULL, NULL, 'Customer', 'Terverifikasi', NULL, NULL, '2019-07-02 03:59:00', '2019-07-05 17:03:12'),
-(2, NULL, 'Admin', 'admin', 'admin@wedding-org.test', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, NULL, '0', '0', '0', 'avatar2_1562248173_.png', 'no_image.png', NULL, NULL, 'Admin', NULL, NULL, NULL, '2019-07-02 04:39:26', '2019-07-04 06:49:33'),
-(4, 2, 'Wedding Organizer Number One', 'WO1', 'organizer1@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur erat enim, dapibus et metus vel, pharetra consequat enim. Praesent nec lorem magna. Curabitur vulputate odio non laoreet vulputate. Aliquam eget nisl posuere, rhoncus libero at, dapibus enim. Cras dapibus dapibus ornare. Proin libero lorem, ornare et sollicitudin vitae, luctus et ex. Nunc laoreet ac tellus nec faucibus. Cras dapibus magna dolor, nec semper ante aliquet sit amet. Sed tempus vestibulum massa, et interdum nibh suscipit a.\r\n\r\nClass aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aliquam nec ex viverra, semper sem sed, faucibus velit. Nam nisl orci, aliquam hendrerit efficitur nec, tincidunt non dui. Aenean malesuada convallis tempus. Sed blandit leo non gravida sollicitudin. Nullam non euismod lectus, vel malesuada mi. Vivamus vel maximus massa, sit amet vestibulum dui. Fusce a tristique ex. Nulla gravida elit id augue euismod dignissim. Nunc pulvinar eros non libero vul', NULL, 'PRAMBANAN', '3404090', '3404', '34', 'asma_1562260385_.jpg', 'npwp_1562260385_.jpg', '3448776152', 'Organizer Satu', 'Wedding Organizer', 'Terverifikasi', NULL, NULL, '2019-07-02 03:59:00', '2019-07-05 07:58:24'),
-(8, NULL, 'Filler Satu', 'filler1', 'filler1@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, NULL, NULL, NULL, NULL, 'no_avatar.png', 'no_image.png', NULL, NULL, 'Customer', 'Belum Terverifikasi', NULL, NULL, '2019-07-02 03:59:00', '2019-07-02 03:59:00'),
-(9, 6, 'Wedding Organizer Number Three', 'WO3', 'organizer3@gmail.com', NULL, '$2y$10$xKhSe0HTBgOck/XX3SEBYed.85cd1AnM3Z8nKPFLu1bj4e1lvaK2K', NULL, '085112247981', 'TEMPEL', '3404140', '1504', '34', 'logo_1562317451_.png', 'Screenshot_3_1562317451_.png', '04511874562', 'Organizer Dua', 'Wedding Organizer', 'Terverifikasi', NULL, NULL, '2019-07-02 03:59:00', '2019-07-05 02:07:53'),
-(10, NULL, 'Filler Tiga', 'filler3', 'filler3@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, NULL, NULL, NULL, NULL, 'no_avatar.png', 'no_image.png', NULL, NULL, 'Customer', 'Belum Terverifikasi', NULL, NULL, '2019-07-02 03:59:00', '2019-07-02 03:59:00'),
-(12, 12, 'Filler Lima', 'filler5', 'filler5@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, 'WWWW', '1504020', '1504', '15', '41171194_2258754061024786_9197098613803581440_n_1562245311_.jpg', '38533781_292006588241206_2064240206776631296_n_1562245311_.jpg', 'ww', 'ww', 'Wedding Organizer', 'Terverifikasi', NULL, NULL, '2019-07-02 03:59:00', '2019-07-04 06:01:51'),
-(13, NULL, 'Filler Enam', 'filler6', 'filler6@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, NULL, NULL, NULL, NULL, 'no_avatar.png', 'no_image.png', NULL, NULL, 'Customer', 'Belum Terverifikasi', NULL, NULL, '2019-07-02 03:59:00', '2019-07-02 03:59:00'),
-(14, NULL, 'Filler Tujuh', 'filler7', 'filler7@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, 'alamat', '1409041', '1409', '14', 'no_avatar.png', 'buah-buahan-segar-png_1562374867_.png', NULL, NULL, 'Customer', 'Terverifikasi', NULL, NULL, '2019-07-02 03:59:00', '2019-07-06 21:06:02'),
-(15, NULL, 'Filler Delapan', 'filler8', 'filler8@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, NULL, NULL, NULL, NULL, 'no_avatar.png', 'no_image.png', NULL, NULL, 'Customer', 'Belum Terverifikasi', NULL, NULL, '2019-07-02 03:59:00', '2019-07-02 03:59:00'),
-(16, NULL, 'Filler Sembilan', 'filler9', 'filler9@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, NULL, NULL, NULL, NULL, 'no_avatar.png', 'no_image.png', NULL, NULL, 'Wedding Organizer', 'Terverifikasi', NULL, NULL, '2019-07-02 03:59:00', '2019-07-02 03:59:00'),
-(17, NULL, 'Filler Sepuluh', 'filler10', 'filler10@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, NULL, NULL, NULL, NULL, 'no_avatar.png', 'no_image.png', NULL, NULL, 'Customer', 'Belum Terverifikasi', NULL, NULL, '2019-07-02 03:59:00', '2019-07-02 03:59:00'),
-(18, NULL, 'Filler Sebelas', 'filler11', 'filler11@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, NULL, NULL, NULL, NULL, 'no_avatar.png', 'no_image.png', NULL, NULL, 'Customer', 'Belum Terverifikasi', NULL, NULL, '2019-07-02 03:59:00', '2019-07-02 03:59:00'),
-(19, NULL, 'Filler Dua Belas', 'filler12', 'filler12@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, NULL, NULL, NULL, NULL, 'no_avatar.png', 'no_image.png', NULL, NULL, 'Wedding Organizer', 'Belum Terverifikasi', NULL, NULL, '2019-07-02 03:59:00', '2019-07-02 03:59:00'),
-(20, 2, 'Wedding Organizer Number Two', 'WO2', 'organizer2@gmail.com', NULL, '$2y$10$QRaEYvCm2h8F5py.G3kPCuwZEwsKlm3/XvjymIpDJJ9eJucQ8lNwG', NULL, NULL, 'TANGERANG', '3603132', '3603', '36', 'avatar6_1562244852_.png', '1984 - George Orwell_1562244852_.pdf', '4581187954', 'Wedding Organizer 2', 'Wedding Organizer', 'Ditolak', 'Dokumen yang diupload bukan CV / SIUP / NPWP', NULL, '2019-07-04 05:52:16', '2019-07-04 05:55:28');
+INSERT INTO `users` (`id`, `bank_id`, `name`, `username`, `email`, `email_verified_at`, `password`, `bio`, `mobile_no`, `address`, `district_id`, `regency_id`, `province_id`, `avatar`, `legal_doc`, `rekening`, `atas_nama`, `role`, `status`, `reputasi`, `alasan`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, NULL, 'Customer Number One', 'customer#1', 'customer1@gmail.com', NULL, '$2y$10$Ri.O9Kf0ftgrb.zOG5plLuQvKNubYxsoNeFPfKkSV9E2gVKtPvuVG', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed a suscipit mauris, vel euismod nibh. Donec a urna nisl. Sed lorem nibh, maximus vulputate ultricies ac, auctor sit amet diam. Suspendisse vitae egestas nunc, nec rutrum arcu. Nullam sodales justo in blandit euismod. Aliquam eget mattis erat. Etiam quis bibendum dui. Ut a diam purus. Suspendisse vel felis tempus, sollicitudin dui sit amet, mollis arcu. Proin convallis dui non bibendum dignissim. Duis vestibulum, libero id gravida mattis, diam nisl molestie dolor, ut cursus diam mauris sit amet erat. Integer pellentesque augue erat, id cursus tellus bibendum eget. Curabitur eleifend vestibulum nisl. Vivamus rutrum dolor ac tristique efficitur.', NULL, 'Jl. Mayor Syamsu', '3205181', '3205', '32', 'woman-profile-cartoon-graphic-design-vector-illustration-eps-63800342_1562318720_.jpg', 'ktp-wna_1562235194_.jpg', NULL, NULL, 'Customer', 'Terverifikasi', 250, NULL, NULL, '2019-07-02 03:59:00', '2019-07-05 17:03:12'),
+(2, NULL, 'Admin', 'admin', 'admin@wedding-org.test', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, NULL, '0', '0', '0', 'avatar2_1562248173_.png', 'no_image.png', NULL, NULL, 'Admin', NULL, 0, NULL, NULL, '2019-07-02 04:39:26', '2019-07-04 06:49:33'),
+(4, 2, 'Wedding Organizer Number One', 'WO1', 'organizer1@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur erat enim, dapibus et metus vel, pharetra consequat enim. Praesent nec lorem magna. Curabitur vulputate odio non laoreet vulputate. Aliquam eget nisl posuere, rhoncus libero at, dapibus enim. Cras dapibus dapibus ornare. Proin libero lorem, ornare et sollicitudin vitae, luctus et ex. Nunc laoreet ac tellus nec faucibus. Cras dapibus magna dolor, nec semper ante aliquet sit amet. Sed tempus vestibulum massa, et interdum nibh suscipit a.\r\n\r\nClass aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aliquam nec ex viverra, semper sem sed, faucibus velit. Nam nisl orci, aliquam hendrerit efficitur nec, tincidunt non dui. Aenean malesuada convallis tempus. Sed blandit leo non gravida sollicitudin. Nullam non euismod lectus, vel malesuada mi. Vivamus vel maximus massa, sit amet vestibulum dui. Fusce a tristique ex. Nulla gravida elit id augue euismod dignissim. Nunc pulvinar eros non libero vul', NULL, 'PRAMBANAN', '3404090', '3404', '34', 'asma_1562260385_.jpg', 'npwp_1562260385_.jpg', '3448776152', 'Organizer Satu', 'Wedding Organizer', 'Terverifikasi', 0, NULL, NULL, '2019-07-02 03:59:00', '2019-07-05 07:58:24'),
+(8, NULL, 'Filler Satu', 'filler1', 'filler1@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, NULL, NULL, NULL, NULL, 'no_avatar.png', 'no_image.png', NULL, NULL, 'Customer', 'Belum Terverifikasi', 0, NULL, NULL, '2019-07-02 03:59:00', '2019-07-02 03:59:00'),
+(9, 6, 'Wedding Organizer Number Three', 'WO3', 'organizer3@gmail.com', NULL, '$2y$10$xKhSe0HTBgOck/XX3SEBYed.85cd1AnM3Z8nKPFLu1bj4e1lvaK2K', NULL, '085112247981', 'TEMPEL', '3404140', '1504', '34', 'logo_1562317451_.png', 'Screenshot_3_1562317451_.png', '04511874562', 'Organizer Dua', 'Wedding Organizer', 'Terverifikasi', 1500, NULL, NULL, '2019-07-02 03:59:00', '2019-07-05 02:07:53'),
+(10, NULL, 'Filler Tiga', 'filler3', 'filler3@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, NULL, NULL, NULL, NULL, 'no_avatar.png', 'no_image.png', NULL, NULL, 'Customer', 'Belum Terverifikasi', 0, NULL, NULL, '2019-07-02 03:59:00', '2019-07-02 03:59:00'),
+(12, 12, 'Filler Lima', 'filler5', 'filler5@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, 'WWWW', '1504020', '1504', '15', '41171194_2258754061024786_9197098613803581440_n_1562245311_.jpg', '38533781_292006588241206_2064240206776631296_n_1562245311_.jpg', 'ww', 'ww', 'Wedding Organizer', 'Terverifikasi', 0, NULL, NULL, '2019-07-02 03:59:00', '2019-07-04 06:01:51'),
+(13, NULL, 'Filler Enam', 'filler6', 'filler6@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, NULL, NULL, NULL, NULL, 'no_avatar.png', 'no_image.png', NULL, NULL, 'Customer', 'Belum Terverifikasi', 0, NULL, NULL, '2019-07-02 03:59:00', '2019-07-02 03:59:00'),
+(14, NULL, 'Filler Tujuh', 'filler7', 'filler7@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, 'alamat', '1409041', '1409', '14', 'no_avatar.png', 'buah-buahan-segar-png_1562374867_.png', NULL, NULL, 'Customer', 'Terverifikasi', 0, NULL, NULL, '2019-07-02 03:59:00', '2019-07-06 21:06:02'),
+(15, NULL, 'Filler Delapan', 'filler8', 'filler8@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, NULL, NULL, NULL, NULL, 'no_avatar.png', 'no_image.png', NULL, NULL, 'Customer', 'Belum Terverifikasi', 0, NULL, NULL, '2019-07-02 03:59:00', '2019-07-02 03:59:00'),
+(16, NULL, 'Filler Sembilan', 'filler9', 'filler9@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, NULL, NULL, NULL, NULL, 'no_avatar.png', 'no_image.png', NULL, NULL, 'Wedding Organizer', 'Terverifikasi', 0, NULL, NULL, '2019-07-02 03:59:00', '2019-07-02 03:59:00'),
+(17, NULL, 'Filler Sepuluh', 'filler10', 'filler10@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, NULL, NULL, NULL, NULL, 'no_avatar.png', 'no_image.png', NULL, NULL, 'Customer', 'Belum Terverifikasi', 0, NULL, NULL, '2019-07-02 03:59:00', '2019-07-02 03:59:00'),
+(18, NULL, 'Filler Sebelas', 'filler11', 'filler11@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, NULL, NULL, NULL, NULL, 'no_avatar.png', 'no_image.png', NULL, NULL, 'Customer', 'Belum Terverifikasi', 0, NULL, NULL, '2019-07-02 03:59:00', '2019-07-02 03:59:00'),
+(19, NULL, 'Filler Dua Belas', 'filler12', 'filler12@gmail.com', NULL, '$2y$10$bGafLS8MrTdXPd/xbO9D/upUBGw21DD8peHPZMuQ3iQb4X3JtSXDi', NULL, NULL, NULL, NULL, NULL, NULL, 'no_avatar.png', 'no_image.png', NULL, NULL, 'Wedding Organizer', 'Belum Terverifikasi', 0, NULL, NULL, '2019-07-02 03:59:00', '2019-07-02 03:59:00'),
+(20, 2, 'Wedding Organizer Number Two', 'WO2', 'organizer2@gmail.com', NULL, '$2y$10$QRaEYvCm2h8F5py.G3kPCuwZEwsKlm3/XvjymIpDJJ9eJucQ8lNwG', NULL, NULL, 'TANGERANG', '3603132', '3603', '36', 'avatar6_1562244852_.png', '1984 - George Orwell_1562244852_.pdf', '4581187954', 'Wedding Organizer 2', 'Wedding Organizer', 'Ditolak', 0, 'Dokumen yang diupload bukan CV / SIUP / NPWP', NULL, '2019-07-04 05:52:16', '2019-07-04 05:55:28');
 
 --
 -- Indexes for dumped tables
@@ -8204,7 +8203,7 @@ ALTER TABLE `carts`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -8216,7 +8215,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `packages`
 --
 ALTER TABLE `packages`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `settings`

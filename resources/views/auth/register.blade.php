@@ -21,7 +21,7 @@
                     </div>
                     <div class="form-side">
                         <!--
-                        <a href="Dashboard.Default.html">
+                        <a href="/">
                             <span class="logo-single"></span>
                         </a>
                         -->

@@ -3,7 +3,7 @@
 @section('style')
 <link href="{{ asset('css/dore.light.blue.min.css') }}" rel="stylesheet">
 <link href="{{ asset('css/vendor/bootstrap-float-label.min.css') }}" rel="stylesheet">
-<link href="{{ asset('css/vendor/select2.min.css') }}" rel="stylesheet">
+<link href="{{ asset('css/vendor/select2.min.css') }}" rel="st  ylesheet">
 <link href="{{ asset('css/vendor/select2-bootstrap.min.css') }}" rel="stylesheet">
 @endsection
 
@@ -311,8 +311,7 @@
                                     <p>Event telah selesai dilaksanakan.</p>
                                 @elseif($cart->status == 'Deal')
                                     @if(auth()->user()->role == 'Customer')
-                                        <p>Pesanan paket ini telah disetujui, silahkan upload bukti pembayaran apabila semua paket di <a href="/transaction/{{$cart->transaction_id}}">transaksi ini</a> telah disetujui.</p>
-                                        @if($cart->package->status == 'Payment Confirmed')
+                                        @if($cart->transaction->status == 'Payment Confirmed')
                                         <a class="btn default btn-success card-img-bottom" data-toggle="modal" data-target="#selesai{{$cart->id}}" href="#"> Event Selesai</a>
                                         <div class="modal fade" id="selesai{{$cart->id}}" role="dialog">
                                             <div class="modal-dialog">
@@ -334,6 +333,8 @@
                                                 {!! Form::close() !!}
                                             </div>
                                         </div>
+                                        @else
+                                        <p>Pesanan paket ini telah disetujui, silahkan upload bukti pembayaran apabila semua paket di <a href="/transaction/{{$cart->transaction_id}}">transaksi ini</a> telah disetujui.</p>
                                         @endif
                                     @elseif(auth()->user()->role == 'Wedding Organizer')
                                         <p>Pesanan berhasil diterima, admin akan memberi tahu lewat email atau SMS apabila pembayaran telah dikonfirmasi. Pastikan rekening dan kontak di profil anda bisa digunakan.</p>

@@ -42,6 +42,9 @@ Route::get('/upcoming', 'CartController@upcoming')->name('upcoming');
 //Proses Verifikasi User
 Route::post('/verifikasi', 'UserController@verifikasi')->name('verifikasi.user');
 
+//Proses Konfirmasi Pembayaran
+Route::post('/confirm', 'UserController@confirm')->name('confirm.bayar');
+
 //dynamic select form
 Route::get('/json-regencies','UserController@regencies');
 Route::get('/json-districts', 'UserController@districts');

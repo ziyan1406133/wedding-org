@@ -216,4 +216,17 @@ class TransactionController extends Controller
     {
         return redirect('/');
     }
+
+
+    public function confim(Request $request)
+    {
+        $transaction = Transaction::findOrFail($request->input('id'));
+
+        $transaction->status = $request->input('status');
+        $transaction->status = $request->input('alasan');
+        $transaction->save();
+
+        return redirect('/transaction/'.$id)->with('success', 'Input berhasil dilakukan, status telah berubah.');
+
+    }
 }

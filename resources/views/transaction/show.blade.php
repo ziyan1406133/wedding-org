@@ -393,8 +393,12 @@
                                         <p>Apakah anda yakin untuk menerima bukti pembayaran ini?</p>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
-                                        <button type="submit" class="btn btn-primary btn-md">Ya</button>
+                                        {!! Form::open(['action' => 'TransactionController@confirm', 'method' => 'POST']) !!}
+                                                <input type="text" value="{{$transaction->id}}" name="id" id="id" hidden>  
+                                                <input type="text" value="Payment Confirmed" name="status" id="status" hidden>
+                                                <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
+                                                {{Form::submit('Ya', ['class' => 'btn btn-primary btn-md'])}}
+                                        {!! Form::close() !!}
                                     </div>
                                 </div>
                                 {!! Form::close() !!}
@@ -403,10 +407,11 @@
                         <div class="modal fade" id="tolak{{$transaction->id}}" role="dialog">
                             <div class="modal-dialog">
                                 <!-- Modal content-->
-                                {!! Form::model($cart, array('route' => array('transaction.update', $transaction->id), 'method' => 'PUT')) !!}
+                                {!! Form::open(['action' => 'TransactionController@confirm', 'method' => 'POST']) !!}
                                 <div class="modal-content">
                                     <div class="modal-body">
                                         <h5 class="mb-5">Alasan Penolakan</h5>
+                                        {!! Form::text('id', $transaction->id, ['hidden' => 'hidden']) !!}
                                         {!! Form::text('status', 'Menunggu Pembayaran', ['hidden' => 'hidden']) !!}
                                         {!! Form::textarea('alasan', '', ['class' => 'form-control', 'rows' => '3', 'required' => 'required']) !!}
                                     </div>
