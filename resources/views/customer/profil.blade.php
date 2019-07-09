@@ -341,18 +341,6 @@
                                     @else
                                         Belum diisi.
                                     @endif
-                                <p class="text-muted text-small mb-2">Reputasi</p>
-                                @if($user->reputasi < 0)
-                                    <span class = "badge badge-danger mb-3"><i class="simple-icon-badge"></i> {{$user->reputasi}}</span>
-                                @elseif(($user->reputasi >= 0) && ($user->reputasi < 100)) 
-                                    <span class = "badge badge-warning mb-3"><i class="simple-icon-badge"></i> {{$user->reputasi}}</span>
-                                @elseif(($user->reputasi >= 100) && ($user->reputasi < 600)) 
-                                    <span class = "badge badge-light mb-3"><i class="simple-icon-badge"></i> {{$user->reputasi}}</span>
-                                @elseif(($user->reputasi >= 600) && ($user->reputasi < 1000)) 
-                                    <span class = "badge badge-secondary mb-3"><i class="simple-icon-badge"></i> {{$user->reputasi}}</span>
-                                @elseif($user->reputasi >= 1000)
-                                    <span class = "badge badge-success mb-3"><i class="simple-icon-badge"></i> {{$user->reputasi}}</span>
-                                @endif
                                 <p class="text-muted text-small mb-2">Member Since</p>
                                 <p class="mb-3">{{ date('d-m-20y', strtotime($user->created_at)) }}</p>
                             </div>
