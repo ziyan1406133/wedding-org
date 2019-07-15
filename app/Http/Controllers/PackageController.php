@@ -87,7 +87,11 @@ class PackageController extends Controller
             $filename = pathInfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('image')->getClientOriginalExtension();
             $FileNameToStore = $filename.'_'.time().'_.'.$extension;
-            $path = $request->file('image')->storeAs('public/package/', $FileNameToStore);
+            $path = public_path('public/package/');
+            $request->file('image')->move($path, $FileNameToStore);
+
+            //$path = $request->file('image')->storeAs('public/package/', $FileNameToStore);
+
             $package->image = $FileNameToStore;
         }
         $package->save();
@@ -145,9 +149,12 @@ class PackageController extends Controller
             $filename = pathInfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('image')->getClientOriginalExtension();
             $FileNameToStore = $filename.'_'.time().'_.'.$extension;
-            $path = $request->file('image')->storeAs('public/package/', $FileNameToStore);
+            $path = public_path('public/package/');
+            $request->file('image')->move($path, $FileNameToStore);
+            //$path = $request->file('image')->storeAs('public/package/', $FileNameToStore);
             if ($package->image !== 'no_image.png') {
-                Storage::delete('public/package/'.$package->image);
+                $file = public_path('/public/avatar/'.$package->image);
+                unlink($file);
             }
             $package->image = $FileNameToStore;
         }
@@ -181,7 +188,8 @@ class PackageController extends Controller
             $deleted = 'DELETED';
             return $deleted;
             if($package->image !== 'no_image.png') {
-                Storage::delete('/public/avatar/'.$package->image);
+                $file = public_path('/public/avatar/'.$package->image);
+                unlink($file);
             }
             $package->delete();
         }

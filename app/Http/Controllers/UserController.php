@@ -12,6 +12,8 @@ use App\Province;
 use App\Regency;
 use App\District;
 use App\Package;
+use Symfony\Component\HttpFoundation\File\File;
+
 class UserController extends Controller
 {
     /**
@@ -180,22 +182,36 @@ class UserController extends Controller
             $filename = pathInfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('avatar')->getClientOriginalExtension();
             $FileNameToStore = $filename.'_'.time().'_.'.$extension;
-            $path = $request->file('avatar')->storeAs('public/avatar/', $FileNameToStore);
+            $path = public_path('/storage/avatar/');
+            $request->file('avatar')->move($path, $FileNameToStore);
+            //$path = $request->file('avatar')->storeAs('public/avatar/', $FileNameToStore);
             
             if ($user->avatar !== 'no_avatar.png') {
-                Storage::delete('public/avatar/'.$user->avatar);
+                $file = public_path('/storage/avatar/'.$user->avatar);
+                unlink($file);
             }
             $user->avatar = $FileNameToStore;
         }
         if($request->hasFile('legal_doc')){
+            /*
+            $image = $request->file('legal_doc');
+            $filename  = time() . '.' . $image->getClientOriginalExtension();
+            $location = base_path().'/legal_doc/' . $filename;
+            Image::make($image)->save($location);
+            */
+
             $filenameWithExt1 = $request->file('legal_doc')->getClientOriginalName();
             $filename1 = pathInfo($filenameWithExt1, PATHINFO_FILENAME);
             $extension1 = $request->file('legal_doc')->getClientOriginalExtension();
             $FileNameToStore1 = $filename1.'_'.time().'_.'.$extension1;
-            $path1 = $request->file('legal_doc')->storeAs('public/legaldoc/', $FileNameToStore1);
-            
+            $path1 = public_path('/storage/legaldoc/');
+            $request->file('legal_doc')->move($path1, $FileNameToStore1);
+
+            //$path1 = $request->file('legal_doc')->storeAs('public/legaldoc/', $FileNameToStore1);
+
             if ($user->legal_doc !== 'no_image.png') {
-                Storage::delete('public/legaldoc/'.$user->legal_doc);
+                $file = public_path('/storage/legaldoc/'.$user->legal_doc);
+                unlink($file);
             }
             $user->legal_doc = $FileNameToStore1;
         }
@@ -219,16 +235,19 @@ class UserController extends Controller
         if(count($packages) > 0) {
             foreach($packages as $package) {
                 if($package->image !== 'no_image.png') {
-                    Storage::delete('/public/avatar/'.$package->image);
+                    $file = public_path('/public/avatar/'.$package->image);
+                    unlink($file);
                 }
                 $package->delete();
             }
         }
         if($user->avatar !== 'no_avatar.png') {
-            Storage::delete('/public/avatar/'.$user->avatar);
+            $file = public_path('/storage/avatar/'.$user->avatar);
+            unlink($file);
         }
         if($user->legal_doc !== 'no_image.png') {
-            Storage::delete('/public/avatar/'.$user->legal_doc);
+            $file = public_path('/storage/legaldoc/'.$user->legal_doc);
+            unlink($file);
         }
         $user->delete();
         return redirect('/user')->with('success', 'Akun Berhasil Dihapus');

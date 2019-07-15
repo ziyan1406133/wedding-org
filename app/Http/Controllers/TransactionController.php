@@ -193,10 +193,14 @@ class TransactionController extends Controller
             $filename = pathInfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('image')->getClientOriginalExtension();
             $FileNameToStore = $filename.'_'.time().'_.'.$extension;
-            $path = $request->file('image')->storeAs('public/legaldoc/', $FileNameToStore);
+            $path = public_path('public/legaldoc/');
+            $request->file('image')->move($path, $FileNameToStore);
+            
+            //$path = $request->file('image')->storeAs('public/legaldoc/', $FileNameToStore);
             
             if ($transaction->image !== NULL) {
-                Storage::delete('public/legaldoc/'.$transaction->image);
+                $file = public_path('public/legaldoc/'.$transaction->image);
+                unlink($file);
             }
 
             $transaction->image = $FileNameToStore;
