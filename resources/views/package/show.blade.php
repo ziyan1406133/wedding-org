@@ -99,6 +99,11 @@
                                 <i class="iconsmind-Full-Cart"></i> Cart
                             </a>
                         </li>
+                        <li>
+                            <a href="/review">
+                                <i class="simple-icon-star"></i> Ulasan
+                            </a>
+                        </li>
                     </ul>
 
                 @elseif(auth()->user()->role == 'Admin')
@@ -155,6 +160,11 @@
                         <li>
                             <a href="/mypackage">
                                 <i class="iconsmind-Box-withFolders"></i> My Package
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/review">
+                                <i class="simple-icon-star"></i> Ulasan
                             </a>
                         </li>
                     </ul>
@@ -242,7 +252,6 @@
                     @endif
                 @endauth
                 @include('inc.messages')
-                <br>
 
                 <div class="row">
                     <div class="col">
@@ -258,12 +267,16 @@
                                 <p class="mb-3">
                                     {{$package->user->address}}, {{ucwords(strtolower($user->district['name']))}}, {{ucwords(strtolower($user->regency['name']))}}, {{ucwords(strtolower($user->province['name']))}};
                                 </p>
+                                <p class="text-muted text-small mb-2">Jenis Paket</p>
+                                <p class="mb-3">
+                                    Paket {{$package->jenis}}
+                                </p>
                                 <p class="text-muted text-small mb-2">Deskripsi</p>
                                 <p class="mb-3">
                                     {!!$package->description!!}
                                 </p>
                                 <p class="text-muted text-small mb-2">Price</p>
-                                <p class="mb-3">Rp. {{ number_format($package->price,0,",",".") }}</p>
+                                <p class="mb-3">Rp. {{ number_format($package->price,0,",",".") }} (Belum termasuk biaya operasional)</p>
                                 @auth
                                     @if($package->hidden == FALSE)
                                         @if(auth()->user()->role == 'Customer')

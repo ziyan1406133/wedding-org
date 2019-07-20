@@ -173,7 +173,6 @@
                     @endif
                 @endauth
                 @include('inc.messages')
-                <br>
             </div>
         </div>
 

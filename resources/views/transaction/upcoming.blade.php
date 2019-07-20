@@ -72,10 +72,10 @@
                     <a href="/package">
                         <i class="iconsmind-Box-withFolders"></i> Paket Wedding
                     </a>
-                </li class="active">
+                </li>
                 @auth
                     @if(auth()->user()->role != 'Admin')
-                    <li>
+                    <li class="active">
                         <a href="/upcoming">
                             <i class="simple-icon-calendar"></i> Upcoming Event
                         </a>
@@ -94,6 +94,11 @@
                         <li>
                             <a href="/cart">
                                 <i class="iconsmind-Full-Cart"></i> Cart
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/review">
+                                <i class="simple-icon-star"></i> Ulasan
                             </a>
                         </li>
                     </ul>
@@ -152,6 +157,11 @@
                         <li>
                             <a href="/mypackage">
                                 <i class="iconsmind-Box-withFolders"></i> My Package
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/review">
+                                <i class="simple-icon-star"></i> Ulasan
                             </a>
                         </li>
                     </ul>
@@ -214,7 +224,6 @@
                     </ol>
                 </nav>
                 @include('inc.messages')
-                <br>
             </div>
         </div>
         @if(count($carts) > 0)

@@ -126,7 +126,7 @@
         <div class="row">
             <div class="col-12">
 
-                <h1>Daftar Users</h1>
+                <h1>Lihat Pesan</h1>
                 <div class="float-right">
                     <a class="btn btn-danger" data-toggle="modal" data-target="#confirmdelete" href="#"><i class="simple-icon-trash"></i></a>
                 </div>
@@ -155,13 +155,15 @@
                         <li class="breadcrumb-item">
                             <a href="/home">Home</a>
                         </li>
+                        <li class="breadcrumb-item">
+                            <a href="/message">Messages</a>
+                        </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Users
+                            {{$message->id}}
                         </li>
                     </ol>
                 </nav>
                 @include('inc.messages')
-                <br>
             </div>
         </div>
         <div class="card">

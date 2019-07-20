@@ -97,6 +97,11 @@
                                 <i class="iconsmind-Full-Cart"></i> Cart
                             </a>
                         </li>
+                        <li>
+                            <a href="/review">
+                                <i class="simple-icon-star"></i> Ulasan
+                            </a>
+                        </li>
                     </ul>
 
                 @elseif(auth()->user()->role == 'Admin')
@@ -153,6 +158,11 @@
                         <li>
                             <a href="/mypackage">
                                 <i class="iconsmind-Box-withFolders"></i> My Package
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/review">
+                                <i class="simple-icon-star"></i> Ulasan
                             </a>
                         </li>
                     </ul>
@@ -245,14 +255,14 @@
                                 </a>
                                 <a href="/login" class="card">
                                     <div class="card-body text-center">
-                                        <i class="simple-icon-calendar"></i>
+                                        <i class="simple-icon-login"></i>
                                         <p class="card-text mb-0">Sign In</p>
                                     </div>
                                 </a>
 
                                 <a href="/register" class="card">
                                     <div class="card-body text-center">
-                                        <i class="iconsmind-Air-Balloon"></i>
+                                        <i class="simple-icon-arrow-up-circle"></i>
                                         <p class="card-text mb-0">Sign Up</p>
                                     </div>
                                 </a>

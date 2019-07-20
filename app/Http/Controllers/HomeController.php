@@ -34,10 +34,10 @@ class HomeController extends Controller
         if(Auth::check()) {
             if(auth()->user()->role == 'Admin') {
                 $cusers = User::where('status', 'Belum Terverifikasi')->get();
-                $ctransactions = Transaction::where('status', 'Sudah Dibayar')->get();
+                $ctransactions = Transaction::where('status', 'Bayar DP')->orWhere('status', 'Bayar Lunas')->get();
 
-                $users = User::where('status', 'Belum Terverifikasi')->orderBy('updated_at','desc')->limit(4)->get();
-                $transactions = Transaction::where('status', 'Sudah Dibayar')->orderBy('updated_at','desc')->limit(4)->get();
+                $users = User::where('status', 'Belum Terverifikasi')->orWhere('status', 'Bayar Lunas')->orderBy('updated_at','desc')->limit(4)->get();
+                $transactions = Transaction::where('status', 'Bayar DP')->orWhere('status', 'Bayar Lunas')->orderBy('updated_at','desc')->limit(4)->get();
 
                 $messages = Message::all();
                 return view('admin.dashboard', compact('users', 'transactions', 'messages', 'cusers', 'ctransactions'));

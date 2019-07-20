@@ -74,6 +74,11 @@
                         <i class="iconsmind-Full-Cart"></i> Cart
                     </a>
                 </li>
+                <li>
+                    <a href="/review">
+                        <i class="simple-icon-star"></i> Ulasan
+                    </a>
+                </li>
             </ul>
 
             <ul class="list-unstyled" data-link="myaccount">
@@ -119,7 +124,6 @@
                     </ol>
                 </nav>
                 @include('inc.messages')
-                <br>
             </div>
         </div>
         @if(count(auth()->user()->transactions) > 0)
@@ -138,10 +142,14 @@
                                     <span class="badge badge-pill badge-secondary">MENUNGGU PEMBAYARAN</span>
                                 @elseif($transaction->status == 'Dibatalkan')
                                     <span class="badge badge-pill badge-danger">CANCELED</span>
-                                    @elseif($transaction->status == 'Payment Confirmed')
-                                        <span class="badge badge-pill badge-success">PAYMENT CONFIRMED</span>
-                                @elseif($transaction->status == 'Sudah Dibayar')
-                                    <span class="badge badge-pill badge-success">SUDAH DIBAYAR</span>
+                                @elseif($transaction->status == 'DP Confirmed')
+                                    <span class="badge badge-pill badge-primary">DP TERKONFIRMASI</span>
+                                @elseif($transaction->status == 'Bayar DP')
+                                    <span class="badge badge-pill badge-secondary">Bayar DP</span>
+                                @elseif($transaction->status == 'Bayar Lunas')
+                                    <span class="badge badge-pill badge-secondary">Bayar Lunas</span>
+                                @elseif($transaction->status == 'Payment Confirmed')
+                                    <span class="badge badge-pill badge-success">LUNAS</span>
                                 @endif
                             </div>
                         </div>

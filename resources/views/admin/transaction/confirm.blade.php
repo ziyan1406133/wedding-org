@@ -144,7 +144,6 @@
                     </ol>
                 </nav>
                 @include('inc.messages')
-                <br>
             </div>
         </div>
         @if(count($transactions) > 0)

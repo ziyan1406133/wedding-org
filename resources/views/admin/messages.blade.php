@@ -139,7 +139,6 @@
                 </nav>
                 <div class="separator mb-5"></div>
                 @include('inc.messages')
-                <br>
             </div>
         </div>
             @if(count($messages)>0)

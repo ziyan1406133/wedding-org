@@ -5,6 +5,7 @@
 <link href="{{ asset('css/vendor/bootstrap-float-label.min.css') }}" rel="stylesheet">
 <link href="{{ asset('css/vendor/select2.min.css') }}" rel="st  ylesheet">
 <link href="{{ asset('css/vendor/select2-bootstrap.min.css') }}" rel="stylesheet">
+<link href="{{ asset('css/vendor/bootstrap-stars.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -99,6 +100,11 @@
                                 <i class="iconsmind-Full-Cart"></i> Cart
                             </a>
                         </li>
+                        <li>
+                            <a href="/review">
+                                <i class="simple-icon-star"></i> Ulasan
+                            </a>
+                        </li>
                     </ul>
 
                 @elseif(auth()->user()->role == 'Admin')
@@ -155,6 +161,11 @@
                         <li>
                             <a href="/mypackage">
                                 <i class="iconsmind-Box-withFolders"></i> My Package
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/review">
+                                <i class="simple-icon-star"></i> Ulasan
                             </a>
                         </li>
                     </ul>
@@ -218,12 +229,11 @@
                     </ol>
                 </nav>
                 @include('inc.messages')
-                <br>
 
                 <div class="row">
                     <div class="col">
                         <div class="card mb-4">
-                            <img src="{{ asset('/storage/package/'.$cart->package->image) }}" alt="Detail Picture" class="card-img-top">
+                            <a href="/package/{{$cart->package->id}}"> <img src="{{ asset('/storage/package/'.$cart->package->image) }}" alt="Detail Picture" class="card-img-top"></a>
 
                             <div class="card-body">
                                 <p class="text-muted text-small mb-2">Nama Paket</p>
@@ -251,7 +261,7 @@
                                     {{ date('d-m-20y', strtotime($cart->event_date)) }}
                                 </p>
                                 <p class="text-muted text-small mb-2">Price</p>
-                                <p class="mb-3">Rp. {{ number_format($cart->package->price,0,",",".") }}</p>
+                                <p class="mb-3">Rp. {{ number_format($cart->package->price + $cart->tambahan,0,",",".") }}</p>
                                 @if($cart->status == 'Pending')
                                     @if(auth()->user()->id == $cart->user->id)
                                         <a class="btn default btn-danger card-img-bottom" data-toggle="modal" data-target="#cancel{{$cart->id}}" href="#">Batal</a>
@@ -267,18 +277,30 @@
                                         <div class="modal fade" id="deal{{$cart->id}}" role="dialog">
                                             <div class="modal-dialog">
                                                 <!-- Modal content-->
-                                                {!! Form::model($cart, array('route' => array('cart.update', $cart->id), 'method' => 'PUT', ' enctype' => 'multipart/form-data')) !!}
+                                                {!! Form::model($cart, array('route' => array('cart.deal', $cart->id), 'method' => 'PUT', ' enctype' => 'multipart/form-data')) !!}
                                                 <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h3>Konfirmasi</h3>
-                                                    </div>
                                                     <div class="modal-body">
-                                                        <input type="text" value="Deal" name="status" id="status" hidden>
-                                                        <p>Apakah anda yakin untuk menerima pesanan ini?</p>
+                                                        <h2 class="mb-5">Terima Pesanan</h2>
+                                                        <label class="form-group has-float-label">
+                                                            <select class="form-control" name="dp" id="dp" required>
+                                                                <option value="" selected>-- Pilih Salah Satu --</option>
+                                                                <option value="50">50 %</option>
+                                                                <option value="55">55 %</option>
+                                                                <option value="60">60 %</option>
+                                                                <option value="65">65 %</option>
+                                                                <option value="70">70 %</option>
+                                                            </select>
+                                                            <span>DP</span>
+                                                        </label>
+                                                        <label class="form-group has-float-label">
+                                                            <input type="number"  min="0" class="form-control" name="tambahan" id="tambahan" required>
+                                                            <span>Biaya Operasional</span>
+                                                            <small id="number" class="form-text text-muted">Tulis tanpa tanda baca. Contoh: 5000000</small>
+                                                        </label>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
-                                                        <button type="submit" class="btn btn-primary btn-md">Ya</button>
+                                                        <button type="submit" class="btn btn-primary btn-md">Deal</button>
                                                     </div>
                                                 </div>
                                                 {!! Form::close() !!}
@@ -288,7 +310,7 @@
                                     <div class="modal fade" id="cancel{{$cart->id}}" role="dialog">
                                         <div class="modal-dialog">
                                             <!-- Modal content-->
-                                            {!! Form::model($cart, array('route' => array('cart.update', $cart->id), 'method' => 'PUT', ' enctype' => 'multipart/form-data')) !!}
+                                            {!! Form::model($cart, array('route' => array('cart.cancel', $cart->id), 'method' => 'PUT', ' enctype' => 'multipart/form-data')) !!}
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h3>Konfirmasi</h3>
@@ -311,19 +333,42 @@
                                     <p>Event telah selesai dilaksanakan.</p>
                                 @elseif($cart->status == 'Deal')
                                     @if(auth()->user()->role == 'Customer')
-                                        @if($cart->transaction->status == 'Payment Confirmed')
+                                        @if($cart->transaction->status == 'DP Confirmed')
                                         <a class="btn default btn-success card-img-bottom" data-toggle="modal" data-target="#selesai{{$cart->id}}" href="#"> Event Selesai</a>
                                         <div class="modal fade" id="selesai{{$cart->id}}" role="dialog">
                                             <div class="modal-dialog">
                                                 <!-- Modal content-->
-                                                {!! Form::model($cart, array('route' => array('cart.update', $cart->id), 'method' => 'PUT', ' enctype' => 'multipart/form-data')) !!}
+                                                {!! Form::model($cart, array('route' => array('cart.done', $cart->id), 'method' => 'PUT', ' enctype' => 'multipart/form-data')) !!}
                                                 <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h3>Konfirmasi</h3>
-                                                    </div>
                                                     <div class="modal-body">
+                                                        <h2 class="mb-5">Ulasan</h2>
+                                                        <label class="form-group has-float-label">
+                                                            <select class="form-control" name="reputasi_wo" id="reputasi_wo" required>
+                                                                <option value="" selected>-- Pilih Salah Satu --</option>
+                                                                <option value="Sangat Buruk">Sangat Buruk</option>
+                                                                <option value="Buruk">Buruk</option>
+                                                                <option value="Cukup">Cukup</option>
+                                                                <option value="Memuaskan">Memuaskan</option>
+                                                                <option value="Sangat Memuaskan">Sangat Memuaskan</option>
+                                                            </select>
+                                                            <span>Bagaimana layanan Wedding Organizer?</span>
+                                                        </label>
+                                                        <div class="text-center">
+                                                            <p>Beri Rating Untuk Paket</p>
+                                                            <div class="form-group mb-3">
+                                                                <select class="rating" name="rate" id="rate" required>
+                                                                    <option value="1">1</option>
+                                                                    <option value="2">2</option>
+                                                                    <option value="3">3</option>
+                                                                    <option value="4">4</option>
+                                                                    <option value="5">5</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <p class="mb-2">Ulasan Paket</p>
+                                                        <textarea class="form-control" name="ulasan" id="ulasan" rows="5" placeholder="Beri ulasan mengenai paket yang dipesan (seperti kesesuaian dengan deskripsi atau kualitas paket)"></textarea>
+                                                            
                                                         <input type="text" value="Event Selesai" name="status" id="status" hidden>
-                                                        <p>Klik "Selesaikan" apabila event ini telah selesai dilaksanakan.</p>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn  btn-md" data-dismiss="modal">Batal</button>
@@ -356,6 +401,7 @@
 @section('script')
 <script src="{{ asset('js/scripts.single.theme.js') }}"></script>
 <script src="{{ asset('js/vendor/select2.full.js') }}"></script>
+<script src="{{ asset('js/vendor/jquery.barrating.min.js') }}"></script>
 <script type="text/javascript">
 
     $('#provinces').on('change', function(e){

@@ -8034,7 +8034,7 @@ CREATE TABLE `transactions` (
   `rekening` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `atas_nama` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `image` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` enum('Sudah Dibayar','Menunggu Pembayaran','Pending','Dibatalkan','Payment Confirmed') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Pending',
+  `status` enum('Bayar DP','Menunggu Pembayaran','Pending','Dibatalkan','DP Confirmed') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Pending',
   `alasan` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -8045,7 +8045,7 @@ CREATE TABLE `transactions` (
 --
 
 INSERT INTO `transactions` (`id`, `user_id`, `bank_id`, `invoice`, `rekening`, `atas_nama`, `image`, `status`, `alasan`, `created_at`, `updated_at`) VALUES
-(2, 1, NULL, 'INV/050719/266', NULL, NULL, 'no-image-icon-23483_1562676554_.png', 'Payment Confirmed', NULL, '2019-07-05 08:13:02', '2019-07-09 05:53:36'),
+(2, 1, NULL, 'INV/050719/266', NULL, NULL, 'no-image-icon-23483_1562676554_.png', 'DP Confirmed', NULL, '2019-07-05 08:13:02', '2019-07-09 05:53:36'),
 (3, 14, NULL, 'INV/070719/361', NULL, NULL, 'ttd5_1562480856_.png', 'Dibatalkan', NULL, '2019-07-06 21:07:41', '2019-07-06 23:52:08');
 
 -- --------------------------------------------------------

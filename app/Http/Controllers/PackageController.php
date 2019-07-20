@@ -77,17 +77,25 @@ class PackageController extends Controller
      */
     public function store(Request $request)
     {
+        $price = $request->input('price');
         $package = new Package;
         $package->user_id = auth()->user()->id;
         $package->nama = $request->input('nama');
-        $package->price = $request->input('price');
+        $package->price = $price;
+        if($price < 10000000) {
+            $package->jenis = 'C';
+        } elseif(($price >= 10000000) && ($price < 100000000)) {
+            $package->jenis = 'B';
+        } elseif($price >= 100000000) {
+            $package->jenis = 'A';
+        }
         $package->description = $request->input('description');
         if($request->hasFile('image')){
             $filenameWithExt = $request->file('image')->getClientOriginalName();
             $filename = pathInfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('image')->getClientOriginalExtension();
             $FileNameToStore = $filename.'_'.time().'_.'.$extension;
-            $path = public_path('public/package/');
+            $path = public_path('storage/package/');
             $request->file('image')->move($path, $FileNameToStore);
 
             //$path = $request->file('image')->storeAs('public/package/', $FileNameToStore);
@@ -139,21 +147,29 @@ class PackageController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $price = $request->input('price');
         $package = Package::findOrFail($id);
         $package->user_id = auth()->user()->id;
         $package->nama = $request->input('nama');
-        $package->price = $request->input('price');
+        $package->price = $price;
+        if($price < 10000000) {
+            $package->jenis = 'C';
+        } elseif(($price >= 10000000) && ($price < 100000000)) {
+            $package->jenis = 'B';
+        } elseif($price >= 100000000) {
+            $package->jenis = 'A';
+        }
         $package->description = $request->input('description');
         if($request->hasFile('image')){
             $filenameWithExt = $request->file('image')->getClientOriginalName();
             $filename = pathInfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('image')->getClientOriginalExtension();
             $FileNameToStore = $filename.'_'.time().'_.'.$extension;
-            $path = public_path('public/package/');
+            $path = public_path('storage/package/');
             $request->file('image')->move($path, $FileNameToStore);
             //$path = $request->file('image')->storeAs('public/package/', $FileNameToStore);
             if ($package->image !== 'no_image.png') {
-                $file = public_path('/public/avatar/'.$package->image);
+                $file = public_path('/storage/package/'.$package->image);
                 unlink($file);
             }
             $package->image = $FileNameToStore;
@@ -185,10 +201,9 @@ class PackageController extends Controller
             return redirect('/mypackage')->with('success', 'Paket Berhasil Dihapus');
 
         } else {
-            $deleted = 'DELETED';
-            return $deleted;
             if($package->image !== 'no_image.png') {
-                $file = public_path('/public/avatar/'.$package->image);
+
+                $file = public_path('/storage/package/'.$package->image);
                 unlink($file);
             }
             $package->delete();
@@ -230,11 +245,22 @@ class PackageController extends Controller
             }
     
             $packages = Package::whereIn('user_id', $user_id)
-                                ->where('hidden', FALSE)->orderBy('updated_at', 'desc')->paginate(10);
+                                ->where('hidden', FALSE)
+                                ->where('jenis', 'like', '%'.$request->input('jenis').'%')
+                                ->orderBy('updated_at', 'desc')->paginate(10);
+            $provinces = Province::all();
+    
+            return view('package.index', compact('packages', 'provinces'));
+        } elseif(($request->input('jenis') != '0') && ($request->input('provinces') == '0')) {
+            
+            $packages = Package::where('hidden', FALSE)
+                                ->where('jenis', 'like', '%'.$request->input('jenis').'%')
+                                ->orderBy('updated_at', 'desc')->paginate(10);
             $provinces = Province::all();
     
             return view('package.index', compact('packages', 'provinces'));
         } else {
+            
             return redirect('/package');
         }
     }

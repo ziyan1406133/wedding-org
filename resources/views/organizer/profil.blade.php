@@ -96,6 +96,11 @@
                                 <i class="iconsmind-Full-Cart"></i> Cart
                             </a>
                         </li>
+                        <li>
+                            <a href="/review">
+                                <i class="simple-icon-star"></i> Ulasan
+                            </a>
+                        </li>
                     </ul>
 
                 @elseif(auth()->user()->role == 'Admin')
@@ -152,6 +157,11 @@
                         <li>
                             <a href="/mypackage">
                                 <i class="iconsmind-Box-withFolders"></i> My Package
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/review">
+                                <i class="simple-icon-star"></i> Ulasan
                             </a>
                         </li>
                     </ul>
@@ -327,7 +337,6 @@
                     @endif
                 @endauth
                 @include('inc.messages')
-                <br>
                 <ul class="nav nav-tabs separator-tabs ml-0 mb-5" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" id="first-tab" data-toggle="tab" href="#first" role="tab" aria-controls="first" aria-selected="true">PROFIL</a>

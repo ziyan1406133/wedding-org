@@ -138,7 +138,6 @@
                     </ol>
                 </nav>
                 @include('inc.messages')
-                <br>
 
                 <div class="card">
                     <div class="card-body">

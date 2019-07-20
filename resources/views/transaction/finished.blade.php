@@ -79,6 +79,11 @@
                         <i class="iconsmind-Box-withFolders"></i> My Package
                     </a>
                 </li>
+                <li>
+                    <a href="/review">
+                        <i class="simple-icon-star"></i> Ulasan
+                    </a>
+                </li>
             </ul>
 
             <ul class="list-unstyled" data-link="myaccount">
@@ -124,7 +129,6 @@
                     </ol>
                 </nav>
                 @include('inc.messages')
-                <br>
             </div>
         </div>
         @if(count($carts) > 0)
@@ -139,7 +143,7 @@
                                 <a href="/cart/{{$cart->id}}" class="w-40 w-sm-100">
                                     <p class="list-item-heading mb-1 truncate">{{$cart->package->nama}}</p>
                                 </a>
-                                <p class="mb-1 text-muted text-small w-15 w-sm-100">Rp. {{ number_format($cart->package->price,0,",",".") }}</p>
+                                <p class="mb-1 text-muted text-small w-15 w-sm-100">Rp. {{ number_format($cart->package->price + $cart->tambahan,0,",",".") }}</p>
                                 <p class="mb-1 text-muted text-small w-15 w-sm-100">{{ date('d-m-20y', strtotime($cart->event_date)) }}</p>
                                 <div class="w-15 w-xs-100">
                                     @if($cart->status == 'Event Selesai')

@@ -99,6 +99,11 @@
                                 <i class="iconsmind-Full-Cart"></i> Cart
                             </a>
                         </li>
+                        <li>
+                            <a href="/review">
+                                <i class="simple-icon-star"></i> Ulasan
+                            </a>
+                        </li>
                     </ul>
 
                 @elseif(auth()->user()->role == 'Admin')
@@ -157,6 +162,11 @@
                                 <i class="iconsmind-Box-withFolders"></i> My Package
                             </a>
                         </li>
+                        <li>
+                            <a href="/review">
+                                <i class="simple-icon-star"></i> Ulasan
+                            </a>
+                        </li>
                     </ul>
                 @endif
             @endauth
@@ -204,7 +214,7 @@
 
                 <h1>Paket Wedding</h1>
                 <div class="float-right">
-                    <a class="btn btn-outline-primary" data-toggle="modal" data-target="#search"  href="#"><i class="simple-icon-magnifier"></i></a>
+                    <a class="btn btn-outline-primary" data-toggle="modal" data-target="#search"  href="#"><i class="iconsmind-Filter-2"></i></a>
                 </div>
                 <div class="modal fade" id="search" role="dialog">
                     <div class="modal-dialog">
@@ -212,7 +222,7 @@
                         <div class="modal-content">
                             {!!Form::open(['action' => 'PackageController@search', 'method' => 'POST'])!!}
                             <div class="modal-body">
-                                <h5 class="mb-5">Cari Berdasarkan Lokasi</h5>
+                                <h5 class="mb-5">Filter</h5>
                                 <label class="form-group has-float-label">
                                     <select class="form-control select2-single" name="provinces" id="provinces">
                                         <option value="0" disable="true"></option>
@@ -220,14 +230,24 @@
                                             <option value="{{$value->id}}">{{ $value->name }}</option>
                                         @endforeach
                                     </select>
-                                    <span>Provinsi*</span>
+                                    <span>Provinsi</span>
                                 </label>
                                 
                                 <label class="form-group has-float-label">
                                     <select class="form-control select2-single" name="regencies" id="regencies">
                                         <option value="0" disable="true"></option>
                                     </select>
-                                    <span>Kabupaten*</span>
+                                    <span>Kabupaten</span>
+                                </label>
+
+                                <label class="form-group has-float-label">
+                                    <select class="form-control select2-single" name="jenis" id="jenis">
+                                        <option value="" disable="true"></option>
+                                        <option value="A">Paket A (>= Rp. 100.000.000)</option>
+                                        <option value="B">Paket B (>= Rp. 10.000.000 dan < Rp. 100.000.000)</option>
+                                        <option value="C">Paket C (< Rp. 10.000.000)</option>
+                                    </select>
+                                    <span>Jenis Paket</span>
                                 </label>
                             </div>
                             <div class="modal-footer">
@@ -249,7 +269,6 @@
                     </ol>
                 </nav>
                 @include('inc.messages')
-                <br>
                 
                 @if(count($packages) > 0)
                 <div class="card">

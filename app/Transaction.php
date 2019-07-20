@@ -18,4 +18,8 @@ class Transaction extends Model
         return $this->belongsTo('App\Bank');
     }
     
+    public function bank1() {
+        return $this->belongsTo('App\Bank', 'bank_id1');
+    }
+    
 }

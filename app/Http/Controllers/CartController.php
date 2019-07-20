@@ -147,18 +147,83 @@ class CartController extends Controller
      */
     public function update(Request $request, $id)
     {
+        return redirect('/');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function eventdone(Request $request, $id)
+    {
         $status = $request->input('status');
+        $penilaian = $request->input('reputasi_wo');
 
         $cart = Cart::findOrFail($id);
+        
+        $user = User::findOrFail($cart->package->user->id);
+        if($penilaian == 'Sangat Buruk') {
+            $user->reputasi = $user->reputasi - 100;
+        } elseif($penilaian == 'Buruk') {
+            $user->reputasi = $user->reputasi - 50;
+        } elseif($penilaian == 'Cukup') {
+            $user->reputasi = $user->reputasi + 10;
+        } elseif($penilaian == 'Memuaskan') {
+            $user->reputasi = $user->reputasi + 50;
+        } elseif($penilaian == 'Sangat Memuaskan') {
+            $user->reputasi = $user->reputasi + 100;
+        } 
+        $user->save();
+
         $cart->status = $status;
-        if($status == 'Dibatalkan') {
-            $cart->cancel_id = auth()->user()->id;
-        }
+        $cart->penilaian = $penilaian;
+        $cart->rate = $request->input('rate');
+        $cart->ulasan = $request->input('ulasan');
+        $cart->save();
+
+        return redirect('/cart/'.$id)->with('success', 'Event telah selesai.');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function cancel(Request $request, $id)
+    {
+        $status = $request->input('status');
+        $cart = Cart::findOrFail($id);
+        $cart->status = $status;
+        $cart->cancel_id = auth()->user()->id;
+        $cart->save();
+
+        return redirect('/cart/'.$id)->with('success', 'Pesanan Telah Dibatalkan.');
+
+
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function deal(Request $request, $id)
+    {
+        $cart = Cart::findOrFail($id);
+        $cart->status = 'Deal';
+        $cart->dp = $request->input('dp');
+        $cart->tambahan = $request->input('tambahan');
         $cart->save();
 
         $cartpendings = Cart::where('status', 'Pending')
                         ->where('user_id', $cart->user_id)->get();
-
 
         if(count($cartpendings) == '0') {
             $cartdone = Cart::findOrFail($id);
@@ -168,11 +233,10 @@ class CartController extends Controller
             $transaction->save();
         }
 
-        return redirect('/cart/'.$id)->with('success', 'Status pesanan diperbaharui.');
+        return redirect('/cart/'.$id)->with('success', 'Pesanan telah diterima.');
 
 
     }
-
     /**
      * Remove the specified resource from storage.
      *

@@ -170,7 +170,6 @@
                     @endif
                 @endauth
                 @include('inc.messages')
-                <br>
             </div>
         </div>
             @if(count($users)>0)

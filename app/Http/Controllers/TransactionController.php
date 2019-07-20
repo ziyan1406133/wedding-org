@@ -46,7 +46,7 @@ class TransactionController extends Controller
     public function confirm()
     {
         if(auth()->user()->role == 'Admin') {
-            $transactions = Transaction::where('status', 'Sudah Dibayar')->get();
+            $transactions = Transaction::where('status', 'Bayar DP')->get();
             return view('admin.transaction.confirm', compact('transactions'));
         } else {
             return redirect('/dashboard')->with('danger', 'Anda tidak memiliki hak untuk mengakses halaman tersebut.');
@@ -81,12 +81,13 @@ class TransactionController extends Controller
         $harga[] = 0;
         foreach($carts as $cart) {
             $harga[] = $cart->package->price;
+            $harga[] = $cart->tambahan;
         }
         $total = array_sum($harga);
 
 
         $pdf = PDF::loadview('transaction.invoice',
-                            compact('setting', 'transaction', 'carts', 'total'))->setPaper('a4', 'potrait');
+                            compact('setting', 'transaction', 'carts', 'total'))->setPaper('a4', 'landscape');
 
         return $pdf->stream($transaction->invoice.' - '.time().'.pdf');
     }
@@ -135,13 +136,20 @@ class TransactionController extends Controller
         $transaction = Transaction::findOrFail($id);
         $setting = Setting::first();
         $harga[] = 0;
+        $dp1[] = 0;
         foreach($transaction->carts as $cart) {
             if($cart->status == 'Deal') {
+                
                 $harga[] = $cart->package->price;
+                $harga[] = $cart->tambahan;
+
+                $bayar_dp = $cart->package->price + $cart->tambahan;
+                $dp1[] = round(($cart->dp / 100) * ($bayar_dp));
             }
         }
+        $dp = array_sum($dp1);
         $total = array_sum($harga);
-        return view('transaction.show', compact('transaction', 'banks', 'total', 'setting'));
+        return view('transaction.show', compact('transaction', 'banks', 'total', 'setting', 'dp'));
     }
 
     /**
@@ -164,6 +172,18 @@ class TransactionController extends Controller
      */
     public function update(Request $request, $id)
     {
+        redirect('/transaction/'.$id);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function bayardp(Request $request, $id)
+    {
         $this->validate($request, [
             'image' => 'image|max:1999'
         ],
@@ -175,39 +195,161 @@ class TransactionController extends Controller
         $transaction->bank_id = $request->input('bank');
         $transaction->rekening = $request->input('rekening');
         $transaction->atas_nama = $request->input('atas_nama');
-        $transaction->status = $request->input('status');
-
-        if($transaction->status == 'Dibatalkan') {
-            return $transaction->status;
-            $carts = Cart::where('transaction_id', $id)->get();
-            foreach($carts as $cart) {
-                $cart->status = 'Dibatalkan';
-                $cart->cancel_id = auth()->user()->id;
-                $cart->save();
-            }
+        $transaction->status = 'Bayar DP';
+        $transaction->jml_bayar = $request->input('jml_bayar');
+        
+        $filenameWithExt = $request->file('image')->getClientOriginalName();
+        $filename = pathInfo($filenameWithExt, PATHINFO_FILENAME);
+        $extension = $request->file('image')->getClientOriginalExtension();
+        $FileNameToStore = $filename.'_'.time().'_.'.$extension;
+        $path = public_path('storage/legaldoc/');
+        $request->file('image')->move($path, $FileNameToStore);
+        
+        //$path = $request->file('image')->storeAs('public/legaldoc/', $FileNameToStore);
+        
+        if ($transaction->image !== NULL) {
+            $file = public_path('storage/legaldoc/'.$transaction->image);
+            unlink($file);
         }
 
-        $transaction->alasan = $request->input('alasan');
-        if($request->hasFile('image')){
-            $filenameWithExt = $request->file('image')->getClientOriginalName();
-            $filename = pathInfo($filenameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('image')->getClientOriginalExtension();
-            $FileNameToStore = $filename.'_'.time().'_.'.$extension;
-            $path = public_path('public/legaldoc/');
-            $request->file('image')->move($path, $FileNameToStore);
-            
-            //$path = $request->file('image')->storeAs('public/legaldoc/', $FileNameToStore);
-            
-            if ($transaction->image !== NULL) {
-                $file = public_path('public/legaldoc/'.$transaction->image);
-                unlink($file);
-            }
+        $transaction->image = $FileNameToStore;
 
-            $transaction->image = $FileNameToStore;
-        }
         $transaction->save();
 
-        return redirect('/transaction/'.$id)->with('success', 'Input berhasil dilakukan, status telah berubah.');
+        return redirect('/transaction/'.$id)->with('success', 'Bukti pembayaran telah diupload. Silahkan tunggu konfirmasi dari Admin');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function tolakdp(Request $request, $id)
+    {
+        $transaction = Transaction::findOrFail($id);
+        $transaction->status = 'Menunggu Pembayaran';
+        
+        $transaction->save();
+
+        return redirect('/transaction/'.$id)->with('success', 'Bukti pembayaran dibatalkan.');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function confirmdp(Request $request, $id)
+    {
+        $transaction = Transaction::findOrFail($id);
+        $transaction->status = 'DP Confirmed';
+        $transaction->alasan = NULL;
+        
+        $transaction->save();
+
+        return redirect('/transaction/'.$id)->with('success', 'Bukti pembayaran Diterima.');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function bayarlunas(Request $request, $id)
+    {
+        $this->validate($request, [
+            'image' => 'image|max:1999'
+        ],
+        [
+            'image' => 'Bukti pembayaran harus berupa gambar'
+        ]);
+        $transaction = Transaction::findOrFail($id);
+
+        $transaction->bank_id1 = $request->input('bank');
+        $transaction->rekening1 = $request->input('rekening');
+        $transaction->atas_nama1 = $request->input('atas_nama');
+        $transaction->status = 'Bayar Lunas';
+        $transaction->jml_bayar =$transaction->jml_bayar + $request->input('jml_bayar');
+        
+        $filenameWithExt = $request->file('image')->getClientOriginalName();
+        $filename = pathInfo($filenameWithExt, PATHINFO_FILENAME);
+        $extension = $request->file('image')->getClientOriginalExtension();
+        $FileNameToStore = $filename.'_'.time().'_.'.$extension;
+        $path = public_path('storage/legaldoc/');
+        $request->file('image')->move($path, $FileNameToStore);
+        
+        //$path = $request->file('image')->storeAs('public/legaldoc/', $FileNameToStore);
+        
+        if ($transaction->image1 !== NULL) {
+            $file = public_path('storage/legaldoc/'.$transaction->image1);
+            unlink($file);
+        }
+
+        $transaction->image1 = $FileNameToStore;
+
+        $transaction->save();
+
+        return redirect('/transaction/'.$id)->with('success', 'Bukti pembayaran telah diupload. Silahkan tunggu konfirmasi dari Admin');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function cancellunas(Request $request, $id)
+    {
+        $transaction = Transaction::findOrFail($id);
+        $transaction->status = 'DP Confirmed';
+        
+        $transaction->save();
+
+        return redirect('/transaction/'.$id)->with('success', 'Bukti pembayaran dibatalkan.');
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function tolaklunas(Request $request, $id)
+    {
+        $transaction = Transaction::findOrFail($id);
+        $transaction->status = 'DP Confirmed';
+        $transaction->alasan = $request->input('alasan');
+        
+        $transaction->save();
+
+        return redirect('/transaction/'.$id)->with('success', 'Bukti pembayaran Ditolak dengan alasan "'.$transaction->alasan.'"');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function confirmlunas(Request $request, $id)
+    {
+        $transaction = Transaction::findOrFail($id);
+        $transaction->status = 'Payment Confirmed';
+        $transaction->alasan = NULL;
+        
+        $transaction->save();
+
+        return redirect('/transaction/'.$id)->with('success', 'Bukti pembayaran Diterima.');
     }
 
     /**
@@ -221,16 +363,4 @@ class TransactionController extends Controller
         return redirect('/');
     }
 
-
-    public function confim(Request $request)
-    {
-        $transaction = Transaction::findOrFail($request->input('id'));
-
-        $transaction->status = $request->input('status');
-        $transaction->status = $request->input('alasan');
-        $transaction->save();
-
-        return redirect('/transaction/'.$id)->with('success', 'Input berhasil dilakukan, status telah berubah.');
-
-    }
 }

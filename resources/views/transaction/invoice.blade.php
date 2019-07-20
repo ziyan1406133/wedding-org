@@ -74,6 +74,10 @@
     .table-borderless tbody + tbody {
       border: 0;
     }
+    .table-condensed tbody>tr>td {
+    padding-top: 0;
+    padding-bottom: 0;
+    }
 
     .footer {
     position: fixed;
@@ -107,21 +111,25 @@
     </tr>
 </table>
 <br>
-<table class="table table-bordered">
+<table class="table table-bordered table-condensed">
     <tr>
         <th>Nama Paket</th>
         <th>Tgl Event</th>
-        <th style="text-align: right;">Harga</th>
+        <th>Harga Paket</th>
+        <th>Biaya Operasional</th>
+        <th style="text-align: right;">Sub Total</th>
     </tr>
     @foreach($carts as $cart)
         <tr>
             <td>{{$cart->package->nama}}</td>
             <td>{{$cart->event_date}}</td>
             <td style="text-align: right;">Rp. {{ number_format($cart->package->price,0,",",".") }}</td>
+            <td style="text-align: right;">Rp. {{ number_format($cart->tambahan,0,",",".") }}</td>
+            <td style="text-align: right;">Rp. {{ number_format($cart->package->price + $cart->tambahan,0,",",".") }}</td>
         </tr>
     @endforeach
     <tr>
-        <th colspan="2" style="text-align: right;">Total</th>
+        <th colspan="4" style="text-align: right;">Total</th>
         <th style="text-align: right;">Rp. {{ number_format($total,0,",",".") }}</th>
     </tr>
 </table>

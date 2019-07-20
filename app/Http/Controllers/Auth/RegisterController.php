@@ -49,11 +49,16 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:191'],        
+            'name' => ['required', 'string'],
             'username' => ['required', 'string', 'max:191', 'unique:users'],
             'role' => ['required', 'string'],    
+            'legal_doc' => ['max:1999'],    
             'email' => ['required', 'string', 'email', 'max:191', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ],
+        [
+            'legal_doc.mimes' => 'Dokumen yang diupload harus berupa Gambar atau PDF',
+            'legal_doc.max' => 'Maksimum ukuran file yang diupload adalah 2 MB'
         ]);
     }
 
@@ -65,10 +70,20 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $request = request();
+
+        $filenameWithExt = $request->file('legal_doc')->getClientOriginalName();
+        $filename = pathInfo($filenameWithExt, PATHINFO_FILENAME);
+        $extension = $request->file('legal_doc')->getClientOriginalExtension();
+        $FileNameToStore = $filename.'_'.time().'_.'.$extension;
+        $path = public_path('/storage/legaldoc/');
+        $request->file('legal_doc')->move($path, $FileNameToStore);
+
         return User::create([
             'name' => $data['name'],        
             'username' => $data['username'],
             'role' => $data['role'],
+            'legal_doc' => $FileNameToStore,
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);

@@ -79,6 +79,11 @@
                         <i class="iconsmind-Box-withFolders"></i> My Package
                     </a>
                 </li>
+                <li>
+                    <a href="/review">
+                        <i class="simple-icon-star"></i> Ulasan
+                    </a>
+                </li>
             </ul>
 
             <ul class="list-unstyled" data-link="myaccount">
@@ -135,8 +140,8 @@
                             </label>
 
                             <label class="form-group has-float-label">
-                                <input type="text" class="form-control" 
-                                    name="price"value="{{$package->price}}"  maxlength="16" required>
+                                <input type="number"  min="0" class="form-control" 
+                                    name="price"value="{{$package->price}}" required>
                                 <span>Harga Paket</span>
                                 <small id="price" class="form-text text-muted">Tulis tanpa tanda baca. Contoh: 5000000</small>
                             </label>

@@ -79,6 +79,11 @@
                         <i class="iconsmind-Box-withFolders"></i> My Package
                     </a>
                 </li>
+                <li>
+                    <a href="/review">
+                        <i class="simple-icon-star"></i> Ulasan
+                    </a>
+                </li>
             </ul>
 
             <ul class="list-unstyled" data-link="myaccount">
@@ -126,7 +131,6 @@
                     </ol>
                 </nav>
                 @include('inc.messages')
-                <br>
                 
                 @if(count($packages) > 0)
                 <div class="card">

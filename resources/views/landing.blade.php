@@ -252,6 +252,65 @@
                 </div>
             </div>
 
+            <div class="section background">
+                <div class="container" id="reviews">
+                    <div class="row">
+                    <div class="col-12 offset-0 col-lg-8 offset-lg-2 text-center">
+                        <h1>Customer Reviews</h1>
+                        <p>
+                            Pelanggan dijamin puas tanpa penyesalan. Berikut adalah 
+                            beberapa ulasan tentang layanan paket wedding yang
+                            kami sediakan
+                        </p>
+                    </div>
+                    <div class="col-12 p-0">
+                        <div class="owl-container">
+                        <div class="owl-carousel review-carousel">
+
+                            <div class="card">
+                                <div class="card-body text-center pt-5 pb-5">
+                                    <div>
+                                    <img alt="profile" class="img-thumbnail border-0 rounded-circle mb-4 list-thumbnail mx-auto" src="img/profile-pic-l-7.jpg" />
+                                    <h5 class="mb-0 font-weight-semibold color-theme-1 mb-3">
+                                        codebars
+                                    </h5>
+                                    <select class="rating" data-current-rating="5" data-readonly="true">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                    <p class="text-muted text-small">Code Quality</p>
+                                    </div>
+                                    <div class="pl-3 pr-3 pt-3 pb-0 flex-grow-1 d-flex align-items-center">
+                                    <p class="mb-0 ">
+                                        Many that live deserve death. And some that die
+                                        deserve life. Can you give it to them? Then do not
+                                        be eager to deal out death in judgement. For even
+                                        the very wise cannot see all ends.
+                                    </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+        
+                        <div class="slider-nav text-center">
+                            <a href="#" class="left-arrow owl-prev">
+                            <i class="simple-icon-arrow-left"></i>
+                            </a>
+                            <div class="slider-dot-container"></div>
+                            <a href="#" class="right-arrow owl-next">
+                            <i class="simple-icon-arrow-right"></i>
+                            </a>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="section background background-no-bottom mb-0">
                 <div class="container" id="contact">
                     <div class="row">

@@ -156,12 +156,12 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'avatar' => 'image|max:1999',
-            'legal_doc' => 'mimes:jpeg,bmp,png,gif,svg,pdf|max:1999'
+            'legal_doc' => 'mimes:jpeg,jpg,bmp,png,gif,svg,pdf|max:1999'
         ],
         [
             'avatar.image' => 'Foto avatar yang diupload harus berupa gambar',
             'legal_doc.mimes' => 'Dokumen yang diupload harus berupa Gambar atau PDF',
-            'max' => 'Maksimum ukuran file yang diupload adalah 1.9 MB'
+            'max' => 'Maksimum ukuran file yang diupload adalah 2 MB'
         ]);
 
         $user = User::findOrFail($id);
@@ -235,7 +235,7 @@ class UserController extends Controller
         if(count($packages) > 0) {
             foreach($packages as $package) {
                 if($package->image !== 'no_image.png') {
-                    $file = public_path('/public/avatar/'.$package->image);
+                    $file = public_path('/storage/avatar/'.$package->image);
                     unlink($file);
                 }
                 $package->delete();
