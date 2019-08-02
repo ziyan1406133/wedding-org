@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Setting;
 use App\Bank;
+use App\Cart;
 
 class SettingController extends Controller
 {
@@ -15,10 +16,15 @@ class SettingController extends Controller
      */
     public function index()
     {
-        $setting = Setting::first();
-        $banks = Bank::all();
-
-        return view('admin.setting', compact('setting', 'banks'));
+        if(auth()->user()->role == 'Admin') {
+            $setting = Setting::first();
+            $banks = Bank::all();
+    
+            $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+            return view('admin.setting', compact('setting', 'banks', 'nav_admins'));
+        } else {
+            return redirect('/home')->with('error', 'Unauthorized Access.');
+        }
     }
 
     /**

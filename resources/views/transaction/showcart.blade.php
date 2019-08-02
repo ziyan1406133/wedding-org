@@ -231,7 +231,7 @@
                 @include('inc.messages')
 
                 <div class="row">
-                    <div class="col">
+                    <div class="col-lg-4 col-12 mb-4">
                         <div class="card mb-4">
                             <a href="/package/{{$cart->package->id}}"> <img src="{{ asset('/storage/package/'.$cart->package->image) }}" alt="Detail Picture" class="card-img-top"></a>
 
@@ -310,13 +310,12 @@
                                     <div class="modal fade" id="cancel{{$cart->id}}" role="dialog">
                                         <div class="modal-dialog">
                                             <!-- Modal content-->
-                                            {!! Form::model($cart, array('route' => array('cart.cancel', $cart->id), 'method' => 'PUT', ' enctype' => 'multipart/form-data')) !!}
+                                            {!! Form::model($cart, array('route' => array('cart.cancel', $cart->id), 'method' => 'PUT',)) !!}
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h3>Konfirmasi</h3>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <input type="text" value="Dibatalkan" name="status" id="status" hidden>
                                                     <p>Apakah anda yakin untuk membatalkan pesanan?</p>
                                                 </div>
                                                 <div class="modal-footer">

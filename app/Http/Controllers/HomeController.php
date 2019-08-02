@@ -8,7 +8,9 @@ use App\Package;
 use App\User;
 use App\Transaction;
 use App\Message;
+use App\Cart;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 class HomeController extends Controller
 {
@@ -21,7 +23,8 @@ class HomeController extends Controller
     {
         $setting = Setting::first();
         $packages = Package::where('hidden', FALSE)->inRandomOrder()->limit(4)->get();
-        return view('landing', compact('setting', 'packages'));
+        $carts = Cart::where('rate', '>', '3')->inRandomOrder()->limit(3)->get();
+        return view('landing', compact('setting', 'packages', 'carts'));
     }
 
     /**
@@ -38,9 +41,10 @@ class HomeController extends Controller
 
                 $users = User::where('status', 'Belum Terverifikasi')->orWhere('status', 'Bayar Lunas')->orderBy('updated_at','desc')->limit(4)->get();
                 $transactions = Transaction::where('status', 'Bayar DP')->orWhere('status', 'Bayar Lunas')->orderBy('updated_at','desc')->limit(4)->get();
-
+                
+                $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
                 $messages = Message::all();
-                return view('admin.dashboard', compact('users', 'transactions', 'messages', 'cusers', 'ctransactions'));
+                return view('admin.dashboard', compact('users', 'transactions', 'messages', 'cusers', 'ctransactions', 'nav_admins'));
             } elseif(auth()->user()->role == 'Customer') {
                 
                 return view('customer.dashboard');

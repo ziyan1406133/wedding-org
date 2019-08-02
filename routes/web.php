@@ -17,6 +17,9 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('landingpage');
 Route::get('/home', 'HomeController@home')->name('homepage');
+Route::get('/petunjuk', function () {
+    return view('petunjuk');
+});
 
 Route::resource('user', 'UserController');
 Route::resource('package', 'PackageController');
@@ -35,6 +38,7 @@ Route::post('/search', 'PackageController@search')->name('search');
 
 Route::get('/confirmindex', 'TransactionController@confirm')->name('confirm');
 Route::get('/pdf/{id}', 'TransactionController@pdf');
+Route::put('/transaction/{id}/cancelinvoice', 'TransactionController@cancelinvoice')->name('transaction.cancel');
 Route::put('/transaction/{id}/bayardp', 'TransactionController@bayardp')->name('bayar.dp');
 Route::put('/transaction/{id}/canceldp', 'TransactionController@canceldp')->name('cancel.dp');
 Route::put('/transaction/{id}/tolakdp', 'TransactionController@tolakdp')->name('tolak.dp');

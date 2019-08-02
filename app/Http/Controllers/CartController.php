@@ -27,10 +27,13 @@ class CartController extends Controller
      */
     public function index()
     {
-        $carts = Cart::where('user_id', auth()->user()->id)->where('status', 'Cart')->get();
+        if(auth()->user()->role == 'Customer') {
+            $carts = Cart::where('user_id', auth()->user()->id)->where('status', 'Cart')->get();
 
-        return view('transaction.cart', compact('carts'));
-    
+            return view('transaction.cart', compact('carts'));
+        } else {
+            return redirect('/home')->with('error', 'Unauthorized Access.');
+        }
     }
 
 
@@ -41,8 +44,12 @@ class CartController extends Controller
      */
     public function pending()
     {
-        $carts = Cart::where('status', 'pending')->paginate(10);
-        return view('transaction.pending', compact('carts'));
+        if(auth()->user()->role == 'Wedding Organizer') {
+            $carts = Cart::where('status', 'pending')->paginate(10);
+            return view('transaction.pending', compact('carts'));
+        } else {
+            return redirect('/home')->with('error', 'Unauthorized Access.');
+        }
     }
 
     /**
@@ -52,8 +59,12 @@ class CartController extends Controller
      */
     public function done()
     {
-        $carts = Cart::where('status', '!=', 'pending')->where('status', '!=', 'cart')->orderBy('updated_at', 'desc')->paginate(10);
-        return view('transaction.finished', compact('carts'));
+        if(auth()->user()->role == 'Wedding Organizer') {
+            $carts = Cart::where('status', '!=', 'pending')->where('status', '!=', 'cart')->orderBy('updated_at', 'desc')->paginate(10);
+            return view('transaction.finished', compact('carts'));
+        } else {
+            return redirect('/home')->with('error', 'Unauthorized Access.');
+        }
     }
 
     /**
@@ -63,17 +74,19 @@ class CartController extends Controller
      */
     public function upcoming()
     {
-        
         if(auth()->user()->role == 'Customer') {
             $carts = Cart::where('status', 'Deal')->where('user_id', auth()->user()->id)->orderBy('updated_at', 'desc')->paginate(10);
-        } else {
+        } elseif(auth()->user()->role == 'Wedding Organizer') {
             $mypackages = auth()->user()->allpackages;
             foreach($mypackages as $mypackage) {
                 $mypackagesid[] =  $mypackage->id;
             }
             $carts = Cart::where('status', 'Deal')->whereIn('package_id', $mypackagesid)->orderBy('updated_at', 'desc')->paginate(10);
+        } else {
+            $carts = Cart::where('status', 'Deal')->whereIn('package_id', $mypackagesid)->orderBy('updated_at', 'desc')->paginate(10);
         }
-        return view('transaction.upcoming', compact('carts'));
+        $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+        return view('transaction.upcoming', compact('carts', 'nav_admins'));
     }
 
     /**
@@ -123,8 +136,9 @@ class CartController extends Controller
     public function show($id)
     {
         $cart = Cart::findOrFail($id);
+        $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
 
-        return view('transaction.showcart', compact('cart'));
+        return view('transaction.showcart', compact('cart', 'nav_admins'));
     }
 
     /**
@@ -196,13 +210,12 @@ class CartController extends Controller
      */
     public function cancel(Request $request, $id)
     {
-        $status = $request->input('status');
         $cart = Cart::findOrFail($id);
-        $cart->status = $status;
+        $cart->status = 'Dibatalkan';
         $cart->cancel_id = auth()->user()->id;
         $cart->save();
 
-        return redirect('/cart/'.$id)->with('success', 'Pesanan Telah Dibatalkan.');
+        return redirect('/transaction/'.$cart->transaction->id)->with('success', 'Pesanan Telah Dibatalkan.');
 
 
     }

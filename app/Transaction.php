@@ -13,7 +13,7 @@ class Transaction extends Model
     public function carts() {
         return $this->hasMany('App\Cart');
     }
-
+    
     public function bank() {
         return $this->belongsTo('App\Bank');
     }

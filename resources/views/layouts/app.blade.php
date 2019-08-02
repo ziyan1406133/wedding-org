@@ -23,7 +23,6 @@
     <link href="{{ asset('css/vendor/owl.carousel.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/vendor/bootstrap-stars.css') }}" rel="stylesheet">
     <link href="{{ asset('css/main.css') }}" rel="stylesheet">
-    
 
     @yield('style')
 

@@ -263,7 +263,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Menunggu Pembayaran</h5>
                             @if(count(auth()->user()->paytransactions_lim) > 0)
-                                @foreach(auth()->user()->pendcarts_lim as $transaction)
+                                @foreach(auth()->user()->paytransactions_lim as $transaction)
                                 <div class="card d-flex flex-row mb-3">
                                         <div class="d-flex flex-grow-1 min-width-zero">
                                             <div class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">

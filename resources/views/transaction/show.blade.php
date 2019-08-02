@@ -211,11 +211,11 @@
             <div class="col">
 
                 <h1>{{$transaction->invoice}}</h1>
-                
-                @if(($transaction->status != 'Dibatalkan') && ($transaction->status != 'Pending'))
-                <div class="float-right">
-                    <a class="btn btn-secondary" href="/pdf/{{$transaction->id}}"><i class="simple-icon-printer"></i></a>
-                </div>
+
+                @if(($transaction->status != 'Dibatalkan') && ($transaction->status != 'Pending') && (auth()->user()->id == $transaction->id))
+                    <div class="float-right">
+                        <a class="btn btn-secondary" href="/pdf/{{$transaction->id}}"><i class="simple-icon-printer"></i></a>
+                    </div>
                 @endif
                 
                 <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
@@ -268,7 +268,6 @@
                                         <h3>Konfirmasi</h3>
                                     </div>
                                     <div class="modal-body">
-                                        <input type="text" value="Dibatalkan" name="status" id="status" hidden>
                                         <p>Apakah anda yakin untuk membatalkan pesanan?</p>
                                     </div>
                                     <div class="modal-footer">

@@ -10,8 +10,12 @@ class Package extends Model
         return $this->belongsTo('App\User');
     }
     
-
     public function carts(){
         return $this->hasMany('App\Cart');
     }
+    
+    public function reviews(){
+        return $this->hasMany('App\Cart')->where('rate', '!=', NULL)->orderBy('updated_at', 'desc');
+    }
+
 }

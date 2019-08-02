@@ -5,9 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Province;
-use App\District;
-use App\Regency;
+use App\Package;
 
 class User extends Authenticatable
 {
@@ -119,5 +117,46 @@ class User extends Authenticatable
         return $this->hasMany('App\Transaction')
                     ->where('status', 'Menunggu Pembayaran')
                     ->orderBy('created_at', 'desc');
+    }
+
+    public function hmin2_customer() {
+        $date = date('Y-m-d', strtotime('2 days'));
+        return $this->hasMany('App\Cart')
+                    ->where('status', 'Deal')
+                    ->where('event_date', '<=', $date)
+                    ->where('event_date', '>', now())
+                    ->orderBy('updated_at', 'desc');
+    }
+
+    public function nav_done() {
+        return $this->hasManyThrough('App\Cart', 'App\Package', 'user_id', 'package_id')
+                    ->where('status', 'Event Selesai')
+                    ->where('respon', NULL)
+                    ->orderBy('updated_at', 'desc');
+    }
+
+    public function hmin2_organizer() {
+        $date = date('Y-m-d', strtotime('2 days'));
+        return $this->hasManyThrough('App\Cart', 'App\Package', 'user_id', 'package_id')
+                    ->where('status', 'Deal')
+                    ->where('event_date', '<=', $date)
+                    ->where('event_date', '>', now())
+                    ->orderBy('updated_at', 'desc');
+    }
+
+    public function hmin5() {
+        $date = date('Y-m-d', strtotime('5 days'));
+        $transactions = Transaction::where('status', 'Payment Confirmed')->get();
+        $transaction_id[] = 0;
+        if(count($transactions) > 0) {
+            foreach($transactions as $transaction) {
+                $transaction_id[] = $transaction->id;
+            }
+        }
+        return $this->hasMany('App\Cart')
+                    ->where('event_date', '<=', $date)
+                    ->where('event_date', '>', now())
+                    ->whereNotIn('transaction_id', $transaction_id)
+                    ->orderBy('updated_at', 'desc');
     }
 }

@@ -12,6 +12,7 @@ use App\Province;
 use App\Regency;
 use App\District;
 use App\Package;
+use App\Cart;
 use Symfony\Component\HttpFoundation\File\File;
 
 class UserController extends Controller
@@ -33,8 +34,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::where('status', '!=', NULL)->orderBy('created_at', 'desc')->get();
-        return view('admin.user.all', compact('users'));
+        if(auth()->user()->role == 'Admin') {
+            $users = User::where('status', '!=', NULL)->orderBy('created_at', 'desc')->get();
+            $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+            return view('admin.user.all', compact('users', 'nav_admins'));
+        } else {
+            return redirect('/home')->with('error', 'Anda tidak memiliki hak untuk mengakses halaman tersebut.');
+        }
     }
 
 
@@ -45,7 +51,7 @@ class UserController extends Controller
      */
     public function organizer()
     {
-        //
+        return redirect('/');
     }
 
     /**
@@ -55,8 +61,13 @@ class UserController extends Controller
      */
     public function verifieduser()
     {
-        $users = User::where('status', 'Terverifikasi')->get();
-        return view('admin.user.verified', compact('users'));
+        if(auth()->user()->role == 'Admin') {
+            $users = User::where('status', 'Terverifikasi')->get();
+            $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+            return view('admin.user.verified', compact('users', 'nav_admins'));
+        } else {
+            return redirect('/home')->with('error', 'Anda tidak memiliki hak untuk mengakses halaman tersebut.');
+        }
     }
 
     /**
@@ -66,8 +77,13 @@ class UserController extends Controller
      */
     public function unverifieduser()
     {
-        $users = User::where('status', 'Belum Terverifikasi')->get();
-        return view('admin.user.pending', compact('users'));
+        if(auth()->user()->role == 'Admin') {
+            $users = User::where('status', 'Belum Terverifikasi')->get();
+            $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+            return view('admin.user.pending', compact('users', 'nav_admins'));
+        } else {
+            return redirect('/home')->with('error', 'Anda tidak memiliki hak untuk mengakses halaman tersebut.');
+        }
     }
 
     /**
@@ -77,8 +93,13 @@ class UserController extends Controller
      */
     public function rejecteduser()
     {
-        $users = User::where('status', 'Ditolak')->get();
-        return view('admin.user.rejected', compact('users'));
+        if(auth()->user()->role == 'Admin') {
+            $users = User::where('status', 'Ditolak')->get();
+            $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+            return view('admin.user.rejected', compact('users', 'nav_admins'));
+        } else {
+            return redirect('/home')->with('error', 'Anda tidak memiliki hak untuk mengakses halaman tersebut.');
+        }
     }
 
     /**
@@ -88,7 +109,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return redirect ('/home');
+        return redirect ('/register');
     }
 
     /**
@@ -99,7 +120,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        return redirect ('/home');
+        return redirect ('/');
     }
 
     /**
@@ -112,11 +133,14 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         if($user->role == 'Admin') {
-            return view('admin.profil', compact('user'));
+            $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+            return view('admin.profil', compact('user', 'nav_admins'));
         } elseif ($user->role == 'Wedding Organizer') {
-            return view('organizer.profil', compact('user'));
+            $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+            return view('organizer.profil', compact('user', 'nav_admins'));
         } else {
-            return view('customer.profil', compact('user'));
+            $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+            return view('customer.profil', compact('user', 'nav_admins'));
         }
     }
 
@@ -133,7 +157,8 @@ class UserController extends Controller
 
         if((auth()->user()->role == 'Admin') || (auth()->user()->id == $id)) {
             if($user->role == 'Customer') {
-                return view('customer.edit', compact('user', 'provinces'));
+                $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+                return view('customer.edit', compact('user', 'provinces', 'nav_admins'));
             } elseif($user->role == 'Wedding Organizer') {
                 $banks = Bank::orderBy('nama', 'asc')->get();
                 return view('organizer.edit', compact('user', 'provinces', 'banks'));
@@ -141,7 +166,7 @@ class UserController extends Controller
                 return view('admin.edit', compact('user', 'provinces'));
             }
         } else {
-            return redirect ('/home')->with('error', 'Anda tidak memiliki hak untuk mengakses halaman tersebut.');
+            return redirect ('/home')->with('error', 'Unauthorized Access.');
         }
     }
 
@@ -273,7 +298,8 @@ class UserController extends Controller
     public function editpassword($id) {
         if(auth()->user()->id == $id) {
             $user = User::findOrFail($id);
-            return view('auth.editpassword', compact('user'));
+            $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+            return view('auth.editpassword', compact('user', 'nav_admins'));
 
         } else {
             return redirect('/home')->with('error', 'Anda tidak memiliki hak akses.');
@@ -284,7 +310,7 @@ class UserController extends Controller
     public function editpassword1(Request $request, $id) {
 
         $this->validate($request, [
-            'password1' => 'same:password2'
+            'password' => 'same:password1'
             ],
             [
                 'same' => 'Konfirmasi Password Baru Tidak Sesuai'

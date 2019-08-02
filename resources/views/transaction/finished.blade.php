@@ -152,8 +152,8 @@
                                         <span class="badge badge-pill badge-primary">DEAL</span>
                                     @elseif($cart->status == 'Pending')
                                         <span class="badge badge-pill badge-warning">PENDING</span>
-                                    @else
-                                        <span class="badge badge-pill badge-danger">CANCELED by {{$cart->cancel->role}}</span>
+                                    @elseif($cart->status == 'Dibatalkan')
+                                        <span class="badge badge-pill badge-danger">CANCELED by {{$cart->cancel['role']}}</span>
                                     @endif
                                 </div>
                             </div>

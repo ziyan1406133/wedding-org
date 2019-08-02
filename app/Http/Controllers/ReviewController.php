@@ -9,6 +9,16 @@ use App\User;
 class ReviewController extends Controller
 {
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -17,12 +27,14 @@ class ReviewController extends Controller
     {
         if(auth()->user()->role == 'Customer') {
             $carts = Cart::where('status', 'Event Selesai')->where('user_id', auth()->user()->id)->orderBy('updated_at', 'desc')->paginate(10);
-        } else {
+        } elseif(auth()->user()->role == 'Wedding Organizer') {
             $mypackages = auth()->user()->allpackages;
             foreach($mypackages as $mypackage) {
                 $mypackagesid[] =  $mypackage->id;
             }
             $carts = Cart::where('status', 'Event Selesai')->whereIn('package_id', $mypackagesid)->orderBy('updated_at', 'desc')->paginate(10);
+        } else {
+            return redirect('/home');
         }
         return view('review.index', compact('carts'));
     }
@@ -34,7 +46,7 @@ class ReviewController extends Controller
      */
     public function create()
     {
-        //
+        return redirect('/');
     }
 
     /**
@@ -45,7 +57,7 @@ class ReviewController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return redirect('/');
     }
 
     /**
@@ -57,7 +69,8 @@ class ReviewController extends Controller
     public function show($id)
     {
         $cart = Cart::findOrFail($id);
-        return view('review.show', compact('cart'));
+        $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+        return view('review.show', compact('cart', 'nav_admins'));
 
     }
 
@@ -69,7 +82,7 @@ class ReviewController extends Controller
      */
     public function edit($id)
     {
-        //
+        return redirect('/');
     }
 
     /**
@@ -132,6 +145,6 @@ class ReviewController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return redirect('/');
     }
 }

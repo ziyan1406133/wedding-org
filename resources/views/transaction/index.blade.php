@@ -159,13 +159,12 @@
                                 <div class="modal fade" id="cancel{{$transaction->id}}" role="dialog">
                                     <div class="modal-dialog">
                                         <!-- Modal content-->
-                                        {!! Form::model($transaction, array('route' => array('transaction.update', $transaction->id), 'method' => 'PUT')) !!}
+                                        {!! Form::model($transaction, array('route' => array('transaction.cancel', $transaction->id), 'method' => 'PUT')) !!}
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h3>Konfirmasi</h3>
                                             </div>
                                             <div class="modal-body">
-                                                <input type="text" value="Dibatalkan" name="status" id="status" hidden>
                                                 <p>Apakah anda yakin untuk membatalkan pesanan?</p>
                                             </div>
                                             <div class="modal-footer">

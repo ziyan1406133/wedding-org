@@ -32,7 +32,8 @@ class PackageController extends Controller
     {
         $packages = Package::where('hidden', FALSE)->orderBy('created_at', 'desc')->paginate(10);
         $provinces = Province::all();
-        return view('package.index', compact('packages', 'provinces'));
+        $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+        return view('package.index', compact('packages', 'provinces', 'nav_admins'));
     }
 
     /**
@@ -49,7 +50,7 @@ class PackageController extends Controller
     
             return view('package.myindex', compact('packages'));
         } else {
-            return redirect('/home')->with('error', 'Anda tidak memiliki hak untuk mengakses halaman tersebut.');
+            return redirect('/home')->with('error', 'Unauthorized Access.');
         }
 
     }
@@ -65,7 +66,7 @@ class PackageController extends Controller
             
             return view('package.create');
         } else {
-            return redirect('/home')->with('error', 'Anda tidak memiliki hak untuk mengakses halaman tersebut.');
+            return redirect('/home')->with('error', 'Unauthorized Access.');
         }
     }
 
@@ -118,7 +119,17 @@ class PackageController extends Controller
         $package = Package::findOrFail($id);
         $user = User::where('id', $package->user_id)->first();
         $provinces = Province::all();
-        return view('package.show', compact('package', 'user', 'provinces'));
+        $reviews = Package::find($id)->reviews()->paginate(10);
+        if(count($package->reviews) > 0) {
+            foreach ($package->reviews as $review) {
+                $rates[] = $review->rate;
+                $average = round(array_sum($rates) / count($rates));
+            }
+        } else {
+            $average = NULL;
+        }
+        $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+        return view('package.show', compact('package', 'user', 'provinces', 'reviews', 'average', 'nav_admins'));
     }
 
     /**
@@ -134,7 +145,7 @@ class PackageController extends Controller
             
             return view('package.edit', compact('package'));
         } else {
-            return redirect('/home')->with('error', 'Anda tidak memiliki hak untuk mengakses halaman tersebut.');
+            return redirect('/home')->with('error', 'Unauthorized Access.');
         }
     }
 
@@ -250,7 +261,8 @@ class PackageController extends Controller
                                 ->orderBy('updated_at', 'desc')->paginate(10);
             $provinces = Province::all();
     
-            return view('package.index', compact('packages', 'provinces'));
+            $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+            return view('package.index', compact('packages', 'provinces', 'nav_admins'));
         } elseif(($request->input('jenis') != '0') && ($request->input('provinces') == '0')) {
             
             $packages = Package::where('hidden', FALSE)
@@ -258,7 +270,8 @@ class PackageController extends Controller
                                 ->orderBy('updated_at', 'desc')->paginate(10);
             $provinces = Province::all();
     
-            return view('package.index', compact('packages', 'provinces'));
+            $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+            return view('package.index', compact('packages', 'provinces', 'nav_admins'));
         } else {
             
             return redirect('/package');

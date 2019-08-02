@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Message;
+use App\Cart;
 
 class MessageController extends Controller
 {
@@ -14,9 +15,14 @@ class MessageController extends Controller
      */
     public function index()
     {
-        $messages = Message::all();
-
-        return view('admin.messages', compact('messages'));
+        if(auth()->user()->role == 'Admin') {
+            $messages = Message::all();
+            $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+    
+            return view('admin.messages', compact('messages', 'nav_admins'));
+        } else {
+            return redirect('/home')->with('error', 'Unauthorized Access.');
+        }
     }
 
     /**
@@ -53,9 +59,14 @@ class MessageController extends Controller
      */
     public function show($id)
     {
-        $message = Message::findOrFail($id);
+        if(auth()->user()->role == 'Admin') {
+            $message = Message::findOrFail($id);
+            $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
 
-        return view('admin.showmessage', compact('message'));
+            return view('admin.showmessage', compact('message', 'nav_admins'));
+        } else {
+            return redirect('/home')->with('error', 'Unauthorized Access.');
+        }
     }
 
     /**

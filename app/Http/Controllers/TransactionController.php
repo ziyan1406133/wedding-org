@@ -30,11 +30,12 @@ class TransactionController extends Controller
     public function index()
     {
         if(auth()->user()->role == 'Admin') {
-            return view('admin.transaction.index');
+            $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+            return view('admin.transaction.index', compact('nav_admins'));
         } elseif(auth()->user()->role == 'Customer') {
             return view('transaction.index');
         } else {
-            return redirect('/dashboard')->with('danger', 'Anda tidak memiliki hak untuk mengakses halaman tersebut.');
+            return redirect('/home')->with('error', 'Anda tidak memiliki hak untuk mengakses halaman tersebut.');
         }
     }
 
@@ -47,9 +48,10 @@ class TransactionController extends Controller
     {
         if(auth()->user()->role == 'Admin') {
             $transactions = Transaction::where('status', 'Bayar DP')->get();
-            return view('admin.transaction.confirm', compact('transactions'));
+            $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+            return view('admin.transaction.confirm', compact('transactions', 'nav_admins'));
         } else {
-            return redirect('/dashboard')->with('danger', 'Anda tidak memiliki hak untuk mengakses halaman tersebut.');
+            return redirect('/home')->with('error', 'Anda tidak memiliki hak untuk mengakses halaman tersebut.');
         }
     }
 
@@ -73,23 +75,27 @@ class TransactionController extends Controller
     {
         $setting = Setting::first();
         $transaction = Transaction::findOrFail($id);
-        $carts = Cart::where('transaction_id', $id)
-                    ->where(function($q) {
-                        $q->where('status', '=', 'Deal')
-                        ->orWhere('status', '=', 'Event Selesai');
-                    })->get();
-        $harga[] = 0;
-        foreach($carts as $cart) {
-            $harga[] = $cart->package->price;
-            $harga[] = $cart->tambahan;
+        if(auth()->user()->id == $transaction->user_id) {
+            $carts = Cart::where('transaction_id', $id)
+                        ->where(function($q) {
+                            $q->where('status', '=', 'Deal')
+                            ->orWhere('status', '=', 'Event Selesai');
+                        })->get();
+            $harga[] = 0;
+            foreach($carts as $cart) {
+                $harga[] = $cart->package->price;
+                $harga[] = $cart->tambahan;
+            }
+            $total = array_sum($harga);
+
+
+            $pdf = PDF::loadview('transaction.invoice',
+                                compact('setting', 'transaction', 'carts', 'total'))->setPaper('a4', 'landscape');
+
+            return $pdf->stream($transaction->invoice.' - '.time().'.pdf');
+        } else {
+            return redirect('/home')->with('error', 'Anda tidak memiliki hak untuk mengakses halaman tersebut.');
         }
-        $total = array_sum($harga);
-
-
-        $pdf = PDF::loadview('transaction.invoice',
-                            compact('setting', 'transaction', 'carts', 'total'))->setPaper('a4', 'landscape');
-
-        return $pdf->stream($transaction->invoice.' - '.time().'.pdf');
     }
 
 
@@ -149,7 +155,8 @@ class TransactionController extends Controller
         }
         $dp = array_sum($dp1);
         $total = array_sum($harga);
-        return view('transaction.show', compact('transaction', 'banks', 'total', 'setting', 'dp'));
+        $nav_admins = Cart::where('status', 'Event Selesai')->orderBy('updated_at', 'desc')->limit(4)->get();
+        return view('transaction.show', compact('transaction', 'banks', 'total', 'setting', 'dp', 'nav_admins'));
     }
 
     /**
@@ -174,6 +181,29 @@ class TransactionController extends Controller
     {
         redirect('/transaction/'.$id);
     }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function cancelinvoice(Request $request, $id)
+    {
+        $transaction = Transaction::findOrFail($id);
+
+        $transaction->status = 'Dibatalkan';
+        foreach($transaction->carts as $cart) {
+            $cart->status = 'Dibatalkan';
+            $cart->cancel_id = auth()->user()->id;
+            $cart->save();
+        }
+        $transaction->save();
+
+        return redirect('/transaction')->with('success', 'Transaksi telah dibatalkan');
+    }
+
 
     /**
      * Update the specified resource in storage.

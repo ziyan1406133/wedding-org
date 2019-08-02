@@ -13,7 +13,9 @@
         </a>
         <ul class="navbar-nav">
         <li class="nav-item"><a href="#package" class="scrollTo">PAKET WEDDING</a></li>
+        <li class="nav-item"><a href="#reviews" class="scrollTo">REVIEWS</a></li>
         <li class="nav-item"><a href="#contact" class="scrollTo">KONTAK KAMI</a></li>
+        <li class="nav-item"><a href="/petunjuk">PETUNJUK PENGGUNAAN</a></li>
         <li class="nav-item">
             <div class="separator"></div>
         </li>
@@ -48,7 +50,9 @@
             </a>
             <ul class="navbar-nav d-none d-lg-flex flex-row">
             <li class="nav-item"><a href="#package" class="scrollTo">PAKET WEDDING</a></li>
+            <li class="nav-item"><a href="#reviews" class="scrollTo">REVIEWS</a></li>
             <li class="nav-item"><a href="#contact" class="scrollTo">KONTAK KAMI</a></li>
+            <li class="nav-item"><a href="/petunjuk">PETUNJUK PENGGUNAAN</a></li>
             @guest
             <li class="nav-item mr-3"><a href="/login">SIGN IN</a></li>
             <li class="nav-item pl-2">
@@ -266,13 +270,39 @@
                     <div class="col-12 p-0">
                         <div class="owl-container">
                         <div class="owl-carousel review-carousel">
-
-                            <div class="card">
+                            @if(count($carts) > 0)
+                                @foreach($carts as $cart)
+                                    <div class="card">
+                                        <div class="card-body text-center pt-5 pb-5">
+                                            <div>
+                                            <img alt="profile" class="img-thumbnail border-0 rounded-circle mb-4 list-thumbnail mx-auto" src="{{asset('/storage/avatar/'.$cart->user->avatar)}}" />
+                                            <h5 class="mb-0 font-weight-semibold color-theme-1 mb-3">
+                                                {{$cart->user->name}}
+                                            </h5>
+                                            <select class="rating" data-current-rating="{{$cart->rate}}" data-readonly="true">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                            </select>
+                                            <p class="text-muted text-small">{{$cart->package->nama}}</p>
+                                            </div>
+                                            <div class="pl-3 pr-3 pt-3 pb-0 flex-grow-1 d-flex align-items-center">
+                                                <p class="mb-0">
+                                                    {{$cart->ulasan}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="card">
                                 <div class="card-body text-center pt-5 pb-5">
                                     <div>
                                     <img alt="profile" class="img-thumbnail border-0 rounded-circle mb-4 list-thumbnail mx-auto" src="img/profile-pic-l-7.jpg" />
                                     <h5 class="mb-0 font-weight-semibold color-theme-1 mb-3">
-                                        codebars
+                                        Nama Customer
                                     </h5>
                                     <select class="rating" data-current-rating="5" data-readonly="true">
                                         <option value="1">1</option>
@@ -281,18 +311,16 @@
                                         <option value="4">4</option>
                                         <option value="5">5</option>
                                     </select>
-                                    <p class="text-muted text-small">Code Quality</p>
+                                    <p class="text-muted text-small">Nama Paket</p>
                                     </div>
                                     <div class="pl-3 pr-3 pt-3 pb-0 flex-grow-1 d-flex align-items-center">
                                     <p class="mb-0 ">
-                                        Many that live deserve death. And some that die
-                                        deserve life. Can you give it to them? Then do not
-                                        be eager to deal out death in judgement. For even
-                                        the very wise cannot see all ends.
+                                        Ooops, ternyata belum ada ulasan.
                                     </p>
                                     </div>
                                 </div>
                             </div>
+                            @endif
 
                         </div>
         

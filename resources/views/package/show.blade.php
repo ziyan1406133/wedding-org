@@ -254,11 +254,25 @@
                 @include('inc.messages')
 
                 <div class="row">
-                    <div class="col">
+                    <div class="col-lg-4 col-12 mb-4">
                         <div class="card mb-4">
                             <img src="{{ asset('/storage/package/'.$package->image) }}" alt="Detail Picture" class="card-img-top">
 
-                            <div class="card-body">
+                            <div class="card-body"> 
+                                @if($average == NULL)
+                                    <p class="text-muted text-small mb-2">Belum ada rating dari ulasan</p>
+                                @else
+                                    <div class="form-group mb-0">
+                                        <select class="rating" data-current-rating="{{$average}}" data-readonly="true">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                    </div>
+                                @endif
+                                
                                 <p class="text-muted text-small mb-2">Wedding Organizer</p>
                                 <p class="mb-3">
                                    <a href="/user/{{$package->user->id}}">{{$package->user->name}}</a>
@@ -279,7 +293,7 @@
                                 <p class="mb-3">Rp. {{ number_format($package->price,0,",",".") }} (Belum termasuk biaya operasional)</p>
                                 @auth
                                     @if($package->hidden == FALSE)
-                                        @if(auth()->user()->role == 'Customer')
+                                        @if((auth()->user()->role == 'Customer') && (auth()->user()->status == 'Terverifikasi'))
                                             <a class="btn default btn-primary card-img-bottom"  data-toggle="modal" data-target="#bookevent" href="#"><i class="simple-icon-book-open"></i> Book Event</a>
                                             <div class="modal fade" id="bookevent" role="dialog">
                                                 <div class="modal-dialog">
@@ -375,6 +389,40 @@
                                     atau <a href="/register">buat akun baru</a>.
                                 </p>
                                 @endauth
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-5">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Ulasan</h5>
+                                @if(count($reviews) > 0)
+                                    @foreach($reviews as $review)
+                                    <div class="d-flex flex-row mb-3 pb-3 border-bottom">
+                                        <a href="/user/{{$review->user->id}}">
+                                            <img alt="Profile Picture" src="{{asset('/storage/avatar/'.$review->user->avatar)}}" class="img-thumbnail border-0 rounded-circle list-thumbnail align-self-center xsmall">
+                                        </a>
+                                        <div class="pl-3">
+                                            <p class="font-weight-medium mb-0">{{$review->ulasan}}
+                                            </p>
+                                            <p class="text-muted mb-1 text-small">{{$review->user->name}} |
+                                                {{ date('d-m-20y', strtotime($review->updated_at)) }}</p>
+                                            <div class="form-group mb-0">
+                                                <select class="rating" data-current-rating="{{$review->rate}}" data-readonly="true">
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                    {{$reviews->links()}}
+                                @else
+                                    <p>Belum ada ulasan.</p>
+                                @endif
                             </div>
                         </div>
                     </div>
